@@ -1,6 +1,6 @@
 # About
 
-This project aim to allows people to dump and view infos from those Pokémons that are stuck in HOME beyond the first Box,
+This project aims to allow people to dump and view infos from those Pokémons that are stuck in HOME beyond the first Box,
 or that for some reason the owner don't want to transfer away (eg. Unique GO/HOME Symbol sticker or SWSH unavailable mons).
 This Plugin is not intended to allow users to edit Pokémon Infos directly from HOME and it will never allows to.
 
@@ -16,7 +16,7 @@ This Plugin is not intended to allow users to edit Pokémon Infos directly from 
 
 # How to use 
 
-Download the DLL from [Project Pokémon](https://projectpokemon.org/).
+Download the DLL from [Project Pokémon](https://projectpokemon.org/home/files/file/4388-pkhex-plugin-home-live-viewer/).
 
 For Windows users, right click on the DLL, go to properties and select "Unlock".
 
@@ -26,7 +26,7 @@ Open PKHeX with a Sword/Shield Save File, or a Blank SWSH save, and click on Too
 
 Enter your IP Adrress, select the Boxes you want to show and click "Connect".
 
-For any problems or suggestion, feel free to write an issue on the GitHub or on the [Project Pokémon thread](https://projectpokemon.org/).
+For any problems or suggestion, feel free to write an issue on the GitHub or on the [Project Pokémon thread](https://projectpokemon.org/home/forums/topic/58311-pkhex-home-live-plugin-ram-viewer-thread/).
 
 # Credits
 
