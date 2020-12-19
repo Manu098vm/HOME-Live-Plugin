@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net46</TargetFramework>
+    <OutputType>Library</OutputType>
+    <LangVersion>8</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+	<PackageReference Include="LibUsbDotNet" Version="2.2.29" />
+    <PackageReference Include="PKHeX.Core" Version="20.11.28" />
+  </ItemGroup>
+
+</Project>
