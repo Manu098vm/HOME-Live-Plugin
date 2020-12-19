@@ -26,9 +26,9 @@ Open PKHeX with a Sword/Shield Save File, or a Blank SWSH save, and click on Too
 
 Enter your IP Adrress, select the Boxes you want to show and click "Connect".
 
-For any problems or suggestion, feel free to write an issue on the GitHub or on the Project Pokémon thread.
+For any problems or suggestion, feel free to write an issue on the GitHub or on the [Project Pokémon thread](https://projectpokemon.org/).
 
-# Credtis
+# Credits
 
 [olliz0r](https://github.com/olliz0r) for [sys-botbase](https://github.com/olliz0r/sys-botbase)
 
