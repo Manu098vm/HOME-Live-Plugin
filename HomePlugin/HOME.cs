@@ -21,7 +21,7 @@ namespace HOME
         {
             SaveFileEditor = (ISaveFileProvider)Array.Find(args, z => z is ISaveFileProvider);
             PKMEditor = (IPKMView)Array.Find(args, z => z is IPKMView);
-            controller = new LiveHeXController(SaveFileEditor, PKMEditor, InjectorCommunicationType.SocketNetwork);
+            controller = new LiveHeXController(SaveFileEditor, PKMEditor);
             var menu = (ToolStrip)Array.Find(args, z => z is ToolStrip);
             LoadMenuStrip(menu);
         }
@@ -77,7 +77,8 @@ namespace HOME
                     "Box 97-128",
                     "Box 129-160",
                     "Box 161-192",
-                    "Box 168-200"},
+                    "Box 193-200",
+                },
                 Location = new Point(boxselection_label.Location.X, boxselection_label.Bounds.Bottom),
                 TabIndex = 11
             };
@@ -112,6 +113,8 @@ namespace HOME
             connectform.Controls.Add(boxselection_combo);
             connectform.Controls.Add(connect_button);
             connectform.Controls.Add(log_box);
+            connectform.FormClosed += (s, e) => controller.Bot.sys.Disconnect();
+            connectform.StartPosition = FormStartPosition.CenterParent;
             connect_button.Click += (s, e) => ModifySaveFile(connectform);
             
             return connectform;
@@ -127,29 +130,18 @@ namespace HOME
                     var sav = SaveFileEditor.SAV;
                     if (sav is SAV8SWSH)
                     {
-                        var ver = (LiveHeXVersion)0;
-                        if (connectform.Controls[3].Text.Equals("Box 33-64"))
-                            ver = (LiveHeXVersion)1;
-                        else if (connectform.Controls[3].Text.Equals("Box 65-96"))
-                            ver = (LiveHeXVersion)2;
-                        else if (connectform.Controls[3].Text.Equals("Box 97-128"))
-                            ver = (LiveHeXVersion)3;
-                        else if (connectform.Controls[3].Text.Equals("Box 129-160"))
-                            ver = (LiveHeXVersion)4;
-                        else if (connectform.Controls[3].Text.Equals("Box 161-192"))
-                            ver = (LiveHeXVersion)5;
-                        else if (connectform.Controls[3].Text.Equals("Box 168-200"))
-                            ver = (LiveHeXVersion)6;
-                        controller.Bot = new PokeSysBotMini(ver, InjectorCommunicationType.SocketNetwork)
+                        var selection = ((ComboBox) connectform.Controls[3]).SelectedIndex;
+                        controller.Bot = new PokeSysBotMini(selection == -1 ? 0 : selection)
                         {
-                            com = { IP = connectform.Controls[1].Text, Port = 6000 }
+                            sys = { IP = connectform.Controls[1].Text, Port = 6000 }
                         };
-                        controller.Bot.com.Connect();
+                        controller.Bot.sys.Connect();
                         var data = controller.Bot.ReadSlot(1, 1);
                         var pkm = sav.GetDecryptedPKM(data);
                         if (pkm.ChecksumValid)
                             connectform.Controls[5].Text = "Connected succesfully!";
-                        for (int i = 0; i <= 32; i++)
+                        var limit = selection == 6 ? 8 : 32; // Only read 8 boxes in the last case
+                        for (int i = 0; i <= limit - 1; i++)
                             controller.ReadBox(i);
                         SaveFileEditor.ReloadSlots();
                     }

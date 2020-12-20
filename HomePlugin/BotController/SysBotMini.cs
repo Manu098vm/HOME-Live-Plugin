@@ -11,7 +11,7 @@ namespace PKHeX.Core.Injection
         Absolute
     }
 
-    public class SysBotMini : ICommunicator
+    public class SysBotMini
     {
         public string IP = "192.168.178.103";
         public int Port = 6000;
@@ -21,10 +21,6 @@ namespace PKHeX.Core.Injection
         public bool Connected;
 
         private readonly object _sync = new object();
-
-        bool ICommunicator.Connected { get => Connected; set => Connected = value; }
-        int ICommunicator.Port { get => Port; set => Port = value; }
-        string ICommunicator.IP { get => IP; set => IP = value; }
 
         public void Connect()
         {
@@ -38,6 +34,7 @@ namespace PKHeX.Core.Injection
 
         public void Disconnect()
         {
+            if (!Connected) return;
             lock (_sync)
             {
                 Connection.Disconnect(false);
