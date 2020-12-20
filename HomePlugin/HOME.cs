@@ -77,7 +77,7 @@ namespace HOME
                     "Box 97-128",
                     "Box 129-160",
                     "Box 161-192",
-                    "Box 168-200",
+                    "Box 193-200",
                 },
                 Location = new Point(boxselection_label.Location.X, boxselection_label.Bounds.Bottom),
                 TabIndex = 11
@@ -139,7 +139,8 @@ namespace HOME
                         var pkm = sav.GetDecryptedPKM(data);
                         if (pkm.ChecksumValid)
                             connectform.Controls[5].Text = "Connected succesfully!";
-                        for (int i = 0; i <= 32; i++)
+                        var limit = selection == 6 ? 8 : 32; // Only read 8 boxes in the last case
+                        for (int i = 0; i <= limit; i++)
                             controller.ReadBox(i);
                         SaveFileEditor.ReloadSlots();
                     }
