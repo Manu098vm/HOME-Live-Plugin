@@ -114,6 +114,7 @@ namespace HOME
             connectform.Controls.Add(connect_button);
             connectform.Controls.Add(log_box);
             connectform.FormClosed += (s, e) => controller.Bot.sys.Disconnect();
+            connectform.StartPosition = FormStartPosition.CenterParent;
             connect_button.Click += (s, e) => ModifySaveFile(connectform);
             
             return connectform;
@@ -140,7 +141,7 @@ namespace HOME
                         if (pkm.ChecksumValid)
                             connectform.Controls[5].Text = "Connected succesfully!";
                         var limit = selection == 6 ? 8 : 32; // Only read 8 boxes in the last case
-                        for (int i = 0; i <= limit; i++)
+                        for (int i = 0; i <= limit - 1; i++)
                             controller.ReadBox(i);
                         SaveFileEditor.ReloadSlots();
                     }

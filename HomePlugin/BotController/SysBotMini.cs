@@ -34,6 +34,7 @@ namespace PKHeX.Core.Injection
 
         public void Disconnect()
         {
+            if (!Connected) return;
             lock (_sync)
             {
                 Connection.Disconnect(false);
