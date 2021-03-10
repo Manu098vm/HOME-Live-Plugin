@@ -1,8 +1,6 @@
 # About
 
-This project aims to allow people to dump and view infos from those Pokémons that are stuck in HOME beyond the first Box,
-or that for some reason the owner don't want to transfer away (eg. Unique GO/HOME Symbol sticker or SWSH unavailable mons).
-This Plugin is not intended to allow users to edit Pokémon Infos directly from HOME and it will never allows to.
+This Plugin is meant to allow people to dump and view infos from those Pokémons that are stuck in HOME beyond the first Box, or that for some reason the owner does not want to transfer away (eg. Unique GO/HOME Symbol sticker or SWSH unavailable mons). This Plugin is not intended to allow users to edit Pokémon Infos directly from HOME and it will never allow to.
 
 # Prerequisites
 
