@@ -9,7 +9,7 @@ namespace HOME
     public class HOME : IPlugin
     {
         public string Name => nameof(HOME);
-        public int Priority => 1; // Loading order, lowest is first.
+        public int Priority => 1;
 
         // Initialized on plugin load
         public ISaveFileProvider SaveFileEditor { get; private set; } = null!;
@@ -113,7 +113,8 @@ namespace HOME
             connectform.Controls.Add(boxselection_combo);
             connectform.Controls.Add(connect_button);
             connectform.Controls.Add(log_box);
-            connectform.FormClosed += (s, e) => controller.Bot.sys.Disconnect();
+            if(controller != null)
+                connectform.FormClosed += (s, e) => controller.Bot.sys.Disconnect();
             connectform.StartPosition = FormStartPosition.CenterParent;
             connect_button.Click += (s, e) => ModifySaveFile(connectform);
             
