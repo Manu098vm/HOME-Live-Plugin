@@ -13,7 +13,7 @@ namespace PKHeX.Core.Injection
 
     public class SysBotMini
     {
-        public string IP = "192.168.178.103";
+        public string IP = "0.0.0.0";
         public int Port = 6000;
 
         public Socket Connection = new Socket(SocketType.Stream, ProtocolType.Tcp);

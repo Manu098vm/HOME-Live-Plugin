@@ -38,7 +38,6 @@ namespace HOME
         {
             var ctrl = new ToolStripMenuItem(Name);
             tools.DropDownItems.Add(ctrl);
-            //var connectform = HomeForm();
             ctrl.Click += (s, e) => HomeForm().Show();
         }
 
@@ -53,7 +52,7 @@ namespace HOME
 
             TextBox connection_box = new TextBox()
             {
-                Text = "192.168.178.103",
+                Text = (string)Properties.Settings.Default["IP"],
                 Size = new Size(260, 100),
                 Location = new Point(connection_label.Location.X, connection_label.Bounds.Bottom),
                 TabIndex = 11
@@ -101,10 +100,13 @@ namespace HOME
                 Enabled = false
             };
 
-            var connectform = new Form();
-            connectform.Text = "Home Live Plugin";
-            connectform.FormBorderStyle = FormBorderStyle.FixedToolWindow;
-            connectform.ShowIcon = false;
+            Form connectform = new Form
+            {
+                Text = "Home Live Plugin",
+                FormBorderStyle = FormBorderStyle.FixedToolWindow,
+                ShowIcon = false
+            };
+
             connect_button.Font = new Font(connect_button.Font.FontFamily, 15);
             log_box.Font = new Font(log_box.Font.FontFamily, 7);
             connectform.Controls.Add(connection_label);
@@ -150,6 +152,8 @@ namespace HOME
                     {
                         connectform.Controls[5].Text = "Invalid Save File type. Please use a Sword/Shield save version.";
                     }
+                    Properties.Settings.Default["IP"] = connectform.Controls[1].Text;
+                    Properties.Settings.Default.Save();
                 } catch(Exception)
                 {
                     connectform.Controls[5].Font = new Font(connectform.Controls[5].Font.FontFamily, 8);
