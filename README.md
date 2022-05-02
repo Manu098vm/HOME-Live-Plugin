@@ -22,6 +22,8 @@ Move the DLL to your PKHeX/Plugins folder, if you don't have it, just create it.
 
 Open PKHeX with a Sword/Shield Save File, or a Blank SWSH save, and click on Tools->HOME to open the Plugin.
 
+Open the Pokémon HOME application from your Nintendo Switch and tap the screen and least once. 
+
 Enter your IP Adrress, select the Boxes you want to show and click "Connect".
 
 For any problems or suggestion, feel free to write an issue on the GitHub or on the [Project Pokémon thread](https://projectpokemon.org/home/forums/topic/58311-pkhex-home-live-plugin-ram-viewer-thread/).
