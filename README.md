@@ -2,6 +2,8 @@
 
 This Plugin is meant to allow people to dump and view infos from those Pokémons that are stuck in HOME beyond the first Box, or that for some reason the owner does not want to transfer away (eg. Unique GO/HOME Symbol sticker or SWSH unavailable mons). This Plugin is not intended to allow users to edit Pokémon Infos directly from HOME and it will never allow to.
 
+The stay_at_home branch currently needs the SciresM PKHeX fork named "no_way_home": https://github.com/SciresM/PKHeX/tree/no_way_home 
+
 # Prerequisites
 
 - Hacked Switch with [Atmosphère](https://github.com/Atmosphere-NX/Atmosphere) installed.
@@ -30,7 +32,11 @@ For any problems or suggestion, feel free to write an issue on the GitHub or on 
 
 # Credits
 
-[olliz0r](https://github.com/olliz0r) for [sys-botbase](https://github.com/olliz0r/sys-botbase)
+[olliz0r](https://github.com/olliz0r) and [berichan](https://github.com/berichan) for [sys-botbase](https://github.com/olliz0r/sys-botbase)
+
+[fishguy6564](https://github.com/fishguy6564) and [Koi-3088](https://github.com/Koi-3088) for [usb-botbase](https://github.com/fishguy6564/USB-Botbase)
+
+[SciresM](https://github.com/SciresM) for his researches into the new Pokémon Home encryption data method, implemented in his [PKHeX fork](https://github.com/SciresM/PKHeX/blob/no_way_home/PKHeX.Core/PKM/Util/HomeCrypto.cs).
 
 [kwsch](https://github.com/kwsch) for [PKHeX](https://github.com/kwsch/PKHeX)
 
