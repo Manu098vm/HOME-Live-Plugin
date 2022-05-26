@@ -1,8 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 using System.Drawing;
 using PKHeX.Core.Injection;
 using PKHeX.Core;
+using static System.Buffers.Binary.BinaryPrimitives;
 
 namespace HOME
 {
@@ -15,13 +17,11 @@ namespace HOME
         public ISaveFileProvider SaveFileEditor { get; private set; } = null!;
         public IPKMView PKMEditor { get; private set; } = null!;
 
-        public LiveHeXController? controller;
-
         public void Initialize(params object[] args)
         {
             SaveFileEditor = (ISaveFileProvider)Array.Find(args, z => z is ISaveFileProvider);
             PKMEditor = (IPKMView)Array.Find(args, z => z is IPKMView);
-            controller = new LiveHeXController(SaveFileEditor, PKMEditor);
+            
             var menu = (ToolStrip)Array.Find(args, z => z is ToolStrip);
             LoadMenuStrip(menu);
         }
@@ -38,128 +38,108 @@ namespace HOME
         {
             var ctrl = new ToolStripMenuItem(Name);
             tools.DropDownItems.Add(ctrl);
-            ctrl.Click += (s, e) => HomeForm().Show();
+            ctrl.Click += (s, e) => new MainForm(this).Show();
         }
 
-        private Form HomeForm()
+        public void StartProcess(MainForm frm)
         {
-            Label connection_label = new Label()
-            {
-                Text = "&IP Address:",
-                Location = new Point(10, 10),
-                TabIndex = 10
-            };
-
-            TextBox connection_box = new TextBox()
-            {
-                Text = (string)Properties.Settings.Default["IP"],
-                Size = new Size(260, 100),
-                Location = new Point(connection_label.Location.X, connection_label.Bounds.Bottom),
-                TabIndex = 11
-            };
-
-            Label boxselection_label = new Label()
-            {
-                Text = "&Select Boxes you want to view:",
-                Location = new Point(connection_box.Location.X, connection_box.Bounds.Bottom + 10),
-                TabIndex = 10
-            };
-
-            ComboBox boxselection_combo = new ComboBox()
-            {
-                Text = "Box 1-32",
-                Size = new Size(260, 100),
-                Items = {
-                    "Box 1-32",
-                    "Box 33-64",
-                    "Box 65-96",
-                    "Box 97-128",
-                    "Box 129-160",
-                    "Box 161-192",
-                    "Box 193-200",
-                },
-                Location = new Point(boxselection_label.Location.X, boxselection_label.Bounds.Bottom),
-                TabIndex = 11
-            };
-
-            Button connect_button = new Button()
-            {
-                Text = "&Connect!",
-                Size = new Size(260, 50),
-                Location = new Point(boxselection_combo.Location.X, boxselection_combo.Bounds.Bottom + 10),
-                TabIndex = 10
-            };
-
-            TextBox log_box = new TextBox()
-            {
-                Text = "Ensure to have sys-botbase in your console.\nOpen your Home application, enter the console IP Adrress and hit Connect.",
-                Location = new Point(connect_button.Location.X, connect_button.Bounds.Bottom + 10),
-                TabIndex = 11,
-                Size = new Size(260, 60),
-                Multiline = true,
-                Enabled = false
-            };
-
-            Form connectform = new Form
-            {
-                Text = "Home Live Plugin",
-                FormBorderStyle = FormBorderStyle.FixedToolWindow,
-                ShowIcon = false
-            };
-
-            connect_button.Font = new Font(connect_button.Font.FontFamily, 15);
-            log_box.Font = new Font(log_box.Font.FontFamily, 7);
-            connectform.Controls.Add(connection_label);
-            connectform.Controls.Add(connection_box);
-            connectform.Controls.Add(boxselection_label);
-            connectform.Controls.Add(boxselection_combo);
-            connectform.Controls.Add(connect_button);
-            connectform.Controls.Add(log_box);
-            if(controller != null)
-                connectform.FormClosed += (s, e) => controller.Bot.sys.Disconnect();
-            connectform.StartPosition = FormStartPosition.CenterParent;
-            connect_button.Click += (s, e) => ModifySaveFile(connectform);
-            
-            return connectform;
-        }
-
-        private void ModifySaveFile(Form connectform)
-        {
+            //TBD If PKHeX will be natively compatible with PKH, let the data be converted to the current save format and reload SAV boxes
+            LiveHeXController? controller = new LiveHeXController(SaveFileEditor, PKMEditor, frm.GetConnectionType());
             if (controller != null)
             {
                 try
                 {
-                    connectform.Controls[5].Font = new Font(connectform.Controls[5].Font.FontFamily, 8);
                     var sav = SaveFileEditor.SAV;
-                    if (sav is SAV8SWSH)
+
+                    controller.Bot = new PokeSysBotMini(frm.GetConnectionType(), 0)
                     {
-                        var selection = ((ComboBox) connectform.Controls[3]).SelectedIndex;
-                        controller.Bot = new PokeSysBotMini(selection == -1 ? 0 : selection)
+                        sys = { IP = frm.GetIP(), Port = frm.GetPort() }
+                    };
+                    controller.Bot.sys.Connect();
+
+                    frm.WriteLog("Connected.");
+
+                    var encrypted = frm.GetWantedFormats() == DumpFormat.Encrypted || frm.GetWantedFormats() == DumpFormat.EncAndDec;
+                    var decrypted = frm.GetWantedFormats() == DumpFormat.Decrypted || frm.GetWantedFormats() == DumpFormat.EncAndDec;
+
+                    var offset = controller.Bot.GetB1S1Offset();
+                    var i = 0;
+                    var found = 0;
+
+                    do
+                    {
+                        var ekh = controller.Bot.ReadBytesPKH(offset);
+
+                        ushort version;
+                        try
                         {
-                            sys = { IP = connectform.Controls[1].Text, Port = 6000 }
-                        };
-                        controller.Bot.sys.Connect();
-                        var data = controller.Bot.ReadSlot(1, 1);
-                        var pkm = sav.GetDecryptedPKM(data);
-                        if (pkm.ChecksumValid)
-                            connectform.Controls[5].Text = "Connected succesfully!";
-                        var limit = selection == 6 ? 8 : 32; // Only read 8 boxes in the last case
-                        for (int i = 0; i <= limit - 1; i++)
-                            controller.ReadBox(i);
-                        SaveFileEditor.ReloadSlots();
-                    }
-                    else
-                    {
-                        connectform.Controls[5].Text = "Invalid Save File type. Please use a Sword/Shield save version.";
-                    }
-                    Properties.Settings.Default["IP"] = connectform.Controls[1].Text;
-                    Properties.Settings.Default.Save();
-                } catch(Exception)
+                            version = DataVersion(ekh!);
+                        }
+                        catch
+                        {
+                            version = 0;
+                            frm.WriteLog($"Found an empty slot.");
+                        }
+
+                        if (version > 1)
+                            frm.WriteLog($"This plugin currently can handle only DataVersion [1]. PKH DataVersion is [{version}]");
+
+
+                        var pkh = DecryptEH1(ekh);
+
+                        if (pkh != null && pkh.Species != 0 && version == 1)
+                        {
+                            found++;
+                            if (decrypted)
+                            {
+                                string path = $"{frm.GetPath()}/{FileName(pkh, true)}";
+                                SavePKH(pkh?.Data, path);
+                            }
+                            if (encrypted)
+                            {
+                                string path = $"{frm.GetPath()}/{FileName(pkh, false)}";
+                                SavePKH(ekh, path);
+                            }
+                        }
+                        offset += controller.Bot.GetSlotSize();
+                        if(found > 930)
+                            MessageBox.Show($"Currently at {i}");
+                        i++;
+                        frm.WriteLog($"Dumping [{(encrypted && decrypted ? found*2 : found)}] file(s).");
+                    } while (frm.GetDumpTarget() == DumpTarget.TargetAll && i < 6000);
+
+                    frm.WriteLog($"Process completed. [{(encrypted && decrypted ? found * 2 : found)}] file(s) dumped.");
+                    return;
+
+                } catch (Exception ex)
                 {
-                    connectform.Controls[5].Font = new Font(connectform.Controls[5].Font.FontFamily, 8);
-                    connectform.Controls[5].Text = "Something went wrong :-( \nCheck your sys-botbase installation and input the correct IP address.";
+                    MessageBox.Show(ex.ToString());
+                    frm.WriteLog("Something went wrong :-( \nCheck your sys-botbase installation and input the correct IP address.");
                 }
             }
+        }
+
+        private ushort DataVersion(byte[] ekh) => ReadUInt16LittleEndian(ekh.AsSpan(0x00));
+        private PKM? DecryptEH1(byte[]? ek1)
+        {
+            if (ek1 != null)
+                return EntityFormat.GetFromHomeBytes(ek1);
+            else
+                return null;
+        }
+        private string FileName(PKM? pkm, bool decrypted)
+        {
+            var name = "";
+            if (pkm != null && pkm.Species != 0)
+                name = $"{name}{pkm.Species} - {pkm.Nickname} {pkm.EncryptionConstant:X8}{pkm.PID:X8}.{(decrypted ? "ph1" : "eh1")}";
+            return name;
+        }
+        private static void SavePKH(byte[]? data, string path)
+        {
+            if (data != null)
+                File.WriteAllBytes(path, data);
+            else
+                throw new ArgumentException("Data is null.");
         }
 
         public void NotifySaveLoaded()

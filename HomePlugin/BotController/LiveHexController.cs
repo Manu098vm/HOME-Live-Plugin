@@ -1,4 +1,6 @@
-﻿namespace PKHeX.Core.Injection
+﻿using HOME;
+
+namespace PKHeX.Core.Injection
 {
     public class LiveHeXController
     {
@@ -6,13 +8,14 @@
         public readonly IPKMView Editor;
         public PokeSysBotMini Bot;
 
-        public LiveHeXController(ISaveFileProvider boxes, IPKMView editor)
+        public LiveHeXController(ISaveFileProvider boxes, IPKMView editor, ConnectionType con)
         {
             SAV = boxes;
             Editor = editor;
-            Bot = new PokeSysBotMini(0);
+            Bot = new PokeSysBotMini(con, 0);
         }
 
+        //Reminder: Edit the constant value depending on the save file type. TBD when PKHeX will be natively compatible with PKH.
         public void ReadBox(int box)
         {
             var sav = SAV.SAV;

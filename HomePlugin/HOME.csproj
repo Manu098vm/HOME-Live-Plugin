@@ -6,11 +6,13 @@
     <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+    <BaseOutputPath>bin\</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
-    <PackageReference Include="PKHeX.Core" Version="21.10.2" />
+    <PackageReference Include="LibUsbDotNet" Version="2.2.29" />
+    <PackageReference Include="PKHeX.Core" Version="22.5.8" />
   </ItemGroup>
 
   <ItemGroup>
