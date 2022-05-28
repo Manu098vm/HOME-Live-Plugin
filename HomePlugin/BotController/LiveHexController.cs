@@ -12,7 +12,7 @@ namespace PKHeX.Core.Injection
         {
             SAV = boxes;
             Editor = editor;
-            Bot = new PokeSysBotMini(con, 0);
+            Bot = new PokeSysBotMini(con);
         }
 
         //Reminder: Edit the constant value depending on the save file type. TBD when PKHeX will be natively compatible with PKH.

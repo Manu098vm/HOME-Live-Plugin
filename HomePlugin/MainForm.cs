@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 namespace HOME
 {
@@ -11,8 +12,16 @@ namespace HOME
         public MainForm(HOME instance)
         {
             InitializeComponent();
-
             ConnectInstance = instance;
+
+            BtnReset.Visible = false;
+
+            for (int i = 1; i <= 200; i++)
+                ComboBox.Items.Add($"Box {i}");
+            for (int i = 1; i <= 30; i++)
+                ComboSlot.Items.Add($"Slot {i}");
+            ComboBox.SelectedIndex = 0;
+            ComboSlot.SelectedIndex = 0;
 
             if ((bool)Properties.Settings.Default["WiFi"])
                 RadioWiFi.Select();
@@ -21,18 +30,6 @@ namespace HOME
 
             TxtBoxIP.Text = Properties.Settings.Default["IP"].ToString();
             TxtBoxPort.Text = Properties.Settings.Default["Port"].ToString();
-
-            if ((bool)Properties.Settings.Default["B1S1"])
-                RadioB1S1.Select();
-            else if ((bool)Properties.Settings.Default["DumpAll"])
-                RadioTargetAll.Select();
-
-            if ((bool)Properties.Settings.Default["Encrypted"])
-                RadioEncrypted.Select();
-            else if ((bool)Properties.Settings.Default["Decrypted"])
-                RadioDecrypted.Select();
-            else if ((bool)Properties.Settings.Default["Both"])
-                RadioEncAndDec.Select();
 
             TxtBoxPath.Text = Properties.Settings.Default["Path"].ToString();
         }
@@ -54,7 +51,7 @@ namespace HOME
                 TxtBoxLog.Text = "Insert a proper Port.";
                 return;
             }
-            else if(!RadioB1S1.Checked && !RadioTargetAll.Checked)
+            else if(!RadioBox.Checked && !RadioSlot.Checked && !RadioTargetAll.Checked)
             {
                 TxtBoxLog.Text = "Select the dump Target.";
                 return;
@@ -74,17 +71,45 @@ namespace HOME
             Properties.Settings.Default["USB"] = RadioUSB.Checked;
             Properties.Settings.Default["IP"] = TxtBoxIP.Text;
             Properties.Settings.Default["Port"] = UInt32.Parse(TxtBoxPort.Text);
-            Properties.Settings.Default["B1S1"] = RadioB1S1.Checked;
-            Properties.Settings.Default["DumpAll"] = RadioTargetAll.Checked;
-            Properties.Settings.Default["Encrypted"] = RadioEncrypted.Checked;
-            Properties.Settings.Default["Decrypted"] = RadioDecrypted.Checked;
-            Properties.Settings.Default["Both"] = RadioEncAndDec.Checked;
             Properties.Settings.Default["Path"] = TxtBoxPath.Text;
             Properties.Settings.Default.Save();
 
             TxtBoxLog.Text = "Connecting....";
+            GrpConnection.Enabled = false;
+            GrpAction.Enabled = false;
+            GrpDump.Enabled = false;
+            GrpPath.Enabled = false;
+            BtnConnect.Enabled = false;
 
-            ConnectInstance.StartProcess(this);
+            BackgroundWorker.RunWorkerAsync();
+        }
+
+        private void MainForm_Close(object sender, EventArgs e)
+        {
+            BackgroundWorker.CancelAsync();
+        }
+
+        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            ConnectInstance.StartProcess(this, sender as BackgroundWorker);
+        }
+
+        private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            ProgressBar.Value = e.ProgressPercentage;
+        }
+
+        private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+            if (e.Cancelled == false)
+            {
+                GrpConnection.Enabled = true;
+                GrpAction.Enabled = true;
+                GrpDump.Enabled = true;
+                GrpPath.Enabled = true;
+                BtnConnect.Enabled = true;
+            }
         }
 
         private void RadioUSB_CheckedChanged(object sender, EventArgs e)
@@ -95,6 +120,24 @@ namespace HOME
         private void RadioWiFi_CheckedChanged(object sender, EventArgs e)
         {
             TxtBoxIP.Enabled = true;
+        }
+
+        private void RadioBox_CheckedChanged(object sender, EventArgs e)
+        {
+            ComboBox.Enabled = true;
+            ComboSlot.Enabled = false;
+        }
+
+        private void RadioSlot_CheckedChanged(object sender, EventArgs e)
+        {
+            ComboBox.Enabled = true;
+            ComboSlot.Enabled = true;
+        }
+
+        private void RadioTargetAll_CheckedChanged(object sender, EventArgs e)
+        {
+            ComboBox.Enabled = false;
+            ComboSlot.Enabled = false;
         }
 
         private void BtnBrowse_Click(object sender, EventArgs e)
@@ -109,14 +152,18 @@ namespace HOME
         {
             RadioWiFi.Checked = false;
             RadioUSB.Checked = false;
-            RadioB1S1.Checked = false;
+            RadioBox.Checked = false;
+            RadioSlot.Checked = false;
             RadioTargetAll.Checked = false;
             RadioEncrypted.Checked = false;
             RadioDecrypted.Checked = false;
             RadioEncAndDec.Checked = false;
             TxtBoxIP.Enabled = true;
+            ComboBox.SelectedIndex = 0;
+            ComboSlot.SelectedIndex = 0;
             TxtBoxIP.Text = "";
             TxtBoxPort.Text = "";
+            TxtBoxPath.Text = "";
             TxtBoxLog.Text = "Reset done.";
         }
 
@@ -134,6 +181,8 @@ namespace HOME
 
         public string GetIP() => TxtBoxIP.Text;
         public int GetPort() => (int)UInt32.Parse(TxtBoxPort.Text);
+        public int GetTargetBox() => ComboBox.SelectedIndex;
+        public int GetTargetSlot() => ComboSlot.SelectedIndex;
         public string GetPath() => TxtBoxPath.Text;
         public ConnectionType GetConnectionType()
         {
@@ -146,8 +195,10 @@ namespace HOME
         {
             if (RadioTargetAll.Checked)
                 return DumpTarget.TargetAll;
+            else if (RadioSlot.Checked)
+                return DumpTarget.TargetSlot;
             else
-                return DumpTarget.B1S1;
+                return DumpTarget.TargetBox;
         }
         public DumpFormat GetWantedFormats()
         {

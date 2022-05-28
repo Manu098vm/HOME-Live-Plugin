@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_Close);
             this.BtnConnect = new System.Windows.Forms.Button();
             this.TxtBoxLog = new System.Windows.Forms.RichTextBox();
             this.TxtBoxIP = new System.Windows.Forms.TextBox();
@@ -42,14 +43,18 @@
             this.RadioUSB = new System.Windows.Forms.RadioButton();
             this.RadioWiFi = new System.Windows.Forms.RadioButton();
             this.GrpAction = new System.Windows.Forms.GroupBox();
+            this.ComboSlot = new System.Windows.Forms.ComboBox();
+            this.ComboBox = new System.Windows.Forms.ComboBox();
+            this.RadioSlot = new System.Windows.Forms.RadioButton();
+            this.RadioBox = new System.Windows.Forms.RadioButton();
             this.RadioTargetAll = new System.Windows.Forms.RadioButton();
-            this.RadioB1S1 = new System.Windows.Forms.RadioButton();
             this.BtnReset = new System.Windows.Forms.Button();
             this.FolderBrowser = new System.Windows.Forms.FolderBrowserDialog();
             this.GrpPath = new System.Windows.Forms.GroupBox();
             this.BtnBrowse = new System.Windows.Forms.Button();
             this.TxtBoxPath = new System.Windows.Forms.TextBox();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.ProgressBar = new System.Windows.Forms.ProgressBar();
+            this.BackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.GrpDump.SuspendLayout();
             this.GrpConnection.SuspendLayout();
             this.GrpAction.SuspendLayout();
@@ -59,7 +64,7 @@
             // BtnConnect
             // 
             this.BtnConnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BtnConnect.Location = new System.Drawing.Point(12, 312);
+            this.BtnConnect.Location = new System.Drawing.Point(12, 356);
             this.BtnConnect.Name = "BtnConnect";
             this.BtnConnect.Size = new System.Drawing.Size(439, 59);
             this.BtnConnect.TabIndex = 0;
@@ -71,7 +76,7 @@
             // 
             this.TxtBoxLog.Enabled = false;
             this.TxtBoxLog.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtBoxLog.Location = new System.Drawing.Point(12, 377);
+            this.TxtBoxLog.Location = new System.Drawing.Point(12, 421);
             this.TxtBoxLog.Name = "TxtBoxLog";
             this.TxtBoxLog.Size = new System.Drawing.Size(439, 77);
             this.TxtBoxLog.TabIndex = 1;
@@ -79,7 +84,7 @@
             // 
             // TxtBoxIP
             // 
-            this.TxtBoxIP.Location = new System.Drawing.Point(100, 74);
+            this.TxtBoxIP.Location = new System.Drawing.Point(91, 53);
             this.TxtBoxIP.Name = "TxtBoxIP";
             this.TxtBoxIP.Size = new System.Drawing.Size(200, 22);
             this.TxtBoxIP.TabIndex = 2;
@@ -88,7 +93,7 @@
             // 
             // TxtBoxPort
             // 
-            this.TxtBoxPort.Location = new System.Drawing.Point(359, 74);
+            this.TxtBoxPort.Location = new System.Drawing.Point(348, 53);
             this.TxtBoxPort.Name = "TxtBoxPort";
             this.TxtBoxPort.Size = new System.Drawing.Size(76, 22);
             this.TxtBoxPort.TabIndex = 3;
@@ -98,7 +103,7 @@
             // LblIP
             // 
             this.LblIP.AutoSize = true;
-            this.LblIP.Location = new System.Drawing.Point(15, 77);
+            this.LblIP.Location = new System.Drawing.Point(6, 53);
             this.LblIP.Name = "LblIP";
             this.LblIP.Size = new System.Drawing.Size(79, 16);
             this.LblIP.TabIndex = 4;
@@ -107,7 +112,7 @@
             // LblPort
             // 
             this.LblPort.AutoSize = true;
-            this.LblPort.Location = new System.Drawing.Point(316, 77);
+            this.LblPort.Location = new System.Drawing.Point(305, 53);
             this.LblPort.Name = "LblPort";
             this.LblPort.Size = new System.Drawing.Size(37, 16);
             this.LblPort.TabIndex = 5;
@@ -138,7 +143,7 @@
             // RadioEncAndDec
             // 
             this.RadioEncAndDec.AutoSize = true;
-            this.RadioEncAndDec.Location = new System.Drawing.Point(252, 21);
+            this.RadioEncAndDec.Location = new System.Drawing.Point(243, 21);
             this.RadioEncAndDec.Name = "RadioEncAndDec";
             this.RadioEncAndDec.Size = new System.Drawing.Size(181, 20);
             this.RadioEncAndDec.TabIndex = 8;
@@ -151,7 +156,7 @@
             this.GrpDump.Controls.Add(this.RadioEncrypted);
             this.GrpDump.Controls.Add(this.RadioEncAndDec);
             this.GrpDump.Controls.Add(this.RadioDecrypted);
-            this.GrpDump.Location = new System.Drawing.Point(12, 184);
+            this.GrpDump.Location = new System.Drawing.Point(12, 228);
             this.GrpDump.Name = "GrpDump";
             this.GrpDump.Size = new System.Drawing.Size(439, 60);
             this.GrpDump.TabIndex = 9;
@@ -162,12 +167,16 @@
             // 
             this.GrpConnection.Controls.Add(this.RadioUSB);
             this.GrpConnection.Controls.Add(this.RadioWiFi);
+            this.GrpConnection.Controls.Add(this.LblIP);
+            this.GrpConnection.Controls.Add(this.TxtBoxIP);
+            this.GrpConnection.Controls.Add(this.TxtBoxPort);
+            this.GrpConnection.Controls.Add(this.LblPort);
             this.GrpConnection.Location = new System.Drawing.Point(12, 12);
             this.GrpConnection.Name = "GrpConnection";
-            this.GrpConnection.Size = new System.Drawing.Size(439, 46);
+            this.GrpConnection.Size = new System.Drawing.Size(439, 102);
             this.GrpConnection.TabIndex = 10;
             this.GrpConnection.TabStop = false;
-            this.GrpConnection.Text = "Connection Type";
+            this.GrpConnection.Text = "Connection";
             // 
             // RadioUSB
             // 
@@ -195,36 +204,69 @@
             // 
             // GrpAction
             // 
+            this.GrpAction.Controls.Add(this.ComboSlot);
+            this.GrpAction.Controls.Add(this.ComboBox);
+            this.GrpAction.Controls.Add(this.RadioSlot);
+            this.GrpAction.Controls.Add(this.RadioBox);
             this.GrpAction.Controls.Add(this.RadioTargetAll);
-            this.GrpAction.Controls.Add(this.RadioB1S1);
             this.GrpAction.Location = new System.Drawing.Point(12, 120);
             this.GrpAction.Name = "GrpAction";
-            this.GrpAction.Size = new System.Drawing.Size(439, 58);
+            this.GrpAction.Size = new System.Drawing.Size(439, 102);
             this.GrpAction.TabIndex = 11;
             this.GrpAction.TabStop = false;
             this.GrpAction.Text = "Dump Target";
             // 
+            // ComboSlot
+            // 
+            this.ComboSlot.FormattingEnabled = true;
+            this.ComboSlot.Location = new System.Drawing.Point(146, 63);
+            this.ComboSlot.Name = "ComboSlot";
+            this.ComboSlot.Size = new System.Drawing.Size(102, 24);
+            this.ComboSlot.TabIndex = 5;
+            // 
+            // ComboBox
+            // 
+            this.ComboBox.FormattingEnabled = true;
+            this.ComboBox.Location = new System.Drawing.Point(8, 63);
+            this.ComboBox.Name = "ComboBox";
+            this.ComboBox.Size = new System.Drawing.Size(102, 24);
+            this.ComboBox.TabIndex = 4;
+            // 
+            // RadioSlot
+            // 
+            this.RadioSlot.AutoSize = true;
+            this.RadioSlot.Location = new System.Drawing.Point(146, 21);
+            this.RadioSlot.Name = "RadioSlot";
+            this.RadioSlot.Size = new System.Drawing.Size(99, 20);
+            this.RadioSlot.TabIndex = 3;
+            this.RadioSlot.TabStop = true;
+            this.RadioSlot.Text = "Specifc Slot";
+            this.RadioSlot.UseVisualStyleBackColor = true;
+            this.RadioSlot.CheckedChanged += new System.EventHandler(this.RadioSlot_CheckedChanged);
+            // 
+            // RadioBox
+            // 
+            this.RadioBox.AutoSize = true;
+            this.RadioBox.Location = new System.Drawing.Point(8, 21);
+            this.RadioBox.Name = "RadioBox";
+            this.RadioBox.Size = new System.Drawing.Size(102, 20);
+            this.RadioBox.TabIndex = 2;
+            this.RadioBox.TabStop = true;
+            this.RadioBox.Text = "Specific Box";
+            this.RadioBox.UseVisualStyleBackColor = true;
+            this.RadioBox.CheckedChanged += new System.EventHandler(this.RadioBox_CheckedChanged);
+            // 
             // RadioTargetAll
             // 
             this.RadioTargetAll.AutoSize = true;
-            this.RadioTargetAll.Location = new System.Drawing.Point(231, 21);
+            this.RadioTargetAll.Location = new System.Drawing.Point(268, 21);
             this.RadioTargetAll.Name = "RadioTargetAll";
             this.RadioTargetAll.Size = new System.Drawing.Size(143, 20);
             this.RadioTargetAll.TabIndex = 1;
             this.RadioTargetAll.TabStop = true;
             this.RadioTargetAll.Text = "All Boxes and Slots";
             this.RadioTargetAll.UseVisualStyleBackColor = true;
-            // 
-            // RadioB1S1
-            // 
-            this.RadioB1S1.AutoSize = true;
-            this.RadioB1S1.Location = new System.Drawing.Point(70, 21);
-            this.RadioB1S1.Name = "RadioB1S1";
-            this.RadioB1S1.Size = new System.Drawing.Size(127, 20);
-            this.RadioB1S1.TabIndex = 0;
-            this.RadioB1S1.TabStop = true;
-            this.RadioB1S1.Text = "Only Box 1 Slot 1";
-            this.RadioB1S1.UseVisualStyleBackColor = true;
+            this.RadioTargetAll.CheckedChanged += new System.EventHandler(this.RadioTargetAll_CheckedChanged);
             // 
             // BtnReset
             // 
@@ -244,7 +286,7 @@
             // 
             this.GrpPath.Controls.Add(this.BtnBrowse);
             this.GrpPath.Controls.Add(this.TxtBoxPath);
-            this.GrpPath.Location = new System.Drawing.Point(12, 250);
+            this.GrpPath.Location = new System.Drawing.Point(12, 294);
             this.GrpPath.Name = "GrpPath";
             this.GrpPath.Size = new System.Drawing.Size(439, 56);
             this.GrpPath.TabIndex = 13;
@@ -268,20 +310,35 @@
             this.TxtBoxPath.Size = new System.Drawing.Size(333, 22);
             this.TxtBoxPath.TabIndex = 0;
             // 
+            // ProgressBar
+            // 
+            this.ProgressBar.Location = new System.Drawing.Point(13, 504);
+            this.ProgressBar.Maximum = 6000;
+            this.ProgressBar.Name = "ProgressBar";
+            this.ProgressBar.Size = new System.Drawing.Size(438, 26);
+            this.ProgressBar.Step = 1;
+            this.ProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.ProgressBar.TabIndex = 14;
+            // 
+            // BackgroundWorker
+            // 
+            this.BackgroundWorker.WorkerReportsProgress = true;
+            this.BackgroundWorker.WorkerSupportsCancellation = true;
+            this.BackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
+            this.BackgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BackgroundWorker_ProgressChanged);
+            this.BackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(457, 462);
+            this.ClientSize = new System.Drawing.Size(457, 541);
+            this.Controls.Add(this.ProgressBar);
             this.Controls.Add(this.GrpPath);
             this.Controls.Add(this.BtnReset);
             this.Controls.Add(this.GrpAction);
             this.Controls.Add(this.GrpConnection);
             this.Controls.Add(this.GrpDump);
-            this.Controls.Add(this.LblPort);
-            this.Controls.Add(this.LblIP);
-            this.Controls.Add(this.TxtBoxPort);
-            this.Controls.Add(this.TxtBoxIP);
             this.Controls.Add(this.TxtBoxLog);
             this.Controls.Add(this.BtnConnect);
             this.MaximizeBox = false;
@@ -298,7 +355,6 @@
             this.GrpPath.ResumeLayout(false);
             this.GrpPath.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -319,12 +375,16 @@
         private System.Windows.Forms.RadioButton RadioWiFi;
         private System.Windows.Forms.GroupBox GrpAction;
         private System.Windows.Forms.RadioButton RadioTargetAll;
-        private System.Windows.Forms.RadioButton RadioB1S1;
         private System.Windows.Forms.Button BtnReset;
         private System.Windows.Forms.FolderBrowserDialog FolderBrowser;
         private System.Windows.Forms.GroupBox GrpPath;
         private System.Windows.Forms.Button BtnBrowse;
         private System.Windows.Forms.TextBox TxtBoxPath;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.RadioButton RadioSlot;
+        private System.Windows.Forms.RadioButton RadioBox;
+        private System.Windows.Forms.ComboBox ComboSlot;
+        private System.Windows.Forms.ComboBox ComboBox;
+        private System.Windows.Forms.ProgressBar ProgressBar;
+        private System.ComponentModel.BackgroundWorker BackgroundWorker;
     }
 }

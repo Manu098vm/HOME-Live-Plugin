@@ -8,8 +8,9 @@
 
     public enum DumpTarget : int
     {
-        B1S1 = 1,
-        TargetAll = 2,
+        TargetBox = 1,
+        TargetSlot = 2,
+        TargetAll = 3,
     }
 
     public enum DumpFormat : int

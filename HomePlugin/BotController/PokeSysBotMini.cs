@@ -10,12 +10,10 @@ namespace PKHeX.Core.Injection
         public const uint SlotSize = 0x248;
         public const int SlotCount = 30;
         public const int BoxCount = 200;
-        public readonly int page;
         public readonly ICommunicator sys;
 
-        public PokeSysBotMini(ConnectionType con, int lv)
+        public PokeSysBotMini(ConnectionType con)
         {
-            page = lv;
             sys = con switch {
                 ConnectionType.WiFi => new SysBotMini(),
                 ConnectionType.USB => new UsbBotMini(),
@@ -25,6 +23,8 @@ namespace PKHeX.Core.Injection
 
         public uint GetB1S1Offset() => BoxStart;
         public uint GetSlotSize() => SlotSize;
+        public int GetSlotCount() => SlotCount;
+        public int GetBoxCount() => BoxCount;
         public uint GetBoxOffset(int box) => BoxStart + (uint)(SlotSize * SlotCount * box);
         public uint GetSlotOffset(int box, int slot) => GetBoxOffset(box) + (uint)(SlotSize * slot);
         public byte[] ReadBox(int box, int len=(int)SlotSize*SlotCount) => sys.ReadBytes(GetBoxOffset(box), len);

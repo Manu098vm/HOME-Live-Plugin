@@ -41,17 +41,17 @@ namespace HOME
             ctrl.Click += (s, e) => new MainForm(this).Show();
         }
 
-        public void StartProcess(MainForm frm)
+        public void StartProcess(MainForm frm, System.ComponentModel.BackgroundWorker? bgWorker)
         {
             //TBD If PKHeX will be natively compatible with PKH, let the data be converted to the current save format and reload SAV boxes
             LiveHeXController? controller = new LiveHeXController(SaveFileEditor, PKMEditor, frm.GetConnectionType());
-            if (controller != null)
+            if (controller != null && bgWorker != null)
             {
                 try
                 {
                     var sav = SaveFileEditor.SAV;
 
-                    controller.Bot = new PokeSysBotMini(frm.GetConnectionType(), 0)
+                    controller.Bot = new PokeSysBotMini(frm.GetConnectionType())
                     {
                         sys = { IP = frm.GetIP(), Port = frm.GetPort() }
                     };
@@ -62,7 +62,14 @@ namespace HOME
                     var encrypted = frm.GetWantedFormats() == DumpFormat.Encrypted || frm.GetWantedFormats() == DumpFormat.EncAndDec;
                     var decrypted = frm.GetWantedFormats() == DumpFormat.Decrypted || frm.GetWantedFormats() == DumpFormat.EncAndDec;
 
-                    var offset = controller.Bot.GetB1S1Offset();
+                    var target = frm.GetDumpTarget();
+                    var offset = target switch
+                    {
+                        DumpTarget.TargetBox => controller.Bot.GetBoxOffset(frm.GetTargetBox()),
+                        DumpTarget.TargetSlot => controller.Bot.GetSlotOffset(frm.GetTargetBox(), frm.GetTargetSlot()),
+                        DumpTarget.TargetAll => controller.Bot.GetB1S1Offset(),
+                        _ => controller.Bot.GetB1S1Offset(),
+                    };
                     var i = 0;
                     var found = 0;
 
@@ -102,11 +109,18 @@ namespace HOME
                             }
                         }
                         offset += controller.Bot.GetSlotSize();
-                        if(found > 930)
-                            MessageBox.Show($"Currently at {i}");
+
                         i++;
+
+                        if (target == DumpTarget.TargetAll)
+                            bgWorker.ReportProgress(i);
+                        else if (target == DumpTarget.TargetBox)
+                            bgWorker.ReportProgress(i * controller.Bot.GetBoxCount());
+                        else
+                            bgWorker.ReportProgress(controller.Bot.GetSlotCount()*controller.Bot.GetBoxCount());
+
                         frm.WriteLog($"Dumping [{(encrypted && decrypted ? found*2 : found)}] file(s).");
-                    } while (frm.GetDumpTarget() == DumpTarget.TargetAll && i < 6000);
+                    } while ((target == DumpTarget.TargetAll && i < 6000) || (target == DumpTarget.TargetBox && i < 30));
 
                     frm.WriteLog($"Process completed. [{(encrypted && decrypted ? found * 2 : found)}] file(s) dumped.");
                     return;
@@ -131,7 +145,7 @@ namespace HOME
         {
             var name = "";
             if (pkm != null && pkm.Species != 0)
-                name = $"{name}{pkm.Species} - {pkm.Nickname} {pkm.EncryptionConstant:X8}{pkm.PID:X8}.{(decrypted ? "ph1" : "eh1")}";
+                name = $"{name}{pkm.Species}{(pkm.Form > 0 ? $"-{pkm.Form:00}" : "")} - {pkm.Nickname.Replace(':', '\0')} {pkm.EncryptionConstant:X8}{pkm.PID:X8}.{(decrypted ? "ph1" : "eh1")}";
             return name;
         }
         private static void SavePKH(byte[]? data, string path)
