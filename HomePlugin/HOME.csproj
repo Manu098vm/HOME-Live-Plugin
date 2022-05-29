@@ -6,7 +6,7 @@
     <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
-    <BaseOutputPath>bin\</BaseOutputPath>
+    <BaseOutputPath>D:\Projects\SciresHeX\PKHeX.WinForms\bin\Release\net46\plugins</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

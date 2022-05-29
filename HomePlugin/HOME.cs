@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using System.Drawing;
 using PKHeX.Core.Injection;
 using PKHeX.Core;
 using static System.Buffers.Binary.BinaryPrimitives;
@@ -133,14 +132,6 @@ namespace HOME
             }
         }
 
-        private ushort DataVersion(byte[] ekh) => ReadUInt16LittleEndian(ekh.AsSpan(0x00));
-        private PKM? DecryptEH1(byte[]? ek1)
-        {
-            if (ek1 != null)
-                return EntityFormat.GetFromHomeBytes(ek1);
-            else
-                return null;
-        }
         private string FileName(PKM? pkm, bool decrypted)
         {
             var name = "";
@@ -148,7 +139,18 @@ namespace HOME
                 name = $"{name}{pkm.Species}{(pkm.Form > 0 ? $"-{pkm.Form:00}" : "")} - {pkm.Nickname.Replace(':', '\0')} {pkm.EncryptionConstant:X8}{pkm.PID:X8}.{(decrypted ? "ph1" : "eh1")}";
             return name;
         }
-        private static void SavePKH(byte[]? data, string path)
+
+        public ushort DataVersion(byte[] ekh) => ReadUInt16LittleEndian(ekh.AsSpan(0x00));
+
+        public PKM? DecryptEH1(byte[]? ek1)
+        {
+            if (ek1 != null)
+                return EntityFormat.GetFromHomeBytes(ek1);
+            else
+                return null;
+        }
+        
+        public static void SavePKH(byte[]? data, string path)
         {
             if (data != null)
                 File.WriteAllBytes(path, data);

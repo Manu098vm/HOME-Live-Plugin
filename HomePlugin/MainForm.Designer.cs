@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_Close);
             this.BtnConnect = new System.Windows.Forms.Button();
             this.TxtBoxLog = new System.Windows.Forms.RichTextBox();
             this.TxtBoxIP = new System.Windows.Forms.TextBox();
@@ -55,16 +54,23 @@
             this.TxtBoxPath = new System.Windows.Forms.TextBox();
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.BackgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.Tools = new System.Windows.Forms.MenuStrip();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.decryptFromFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.SaveFileDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.BackGroundWorkerLocal = new System.ComponentModel.BackgroundWorker();
             this.GrpDump.SuspendLayout();
             this.GrpConnection.SuspendLayout();
             this.GrpAction.SuspendLayout();
             this.GrpPath.SuspendLayout();
+            this.Tools.SuspendLayout();
             this.SuspendLayout();
             // 
             // BtnConnect
             // 
             this.BtnConnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BtnConnect.Location = new System.Drawing.Point(12, 356);
+            this.BtnConnect.Location = new System.Drawing.Point(12, 376);
             this.BtnConnect.Name = "BtnConnect";
             this.BtnConnect.Size = new System.Drawing.Size(439, 59);
             this.BtnConnect.TabIndex = 0;
@@ -76,7 +82,7 @@
             // 
             this.TxtBoxLog.Enabled = false;
             this.TxtBoxLog.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtBoxLog.Location = new System.Drawing.Point(12, 421);
+            this.TxtBoxLog.Location = new System.Drawing.Point(12, 441);
             this.TxtBoxLog.Name = "TxtBoxLog";
             this.TxtBoxLog.Size = new System.Drawing.Size(439, 77);
             this.TxtBoxLog.TabIndex = 1;
@@ -156,7 +162,7 @@
             this.GrpDump.Controls.Add(this.RadioEncrypted);
             this.GrpDump.Controls.Add(this.RadioEncAndDec);
             this.GrpDump.Controls.Add(this.RadioDecrypted);
-            this.GrpDump.Location = new System.Drawing.Point(12, 228);
+            this.GrpDump.Location = new System.Drawing.Point(12, 248);
             this.GrpDump.Name = "GrpDump";
             this.GrpDump.Size = new System.Drawing.Size(439, 60);
             this.GrpDump.TabIndex = 9;
@@ -171,7 +177,7 @@
             this.GrpConnection.Controls.Add(this.TxtBoxIP);
             this.GrpConnection.Controls.Add(this.TxtBoxPort);
             this.GrpConnection.Controls.Add(this.LblPort);
-            this.GrpConnection.Location = new System.Drawing.Point(12, 12);
+            this.GrpConnection.Location = new System.Drawing.Point(12, 32);
             this.GrpConnection.Name = "GrpConnection";
             this.GrpConnection.Size = new System.Drawing.Size(439, 102);
             this.GrpConnection.TabIndex = 10;
@@ -209,7 +215,7 @@
             this.GrpAction.Controls.Add(this.RadioSlot);
             this.GrpAction.Controls.Add(this.RadioBox);
             this.GrpAction.Controls.Add(this.RadioTargetAll);
-            this.GrpAction.Location = new System.Drawing.Point(12, 120);
+            this.GrpAction.Location = new System.Drawing.Point(12, 140);
             this.GrpAction.Name = "GrpAction";
             this.GrpAction.Size = new System.Drawing.Size(439, 102);
             this.GrpAction.TabIndex = 11;
@@ -270,7 +276,7 @@
             // 
             // BtnReset
             // 
-            this.BtnReset.Location = new System.Drawing.Point(360, 102);
+            this.BtnReset.Location = new System.Drawing.Point(360, 122);
             this.BtnReset.Name = "BtnReset";
             this.BtnReset.Size = new System.Drawing.Size(75, 23);
             this.BtnReset.TabIndex = 12;
@@ -286,7 +292,7 @@
             // 
             this.GrpPath.Controls.Add(this.BtnBrowse);
             this.GrpPath.Controls.Add(this.TxtBoxPath);
-            this.GrpPath.Location = new System.Drawing.Point(12, 294);
+            this.GrpPath.Location = new System.Drawing.Point(12, 314);
             this.GrpPath.Name = "GrpPath";
             this.GrpPath.Size = new System.Drawing.Size(439, 56);
             this.GrpPath.TabIndex = 13;
@@ -312,10 +318,10 @@
             // 
             // ProgressBar
             // 
-            this.ProgressBar.Location = new System.Drawing.Point(13, 504);
+            this.ProgressBar.Location = new System.Drawing.Point(12, 524);
             this.ProgressBar.Maximum = 6000;
             this.ProgressBar.Name = "ProgressBar";
-            this.ProgressBar.Size = new System.Drawing.Size(438, 26);
+            this.ProgressBar.Size = new System.Drawing.Size(439, 26);
             this.ProgressBar.Step = 1;
             this.ProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.ProgressBar.TabIndex = 14;
@@ -328,11 +334,61 @@
             this.BackgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BackgroundWorker_ProgressChanged);
             this.BackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
             // 
+            // Tools
+            // 
+            this.Tools.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.Tools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolsToolStripMenuItem});
+            this.Tools.Location = new System.Drawing.Point(0, 0);
+            this.Tools.Name = "Tools";
+            this.Tools.Size = new System.Drawing.Size(457, 28);
+            this.Tools.TabIndex = 16;
+            this.Tools.Text = "menuStrip2";
+            // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.decryptFromFilesToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
+            this.toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // decryptFromFilesToolStripMenuItem
+            // 
+            this.decryptFromFilesToolStripMenuItem.Name = "decryptFromFilesToolStripMenuItem";
+            this.decryptFromFilesToolStripMenuItem.Size = new System.Drawing.Size(211, 26);
+            this.decryptFromFilesToolStripMenuItem.Text = "Decrypt from files";
+            this.decryptFromFilesToolStripMenuItem.Click += new System.EventHandler(this.DecryptFromFiles_Click);
+            // 
+            // OpenFileDialog
+            // 
+            this.OpenFileDialog.DefaultExt = "eh1";
+            this.OpenFileDialog.FileName = "OpenFileDialog";
+            this.OpenFileDialog.Filter = "Encrypted PH1 files (*.eh1)|*.eh1|Encrypted PKH files (*.ekh)|*.ekh|All files (*." +
+    "*)|*.*";
+            this.OpenFileDialog.Multiselect = true;
+            this.OpenFileDialog.ReadOnlyChecked = true;
+            this.OpenFileDialog.ShowReadOnly = true;
+            this.OpenFileDialog.SupportMultiDottedExtensions = true;
+            this.OpenFileDialog.Title = "Open encrypted Pokémon Home data file";
+            // 
+            // SaveFileDialog
+            // 
+            this.SaveFileDialog.Description = "Save decrypted Pokémon Home data";
+            // 
+            // BackGroundWorkerLocal
+            // 
+            this.BackGroundWorkerLocal.WorkerReportsProgress = true;
+            this.BackGroundWorkerLocal.WorkerSupportsCancellation = true;
+            this.BackGroundWorkerLocal.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackGroundWorkerLocal_DoWork);
+            this.BackGroundWorkerLocal.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BackgroundWorker_ProgressChanged);
+            this.BackGroundWorkerLocal.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(457, 541);
+            this.ClientSize = new System.Drawing.Size(457, 562);
             this.Controls.Add(this.ProgressBar);
             this.Controls.Add(this.GrpPath);
             this.Controls.Add(this.BtnReset);
@@ -341,11 +397,13 @@
             this.Controls.Add(this.GrpDump);
             this.Controls.Add(this.TxtBoxLog);
             this.Controls.Add(this.BtnConnect);
+            this.Controls.Add(this.Tools);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MainForm";
             this.ShowIcon = false;
             this.Text = "Home Plugin";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_Close);
             this.GrpDump.ResumeLayout(false);
             this.GrpDump.PerformLayout();
             this.GrpConnection.ResumeLayout(false);
@@ -354,7 +412,10 @@
             this.GrpAction.PerformLayout();
             this.GrpPath.ResumeLayout(false);
             this.GrpPath.PerformLayout();
+            this.Tools.ResumeLayout(false);
+            this.Tools.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -386,5 +447,11 @@
         private System.Windows.Forms.ComboBox ComboBox;
         private System.Windows.Forms.ProgressBar ProgressBar;
         private System.ComponentModel.BackgroundWorker BackgroundWorker;
+        private System.Windows.Forms.MenuStrip Tools;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem decryptFromFilesToolStripMenuItem;
+        private System.Windows.Forms.OpenFileDialog OpenFileDialog;
+        private System.ComponentModel.BackgroundWorker BackGroundWorkerLocal;
+        private System.Windows.Forms.FolderBrowserDialog SaveFileDialog;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 using System.ComponentModel;
 
@@ -84,9 +85,34 @@ namespace HOME
             BackgroundWorker.RunWorkerAsync();
         }
 
-        private void MainForm_Close(object sender, EventArgs e)
+        private void DecryptFromFiles_Click(object sender, EventArgs e)
         {
-            BackgroundWorker.CancelAsync();
+            if (OpenFileDialog.ShowDialog() == DialogResult.OK)
+                if (SaveFileDialog.ShowDialog() == DialogResult.OK)
+                    BackGroundWorkerLocal.RunWorkerAsync();
+        }
+
+        private void BackGroundWorkerLocal_DoWork(object sender, DoWorkEventArgs e)
+        {
+            var bgWorker = sender as BackgroundWorker;
+            if (bgWorker != null)
+            {
+                var i = 0;
+                foreach (String file in OpenFileDialog.FileNames)
+                {
+                    var data = File.ReadAllBytes(file);
+                    if (ConnectInstance.DataVersion(data) != 1)
+                    {
+                        MessageBox.Show($"{file} is incompatible data.");
+                        return;
+                    }
+                    i++;
+                    WriteLog($"Loading [{i}] file(s).");
+                    File.WriteAllBytes($"{SaveFileDialog.SelectedPath}/{Path.GetFileNameWithoutExtension(file)}.ph1", ConnectInstance.DecryptEH1(data)!.Data);
+                    bgWorker.ReportProgress(6000 / OpenFileDialog.FileNames.Length * i);
+                }
+                WriteLog($"Process completed. [{i}] file(s) elaborated.");
+            }
         }
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -110,6 +136,11 @@ namespace HOME
                 GrpPath.Enabled = true;
                 BtnConnect.Enabled = true;
             }
+        }
+
+        private void MainForm_Close(object sender, EventArgs e)
+        {
+            BackgroundWorker.CancelAsync();
         }
 
         private void RadioUSB_CheckedChanged(object sender, EventArgs e)
@@ -211,5 +242,6 @@ namespace HOME
         }
         public void WriteLog(string str) => TxtBoxLog.Text = str;
         public void AppendLog(string str) => TxtBoxLog.AppendText(str);
+
     }
 }
