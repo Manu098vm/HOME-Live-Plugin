@@ -1,5 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿//Taken from Live Hex
+
+using System;
 using System.Threading;
 using LibUsbDotNet;
 using LibUsbDotNet.Main;
@@ -8,8 +9,6 @@ namespace PKHeX.Core.Injection
 {
     public class UsbBotMini : ICommunicator
     {
-        private const int MaximumTransferSize = 468; // byte limitation of USB-Botbase over Android for ACNHMS, assumed same here.
-
         public string IP = string.Empty;
         public int Port;
 
@@ -101,35 +100,15 @@ namespace PKHeX.Core.Injection
             }
         }
 
-        public byte[] ReadBytes(ulong offset, int length) => ReadBytesUSB(offset, length, RWMethod.Heap);
-        public void WriteBytes(byte[] data, ulong offset) => WriteBytesUSB(data, offset, RWMethod.Heap);
-        public byte[] ReadBytesMain(ulong offset, int length) => ReadBytesUSB(offset, length, RWMethod.Main);
-        public void WriteBytesMain(byte[] data, ulong offset) => WriteBytesUSB(data, offset, RWMethod.Main);
-        public byte[] ReadBytesAbsolute(ulong offset, int length) => ReadBytesUSB(offset, length, RWMethod.Absolute);
-        public void WriteBytesAbsolute(byte[] data, ulong offset) => WriteBytesUSB(data, offset, RWMethod.Absolute);
-        public byte[] ReadBytesAbsoluteMulti(Dictionary<ulong, int> offsets) => ReadAbsoluteMultiUSB(offsets);
-        public ulong GetHeapBase()
+        public byte[] ReadBytes(ulong offset, int length) => ReadBytesUSB(offset, length);
+
+        public byte[] ReadBytesUSB(ulong offset, int length)
         {
-            var cmd = SwitchCommand.GetHeapBase();
-            SendInternal(cmd);
-            var buffer = new byte[(8 * 2) + 1];
-            var _ = ReadInternal(buffer);
-            return BitConverter.ToUInt64(buffer, 0);
-        }
-
-        private int ReadInternal(byte[] buffer)
-        {
-            byte[] sizeOfReturn = new byte[4];
-
-            //read size, no error checking as of yet, should be the required 368 bytes
-            if (reader == null)
-                throw new Exception("USB writer is null, you may have disconnected the device during previous function");
-
-            reader.Read(sizeOfReturn, 5000, out _);
-
-            //read stack
-            reader.Read(buffer, 5000, out var lenVal);
-            return lenVal;
+            lock (_sync)
+            {
+                SendInternal(SwitchCommand.Peek(offset, length, false));
+                return ReadBulkUSB();
+            }
         }
 
         private int SendInternal(byte[] buffer)
@@ -151,41 +130,6 @@ namespace PKHeX.Core.Injection
                 throw new Exception(UsbDevice.LastErrorString);
             }
             return l;
-        }
-
-        public int Read(byte[] buffer)
-        {
-            lock (_sync)
-            {
-                return ReadInternal(buffer);
-            }
-        }
-
-        public byte[] ReadBytesUSB(ulong offset, int length, RWMethod method)
-        {
-            lock (_sync)
-            {
-                var cmd = method switch
-                {
-                    RWMethod.Heap => SwitchCommand.Peek(offset, length, false),
-                    RWMethod.Main => SwitchCommand.PeekMain(offset, length, false),
-                    RWMethod.Absolute => SwitchCommand.PeekAbsolute(offset, length, false),
-                    _ => SwitchCommand.Peek(offset, length, false),
-                };
-
-                SendInternal(cmd);
-                return ReadBulkUSB();
-            }
-        }
-
-        public byte[] ReadAbsoluteMultiUSB(Dictionary<ulong, int> offsets)
-        {
-            lock (_sync)
-            {
-                var cmd = SwitchCommand.PeekAbsoluteMulti(offsets, false);
-                SendInternal(cmd);
-                return ReadBulkUSB();
-            }
         }
 
         private byte[] ReadBulkUSB()
@@ -217,52 +161,6 @@ namespace PKHeX.Core.Injection
                 transfSize += lenVal;
             }
             return buffer;
-        }
-
-        public void WriteBytesUSB(byte[] data, ulong offset, RWMethod method)
-        {
-            if (data.Length > MaximumTransferSize)
-                WriteBytesLarge(data, offset, method);
-            else WriteSmall(data, offset, method);
-        }
-
-        public void WriteSmall(byte[] data, ulong offset, RWMethod method)
-        {
-            lock (_sync)
-            {
-                var cmd = method switch
-                {
-                    RWMethod.Heap => SwitchCommand.Poke(offset, data, false),
-                    RWMethod.Main => SwitchCommand.PokeMain(offset, data, false),
-                    RWMethod.Absolute => SwitchCommand.PokeAbsolute(offset, data, false),
-                    _ => SwitchCommand.Poke(offset, data, false),
-                };
-
-                SendInternal(cmd);
-                Thread.Sleep(1);
-            }
-        }
-
-        private void WriteBytesLarge(byte[] data, ulong offset, RWMethod method)
-        {
-            int byteCount = data.Length;
-            for (int i = 0; i < byteCount; i += MaximumTransferSize)
-            {
-                var slice = SliceSafe(data, i, MaximumTransferSize);
-                WriteBytesUSB(slice, offset + (ulong)i, method);
-            }
-        }
-
-        // Taken from SysBot.
-        private byte[] SliceSafe(byte[] src, int offset, int length)
-        {
-            var delta = src.Length - offset;
-            if (delta < length)
-                length = delta;
-
-            byte[] data = new byte[length];
-            Buffer.BlockCopy(src, offset, data, 0, data.Length);
-            return data;
         }
     }
 }
