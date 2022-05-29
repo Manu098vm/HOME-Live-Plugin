@@ -93,24 +93,23 @@ namespace HOME
 
 
                         var pkh = DecryptEH1(ekh);
+                        i++;
 
                         if (pkh != null && pkh.Species != 0 && version == 1)
                         {
                             found++;
                             if (decrypted)
                             {
-                                string path = $"{frm.GetPath()}/{FileName(pkh, true)}";
+                                string path = SetFileName(pkh, frm.GetPath(), target, false, i);
                                 SavePKH(pkh?.Data, path);
                             }
                             if (encrypted)
                             {
-                                string path = $"{frm.GetPath()}/{FileName(pkh, false)}";
+                                string path = SetFileName(pkh, frm.GetPath(), target, true, i);
                                 SavePKH(ekh, path);
                             }
                         }
                         offset += controller.Bot.GetSlotSize();
-
-                        i++;
 
                         switch(target)
                         {
@@ -150,11 +149,23 @@ namespace HOME
             SavePKH(DecryptEH1(data)!.Data, $"{path}/{Path.GetFileNameWithoutExtension(file)}.ph1");
         }
 
-        private string FileName(PKM? pkm, bool decrypted)
+        private string SetFileName(PKM? pkm, string path, DumpTarget target, bool encrypted, int i = 0)
         {
-            var name = "";
+            var name = $"{path}/";
+            if (target == DumpTarget.TargetAll)
+                name += $"Box {(int)(i / 30) + 1}/";
             if (pkm != null && pkm.Species != 0)
-                name = $"{name}{pkm.Species}{(pkm.Form > 0 ? $"-{pkm.Form:00}" : "")} - {pkm.Nickname.Replace(":", String.Empty)} {pkm.EncryptionConstant:X8}{pkm.PID:X8}.{(decrypted ? "ph1" : "eh1")}";
+            {
+                name += $"{pkm.Species}";
+                if (pkm.Form > 0)
+                    name += $"-{pkm.Form:00}";
+                name += $" - {pkm.Nickname.Replace(":", String.Empty)}";
+                name += $" {pkm.EncryptionConstant:X8}{pkm.PID:X8}";
+                if(encrypted)
+                    name += $".eh1";
+                else
+                    name += $".ph1";
+            }
             return name;
         }
 
@@ -171,7 +182,10 @@ namespace HOME
         private static void SavePKH(byte[]? data, string path)
         {
             if (data != null)
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
                 File.WriteAllBytes(path, data);
+            }
             else
                 throw new ArgumentException("Data is null.");
         }

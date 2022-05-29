@@ -105,6 +105,7 @@ namespace HOME
                     TxtBoxLog.Text = $"Loading [{i}] file(s).";
                     bgWorker.ReportProgress(6000 / OpenFileDialog.FileNames.Length * i);
                 }
+                bgWorker.ReportProgress(6000);
                 TxtBoxLog.Text = $"Process completed. [{i}] file(s) elaborated.";
             }
         }
