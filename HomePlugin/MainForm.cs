@@ -86,11 +86,15 @@ namespace HOME
             BackgroundWorker.RunWorkerAsync();
         }
 
-        private void DecryptFromFiles_Click(object sender, EventArgs e)
+        private void DecryptFromFiles_Click(object sender, EventArgs e) => LoadLocalFiles(DumpFormat.Encrypted);
+
+        private void EncryptFromFiles_Click(object sender, EventArgs e) => LoadLocalFiles(DumpFormat.Decrypted);
+
+        private void LoadLocalFiles(DumpFormat originFormat)
         {
             if (OpenFileDialog.ShowDialog() == DialogResult.OK)
                 if (SaveFileDialog.ShowDialog() == DialogResult.OK)
-                    BackGroundWorkerLocal.RunWorkerAsync();
+                    BackGroundWorkerLocal.RunWorkerAsync(argument: originFormat);
         }
 
         private void BackGroundWorkerLocal_DoWork(object sender, DoWorkEventArgs e)
@@ -101,7 +105,7 @@ namespace HOME
                 var i = 0;
                 foreach (String file in OpenFileDialog.FileNames)
                 {
-                    PluginInstance.ProcessLocal(this, bgWorker, file, SaveFileDialog.SelectedPath.ToString());
+                    PluginInstance.ProcessLocal(this, (DumpFormat)e.Argument, file, SaveFileDialog.SelectedPath.ToString());
                     i++;
                     TxtBoxLog.Text = $"Loading [{i}] file(s).";
                     bgWorker.ReportProgress(6000 / OpenFileDialog.FileNames.Length * i);
@@ -239,6 +243,5 @@ namespace HOME
         }
         public void WriteLog(string str) => TxtBoxLog.Text = str;
         public void AppendLog(string str) => TxtBoxLog.AppendText(str);
-
     }
 }

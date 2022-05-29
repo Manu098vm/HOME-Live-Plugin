@@ -139,15 +139,27 @@ namespace HOME
             }
         }
 
-        public void ProcessLocal(MainForm frm, System.ComponentModel.BackgroundWorker? bgWorker, string file, string path)
+        public void ProcessLocal(MainForm frm, DumpFormat originFormat, string file, string path)
         {
             var data = File.ReadAllBytes(file);
+
             if (DataVersion(data) != 1)
             {
                 frm.WriteLog($"{file} is incompatible data.");
                 return;
             }
-            SavePKH(DecryptEH1(data)!.Data, $"{path}/{Path.GetFileNameWithoutExtension(file)}.ph1");
+
+            switch (originFormat)
+            {
+                case DumpFormat.Encrypted:
+                    data = DecryptEH1(data)!.Data;
+                    break;
+                case DumpFormat.Decrypted:
+                    data = HomeCrypto.Encrypt(data);
+                    break;
+            }
+
+            SavePKH(data, $"{path}/{Path.GetFileNameWithoutExtension(file)}.{(originFormat == DumpFormat.Encrypted ? "ph1" : "eh1")}");
         }
 
         private string SetFileName(PKM? pkm, string path, DumpTarget target, bool encrypted, int i = 0)
@@ -160,6 +172,13 @@ namespace HOME
                 name += $"{pkm.Species}";
                 if (pkm.Form > 0)
                     name += $"-{pkm.Form:00}";
+                if (pkm.ShinyXor < 16)
+                {
+                    if (pkm.ShinyXor == 0)
+                        name += " ■";
+                    else
+                        name += " ★";
+                }
                 name += $" - {Regex.Replace(pkm.Nickname, @"[^0-9a-zA-Z\._ ]", "")}";
                 name += $" {pkm.EncryptionConstant:X8}{pkm.PID:X8}";
                 if(encrypted)

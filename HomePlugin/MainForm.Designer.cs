@@ -57,6 +57,7 @@
             this.Tools = new System.Windows.Forms.MenuStrip();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.decryptFromFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.encryptFromFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.SaveFileDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.BackGroundWorkerLocal = new System.ComponentModel.BackgroundWorker();
@@ -348,7 +349,8 @@
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.decryptFromFilesToolStripMenuItem});
+            this.decryptFromFilesToolStripMenuItem,
+            this.encryptFromFilesToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -356,16 +358,22 @@
             // decryptFromFilesToolStripMenuItem
             // 
             this.decryptFromFilesToolStripMenuItem.Name = "decryptFromFilesToolStripMenuItem";
-            this.decryptFromFilesToolStripMenuItem.Size = new System.Drawing.Size(211, 26);
+            this.decryptFromFilesToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.decryptFromFilesToolStripMenuItem.Text = "Decrypt from files";
             this.decryptFromFilesToolStripMenuItem.Click += new System.EventHandler(this.DecryptFromFiles_Click);
+            // 
+            // encryptFromFilesToolStripMenuItem
+            // 
+            this.encryptFromFilesToolStripMenuItem.Name = "encryptFromFilesToolStripMenuItem";
+            this.encryptFromFilesToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.encryptFromFilesToolStripMenuItem.Text = "Encrypt from files";
+            this.encryptFromFilesToolStripMenuItem.Click += new System.EventHandler(this.EncryptFromFiles_Click);
             // 
             // OpenFileDialog
             // 
             this.OpenFileDialog.DefaultExt = "eh1";
             this.OpenFileDialog.FileName = "OpenFileDialog";
-            this.OpenFileDialog.Filter = "Encrypted PH1 files (*.eh1)|*.eh1|Encrypted PKH files (*.ekh)|*.ekh|All files (*." +
-    "*)|*.*";
+            this.OpenFileDialog.Filter = "All files (*.*)|*.*|Encrypted files (*.eh1)|*.eh1|Decrypted files (*.pkh)|*.pk1";
             this.OpenFileDialog.Multiselect = true;
             this.OpenFileDialog.ReadOnlyChecked = true;
             this.OpenFileDialog.ShowReadOnly = true;
@@ -453,5 +461,6 @@
         private System.Windows.Forms.OpenFileDialog OpenFileDialog;
         private System.ComponentModel.BackgroundWorker BackGroundWorkerLocal;
         private System.Windows.Forms.FolderBrowserDialog SaveFileDialog;
+        private System.Windows.Forms.ToolStripMenuItem encryptFromFilesToolStripMenuItem;
     }
 }
