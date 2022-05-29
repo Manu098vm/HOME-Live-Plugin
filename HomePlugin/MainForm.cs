@@ -8,12 +8,12 @@ namespace HOME
     public partial class MainForm : Form
     {
 
-        HOME ConnectInstance = null!;
+        HOME PluginInstance = null!;
 
         public MainForm(HOME instance)
         {
             InitializeComponent();
-            ConnectInstance = instance;
+            PluginInstance = instance;
 
             BtnReset.Visible = false;
 
@@ -100,24 +100,18 @@ namespace HOME
                 var i = 0;
                 foreach (String file in OpenFileDialog.FileNames)
                 {
-                    var data = File.ReadAllBytes(file);
-                    if (ConnectInstance.DataVersion(data) != 1)
-                    {
-                        MessageBox.Show($"{file} is incompatible data.");
-                        return;
-                    }
+                    PluginInstance.ProcessLocal(this, bgWorker, file, SaveFileDialog.SelectedPath.ToString());
                     i++;
-                    WriteLog($"Loading [{i}] file(s).");
-                    File.WriteAllBytes($"{SaveFileDialog.SelectedPath}/{Path.GetFileNameWithoutExtension(file)}.ph1", ConnectInstance.DecryptEH1(data)!.Data);
+                    TxtBoxLog.Text = $"Loading [{i}] file(s).";
                     bgWorker.ReportProgress(6000 / OpenFileDialog.FileNames.Length * i);
                 }
-                WriteLog($"Process completed. [{i}] file(s) elaborated.");
+                TxtBoxLog.Text = $"Process completed. [{i}] file(s) elaborated.";
             }
         }
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            ConnectInstance.StartProcess(this, sender as BackgroundWorker);
+            PluginInstance.ProcessRemote(this, sender as BackgroundWorker);
         }
 
         private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using System.Collections.Generic;
+using static System.Buffers.Binary.BinaryPrimitives;
 using PKHeX.Core.Injection;
 using PKHeX.Core;
-using static System.Buffers.Binary.BinaryPrimitives;
 
 namespace HOME
 {
@@ -40,7 +41,7 @@ namespace HOME
             ctrl.Click += (s, e) => new MainForm(this).Show();
         }
 
-        public void StartProcess(MainForm frm, System.ComponentModel.BackgroundWorker? bgWorker)
+        public void ProcessRemote(MainForm frm, System.ComponentModel.BackgroundWorker? bgWorker)
         {
             //TBD If PKHeX will be natively compatible with PKH, let the data be converted to the current save format and reload SAV boxes
             LiveHeXController? controller = new LiveHeXController(SaveFileEditor, PKMEditor, frm.GetConnectionType());
@@ -111,12 +112,18 @@ namespace HOME
 
                         i++;
 
-                        if (target == DumpTarget.TargetAll)
-                            bgWorker.ReportProgress(i);
-                        else if (target == DumpTarget.TargetBox)
-                            bgWorker.ReportProgress(i * controller.Bot.GetBoxCount());
-                        else
-                            bgWorker.ReportProgress(controller.Bot.GetSlotCount()*controller.Bot.GetBoxCount());
+                        switch(target)
+                        {
+                            case DumpTarget.TargetAll:
+                                bgWorker.ReportProgress(i);
+                                break;
+                            case DumpTarget.TargetBox:
+                                bgWorker.ReportProgress(i * controller.Bot.GetBoxCount());
+                                break;
+                            case DumpTarget.TargetSlot:
+                                bgWorker.ReportProgress(controller.Bot.GetSlotCount() * controller.Bot.GetBoxCount());
+                                break;
+                        };
 
                         frm.WriteLog($"Dumping [{(encrypted && decrypted ? found*2 : found)}] file(s).");
                     } while ((target == DumpTarget.TargetAll && i < 6000) || (target == DumpTarget.TargetBox && i < 30));
@@ -132,17 +139,28 @@ namespace HOME
             }
         }
 
+        public void ProcessLocal(MainForm frm, System.ComponentModel.BackgroundWorker? bgWorker, string file, string path)
+        {
+            var data = File.ReadAllBytes(file);
+            if (DataVersion(data) != 1)
+            {
+                frm.WriteLog($"{file} is incompatible data.");
+                return;
+            }
+            SavePKH(DecryptEH1(data)!.Data, $"{path}/{Path.GetFileNameWithoutExtension(file)}.ph1");
+        }
+
         private string FileName(PKM? pkm, bool decrypted)
         {
             var name = "";
             if (pkm != null && pkm.Species != 0)
-                name = $"{name}{pkm.Species}{(pkm.Form > 0 ? $"-{pkm.Form:00}" : "")} - {pkm.Nickname.Replace(':', '\0')} {pkm.EncryptionConstant:X8}{pkm.PID:X8}.{(decrypted ? "ph1" : "eh1")}";
+                name = $"{name}{pkm.Species}{(pkm.Form > 0 ? $"-{pkm.Form:00}" : "")} - {pkm.Nickname.Replace(":", String.Empty)} {pkm.EncryptionConstant:X8}{pkm.PID:X8}.{(decrypted ? "ph1" : "eh1")}";
             return name;
         }
 
-        public ushort DataVersion(byte[] ekh) => ReadUInt16LittleEndian(ekh.AsSpan(0x00));
+        private ushort DataVersion(byte[] ekh) => ReadUInt16LittleEndian(ekh.AsSpan(0x00));
 
-        public PKM? DecryptEH1(byte[]? ek1)
+        private PKM? DecryptEH1(byte[]? ek1)
         {
             if (ek1 != null)
                 return EntityFormat.GetFromHomeBytes(ek1);
@@ -150,7 +168,7 @@ namespace HOME
                 return null;
         }
         
-        public static void SavePKH(byte[]? data, string path)
+        private static void SavePKH(byte[]? data, string path)
         {
             if (data != null)
                 File.WriteAllBytes(path, data);
