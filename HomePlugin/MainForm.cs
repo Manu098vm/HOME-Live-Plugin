@@ -81,6 +81,7 @@ namespace HOME
             GrpDump.Enabled = false;
             GrpPath.Enabled = false;
             BtnConnect.Enabled = false;
+            toolsToolStripMenuItem.Enabled = false;
 
             BackgroundWorker.RunWorkerAsync();
         }
@@ -130,6 +131,7 @@ namespace HOME
                 GrpDump.Enabled = true;
                 GrpPath.Enabled = true;
                 BtnConnect.Enabled = true;
+                toolsToolStripMenuItem.Enabled = true;
             }
         }
 

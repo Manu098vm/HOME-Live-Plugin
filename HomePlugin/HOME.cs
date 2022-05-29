@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using static System.Buffers.Binary.BinaryPrimitives;
 using PKHeX.Core.Injection;
 using PKHeX.Core;
@@ -109,15 +109,16 @@ namespace HOME
                                 SavePKH(ekh, path);
                             }
                         }
-                        offset += controller.Bot.GetSlotSize();
 
                         switch(target)
                         {
                             case DumpTarget.TargetAll:
                                 bgWorker.ReportProgress(i);
+                                offset += controller.Bot.GetSlotSize();
                                 break;
                             case DumpTarget.TargetBox:
                                 bgWorker.ReportProgress(i * controller.Bot.GetBoxCount());
+                                offset += controller.Bot.GetSlotSize();
                                 break;
                             case DumpTarget.TargetSlot:
                                 bgWorker.ReportProgress(controller.Bot.GetSlotCount() * controller.Bot.GetBoxCount());
@@ -153,13 +154,13 @@ namespace HOME
         {
             var name = $"{path}/";
             if (target == DumpTarget.TargetAll)
-                name += $"Box {(int)(i / 30) + 1}/";
+                name += $"Box {(i / 30) + 1}/";
             if (pkm != null && pkm.Species != 0)
             {
                 name += $"{pkm.Species}";
                 if (pkm.Form > 0)
                     name += $"-{pkm.Form:00}";
-                name += $" - {pkm.Nickname.Replace(":", String.Empty)}";
+                name += $" - {Regex.Replace(pkm.Nickname, @"[^0-9a-zA-Z\._ ]", "")}";
                 name += $" {pkm.EncryptionConstant:X8}{pkm.PID:X8}";
                 if(encrypted)
                     name += $".eh1";
@@ -171,12 +172,14 @@ namespace HOME
 
         private ushort DataVersion(byte[] ekh) => ReadUInt16LittleEndian(ekh.AsSpan(0x00));
 
-        private PKM? DecryptEH1(byte[]? ek1)
+        private PKH? DecryptEH1(byte[]? ek1)
         {
             if (ek1 != null)
-                return EntityFormat.GetFromHomeBytes(ek1);
-            else
-                return null;
+            {
+                if (HomeCrypto.GetIsEncrypted1(ek1))
+                    return new PKH(ek1);
+            }
+            return null;
         }
         
         private static void SavePKH(byte[]? data, string path)
