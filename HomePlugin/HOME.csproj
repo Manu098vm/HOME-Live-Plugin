@@ -6,7 +6,7 @@
     <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
-    <BaseOutputPath>D:\Projects\PKHeX\PKHeX.WinForms\bin\Release\net46\plugins</BaseOutputPath>
+    <BaseOutputPath>bin\</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,9 +29,5 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="D:\Projects\PKHeX\PKHeX.WinForms\bin\Release\net46\PKHeX.exe" />
-  </Target>
 
 </Project>
