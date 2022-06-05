@@ -5,5 +5,17 @@
     <Setting Name="IP" Type="System.String" Scope="User">
       <Value Profile="(Default)">0.0.0.0</Value>
     </Setting>
+    <Setting Name="Port" Type="System.UInt32" Scope="User">
+      <Value Profile="(Default)">6000</Value>
+    </Setting>
+    <Setting Name="WiFi" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="USB" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Path" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

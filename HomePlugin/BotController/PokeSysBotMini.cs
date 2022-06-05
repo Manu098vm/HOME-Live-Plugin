@@ -1,23 +1,52 @@
-﻿namespace PKHeX.Core.Injection
+﻿using System;
+using HOME;
+using static System.Buffers.Binary.BinaryPrimitives;
+
+namespace HOME
 {
     public class PokeSysBotMini
     {
-        public readonly int BoxStart;
-        public const int SlotSize = 344;
+        public const uint BoxStart = 0x36C000;
+        public const uint SlotSize = 0x248;
         public const int SlotCount = 30;
-        public readonly int page;
-        public readonly SysBotMini sys;
+        public const int BoxCount = 200;
+        public readonly ICommunicator sys;
 
-        public PokeSysBotMini(int lv)
+        public PokeSysBotMini(ConnectionType con)
         {
-            page = lv;
-            sys = new SysBotMini();
-            BoxStart = 0x1EC73028 + (30 * 32 * 344 * lv);
+            sys = con switch {
+                ConnectionType.WiFi => new SysBotMini(),
+                ConnectionType.USB => new UsbBotMini(),
+                _ => new SysBotMini(),
+            };
         }
 
-        private uint GetBoxOffset(int box) => (uint)BoxStart + (uint)(SlotSize * SlotCount * box);
-        private uint GetSlotOffset(int box, int slot) => GetBoxOffset(box) + (uint)(SlotSize * slot);
-        public byte[] ReadBox(int box, int len) =>  sys.ReadBytes(GetBoxOffset(box), len);
-        public byte[] ReadSlot(int box, int slot) => sys.ReadBytes(GetSlotOffset(box, slot), SlotSize);
+        public uint GetB1S1Offset() => BoxStart;
+        public uint GetSlotSize() => SlotSize;
+        public int GetSlotCount() => SlotCount;
+        public int GetBoxCount() => BoxCount;
+        public uint GetBoxOffset(int box) => BoxStart + (uint)(SlotSize * SlotCount * box);
+        public uint GetSlotOffset(int box, int slot) => GetBoxOffset(box) + (uint)(SlotSize * slot);
+
+        public byte[]? ReadBox(int box, int boxSize = (int)SlotSize)
+        {
+            var offset = GetB1S1Offset() + box * boxSize;
+            return sys.ReadBytes((ulong)offset, boxSize);
+        }
+        public byte[]? ReadSlot(int box, int slot)
+        {
+            var offset = GetSlotOffset(box, slot);
+            return ReadBytesPKH(offset);
+        }
+        public byte[]? ReadBytesPKH(uint offset)
+        {
+            var data = sys.ReadBytes(offset, 0x10);
+
+            if (ReadUInt64LittleEndian(data.AsSpan(0x02)) == 0)
+                return null;
+
+            var EncodedDataSize = ReadUInt16LittleEndian(data.AsSpan(0x0E));
+            return sys.ReadBytes(offset, 0x10 + EncodedDataSize);
+        }
     }
 }

@@ -1,6 +1,8 @@
-﻿using System;
+﻿//Taken from Live Hex
 
-namespace PKHeX.Core.Injection
+using System;
+
+namespace HOME
 {
     public static class Decoder
     {
@@ -17,15 +19,6 @@ namespace PKHeX.Core.Injection
                 dest[i] = DecodeTuple(_0, _1);
             }
             return dest;
-        }
-
-        public static byte[] StringToByteArray(string hex)
-        {
-            int NumberChars = hex.Length;
-            byte[] bytes = new byte[NumberChars / 2];
-            for (int i = 0; i < NumberChars; i += 2)
-                bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
-            return bytes;
         }
 
         private static byte DecodeTuple(char _0, char _1)
