@@ -2,8 +2,6 @@
 
 This Plugin is meant to allow people to dump and view infos from those Pokémons that are stuck in HOME beyond the first Box, or that for some reason the owner does not want to transfer away (eg. Unique GO/HOME Symbol sticker or SWSH unavailable mons). This Plugin is not intended to allow users to edit Pokémon Infos directly from HOME and it will never allow to.
 
-The stay_at_home branch currently needs the SciresM PKHeX fork named "no_way_home": https://github.com/SciresM/PKHeX/tree/no_way_home 
-
 # Prerequisites
 
 - Hacked Switch with [Atmosphère](https://github.com/Atmosphere-NX/Atmosphere) installed.
