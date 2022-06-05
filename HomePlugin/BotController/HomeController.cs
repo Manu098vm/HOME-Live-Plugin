@@ -1,6 +1,7 @@
 ﻿using System;
 using static System.Buffers.Binary.BinaryPrimitives;
 using HOME;
+using System.Windows.Forms;
 
 namespace PKHeX.Core.Injection
 {
@@ -29,7 +30,7 @@ namespace PKHeX.Core.Injection
             Bot = new PokeSysBotMini(con);
         }
 
-        public void ReadBox(int selectedIndex, int currBox, bool forceConversion)
+        public void LiveBox(int selectedIndex, int currBox, bool forceConversion)
         {
             var sav = SAV.SAV;
 
@@ -61,20 +62,20 @@ namespace PKHeX.Core.Injection
             {
                 for (int i = 0; i < remoteBoxSize/HomeSlotSize; i++)
                 {
-                    var data = ExtractFromBoxData(i, ref boxData); //ERRORE QUI ALL'INIZIO DEL SECONDO CICLO
+                    var data = ExtractFromBoxData(i, ref boxData);
                     if (data != null)
                     {
                         var pkh = new PKH(data);
                         PKM? pkm = null;
                         if(pkh != null && pkh.Species != 0)
                         {
-                            if (sav is SAV7b && (pkh.DataPB7 != null)) //PX8 -> PB7 is not possible
+                            if (sav is SAV7b && CheckLGPEAvailability(pkh) && (pkh.DataPB7 != null)) //PX8 -> PB7 is not possible
                                 pkm = pkh.ConvertToPB7();
-                            else if (sav is SAV8SWSH && (pkh.DataPK8 != null || forceConversion))
+                            else if (sav is SAV8SWSH && CheckSwShAvailability(pkh) && (pkh.DataPK8 != null || forceConversion))
                                 pkm = pkh.ConvertToPK8();
-                            else if (sav is SAV8BS && (pkh.DataPB8 != null || forceConversion))
+                            else if (sav is SAV8BS && CheckBDSPAvailability(pkh) && (pkh.DataPB8 != null || forceConversion))
                                 pkm = pkh.ConvertToPB8();
-                            else if (sav is SAV8LA && (pkh.DataPA8 != null || forceConversion))
+                            else if (sav is SAV8LA && CheckPLAAvailability(pkh) && (pkh.DataPA8 != null || forceConversion))
                                 pkm = pkh.ConvertToPA8();
 
                             if(pkm != null)
@@ -83,8 +84,13 @@ namespace PKHeX.Core.Injection
                     }
                 }
             }
-            SAV.ReloadSlots();
         }
+
+        private bool CheckPLAAvailability(PKM pk) => PersonalTable.LA.IsPresentInGame(pk.Species, pk.Form);
+        private bool CheckBDSPAvailability(PKM pk) => PersonalTable.BDSP.IsPresentInGame(pk.Species, pk.Form);
+        private bool CheckSwShAvailability(PKM pk) => PersonalTable.SWSH.IsPresentInGame(pk.Species, pk.Form);
+        private bool CheckLGPEAvailability(PKM pk) => PersonalTable.LG.IsPresentInGame(pk.Species, pk.Form);
+
 
         private byte[]? ExtractFromBoxData(int index, ref byte[] boxData)
         {

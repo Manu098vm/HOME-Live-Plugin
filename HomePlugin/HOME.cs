@@ -185,7 +185,7 @@ namespace HOME
                     var qty = CalcBoxQtyInSelection(selection);
                     for (int i = 0; i < qty; i++)
                     {
-                        controller.ReadBox(selection, i, frm.GetForceConversion());
+                        controller.LiveBox(selection, i, frm.GetForceConversion());
                         bgWorker.ReportProgress(100 / savBoxes * i);
                     }
                     frm.WriteLog("Conversion completed.");
@@ -342,7 +342,7 @@ namespace HOME
         {
             var name = $"{path}\\";
             if (target == DumpTarget.TargetAll && boxFolderReq)
-                name += $"Box {(i / 30) + 1}\\";
+                name += $"Box {((i / 30) + 1):000}\\";
             if (pkm != null && pkm.Species != 0)
             {
                 name += $"{pkm.Species:000}";
@@ -395,7 +395,7 @@ namespace HOME
                     if (HomeCrypto.GetIsEncrypted1(ek1.AsSpan()))
                         return new PKH(ek1);
                 }
-                catch
+                catch (Exception)
                 {
                     if (HomeCrypto.GetIsEncrypted1(ek1))
                         return new PKH(ek1);

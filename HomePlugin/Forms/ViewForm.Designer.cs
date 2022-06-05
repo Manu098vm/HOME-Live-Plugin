@@ -42,8 +42,8 @@
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.BackGroundWorker = new System.ComponentModel.BackgroundWorker();
             this.GrpForceConv = new System.Windows.Forms.GroupBox();
-            this.RadioConvertSpecific = new System.Windows.Forms.RadioButton();
             this.RadioConvertForce = new System.Windows.Forms.RadioButton();
+            this.RadioConvertSpecific = new System.Windows.Forms.RadioButton();
             this.GrpWarning = new System.Windows.Forms.GroupBox();
             this.ChkWarning = new System.Windows.Forms.CheckBox();
             this.GrpConnection.SuspendLayout();
@@ -190,17 +190,6 @@
             this.GrpForceConv.TabStop = false;
             this.GrpForceConv.Text = "Conversion Method";
             // 
-            // RadioConvertSpecific
-            // 
-            this.RadioConvertSpecific.AutoSize = true;
-            this.RadioConvertSpecific.Location = new System.Drawing.Point(7, 21);
-            this.RadioConvertSpecific.Name = "RadioConvertSpecific";
-            this.RadioConvertSpecific.Size = new System.Drawing.Size(314, 20);
-            this.RadioConvertSpecific.TabIndex = 0;
-            this.RadioConvertSpecific.TabStop = true;
-            this.RadioConvertSpecific.Text = "Convert only if game specific data already exists";
-            this.RadioConvertSpecific.UseVisualStyleBackColor = true;
-            // 
             // RadioConvertForce
             // 
             this.RadioConvertForce.AutoSize = true;
@@ -211,6 +200,17 @@
             this.RadioConvertForce.TabStop = true;
             this.RadioConvertForce.Text = "Convert any PKM data if compatible with save file";
             this.RadioConvertForce.UseVisualStyleBackColor = true;
+            // 
+            // RadioConvertSpecific
+            // 
+            this.RadioConvertSpecific.AutoSize = true;
+            this.RadioConvertSpecific.Location = new System.Drawing.Point(7, 21);
+            this.RadioConvertSpecific.Name = "RadioConvertSpecific";
+            this.RadioConvertSpecific.Size = new System.Drawing.Size(314, 20);
+            this.RadioConvertSpecific.TabIndex = 0;
+            this.RadioConvertSpecific.TabStop = true;
+            this.RadioConvertSpecific.Text = "Convert only if game specific data already exists";
+            this.RadioConvertSpecific.UseVisualStyleBackColor = true;
             // 
             // GrpWarning
             // 
@@ -249,6 +249,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ViewForm";
+            this.ShowIcon = false;
             this.Text = "Home Plugin";
             this.GrpConnection.ResumeLayout(false);
             this.GrpConnection.PerformLayout();
