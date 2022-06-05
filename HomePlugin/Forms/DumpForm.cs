@@ -5,17 +5,15 @@ using System.ComponentModel;
 
 namespace HOME
 {
-    public partial class MainForm : Form
+    public partial class DumpForm : Form
     {
 
         HOME PluginInstance = null!;
 
-        public MainForm(HOME instance)
+        public DumpForm(HOME instance)
         {
             InitializeComponent();
             PluginInstance = instance;
-
-            BtnReset.Visible = false;
 
             for (int i = 1; i <= 200; i++)
                 ComboBox.Items.Add($"Box {i}");
@@ -47,7 +45,7 @@ namespace HOME
                 TxtBoxLog.Text = "Insert a proper IP Address.";
                 return;
             }
-            else if (string.IsNullOrWhiteSpace(TxtBoxPort.Text) || CheckPortTxt(TxtBoxPort.Text))
+            else if (string.IsNullOrWhiteSpace(TxtBoxPort.Text) || CheckPortTxt())
             {
                 TxtBoxLog.Text = "Insert a proper Port.";
                 return;
@@ -127,7 +125,6 @@ namespace HOME
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
             if (e.Cancelled == false)
             {
                 GrpConnection.Enabled = true;
@@ -158,18 +155,23 @@ namespace HOME
         {
             ComboBox.Enabled = true;
             ComboSlot.Enabled = false;
+            ChkBoxFolders.Checked = false;
+            ChkBoxFolders.Enabled = false;
         }
 
         private void RadioSlot_CheckedChanged(object sender, EventArgs e)
         {
             ComboBox.Enabled = true;
             ComboSlot.Enabled = true;
+            ChkBoxFolders.Checked = false;
+            ChkBoxFolders.Enabled = false;
         }
 
         private void RadioTargetAll_CheckedChanged(object sender, EventArgs e)
         {
             ComboBox.Enabled = false;
             ComboSlot.Enabled = false;
+            ChkBoxFolders.Enabled = true;
         }
 
         private void BtnBrowse_Click(object sender, EventArgs e)
@@ -180,26 +182,7 @@ namespace HOME
             }
         }
 
-        private void BtnReset_Click(object sender, EventArgs e)
-        {
-            RadioWiFi.Checked = false;
-            RadioUSB.Checked = false;
-            RadioBox.Checked = false;
-            RadioSlot.Checked = false;
-            RadioTargetAll.Checked = false;
-            RadioEncrypted.Checked = false;
-            RadioDecrypted.Checked = false;
-            RadioEncAndDec.Checked = false;
-            TxtBoxIP.Enabled = true;
-            ComboBox.SelectedIndex = 0;
-            ComboSlot.SelectedIndex = 0;
-            TxtBoxIP.Text = "";
-            TxtBoxPort.Text = "";
-            TxtBoxPath.Text = "";
-            TxtBoxLog.Text = "Reset done.";
-        }
-
-        private bool CheckPortTxt(string str)
+        private bool CheckPortTxt()
         {
             try
             {
@@ -216,6 +199,7 @@ namespace HOME
         public int GetTargetBox() => ComboBox.SelectedIndex;
         public int GetTargetSlot() => ComboSlot.SelectedIndex;
         public string GetPath() => TxtBoxPath.Text;
+        public bool GetBoxFolderRequested() => ChkBoxFolders.Checked;
         public ConnectionType GetConnectionType()
         {
             if (RadioUSB.Checked)
@@ -243,5 +227,6 @@ namespace HOME
         }
         public void WriteLog(string str) => TxtBoxLog.Text = str;
         public void AppendLog(string str) => TxtBoxLog.AppendText(str);
+
     }
 }

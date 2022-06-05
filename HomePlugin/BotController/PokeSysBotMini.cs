@@ -27,7 +27,12 @@ namespace PKHeX.Core.Injection
         public int GetBoxCount() => BoxCount;
         public uint GetBoxOffset(int box) => BoxStart + (uint)(SlotSize * SlotCount * box);
         public uint GetSlotOffset(int box, int slot) => GetBoxOffset(box) + (uint)(SlotSize * slot);
-        public byte[] ReadBox(int box, int len=(int)SlotSize*SlotCount) => sys.ReadBytes(GetBoxOffset(box), len);
+
+        public byte[]? ReadBox(int box, int boxSize = (int)SlotSize)
+        {
+            var offset = GetB1S1Offset() + box * boxSize;
+            return sys.ReadBytes((ulong)offset, boxSize);
+        }
         public byte[]? ReadSlot(int box, int slot) 
         {
             var offset = GetSlotOffset(box, slot);
@@ -37,6 +42,7 @@ namespace PKHeX.Core.Injection
         {
             var data = sys.ReadBytes(offset, 0x10);
 
+            //TBD check if proper enc data
             if (ReadUInt64LittleEndian(data.AsSpan(0x02)) == 0)
                 return null;
 

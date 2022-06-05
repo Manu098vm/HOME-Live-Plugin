@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using System.Text.RegularExpressions;
-using static System.Buffers.Binary.BinaryPrimitives;
 using PKHeX.Core.Injection;
 using PKHeX.Core;
+using System.Text;
+using static System.Buffers.Binary.BinaryPrimitives;
 
 namespace HOME
 {
@@ -36,15 +36,17 @@ namespace HOME
 
         private void AddPluginControl(ToolStripDropDownItem tools)
         {
-            var ctrl = new ToolStripMenuItem(Name);
-            tools.DropDownItems.Add(ctrl);
-            ctrl.Click += (s, e) => new MainForm(this).Show();
+            var dumper = new ToolStripMenuItem("Home Live Dumper");
+            var viewer = new ToolStripMenuItem("Home Live Viewer");
+            tools.DropDownItems.Add(dumper);
+            tools.DropDownItems.Add(viewer);
+            dumper.Click += (s, e) => new DumpForm(this).Show();
+            viewer.Click += (s, e) => new ViewForm(this).Show();
         }
 
-        public void ProcessRemote(MainForm frm, System.ComponentModel.BackgroundWorker? bgWorker)
+        public void ProcessRemote(DumpForm frm, System.ComponentModel.BackgroundWorker? bgWorker)
         {
-            //TBD If PKHeX will be natively compatible with PKH, let the data be converted to the current save format and reload SAV boxes
-            LiveHeXController? controller = new LiveHeXController(SaveFileEditor, PKMEditor, frm.GetConnectionType());
+            HomeController? controller = new HomeController(SaveFileEditor, PKMEditor, frm.GetConnectionType());
             if (controller != null && bgWorker != null)
             {
                 try
@@ -91,26 +93,26 @@ namespace HOME
                         if (version > 1)
                             frm.WriteLog($"This plugin currently can handle only DataVersion [1]. PKH DataVersion is [{version}]");
 
-
                         var pkh = DecryptEH1(ekh);
-                        i++;
 
                         if (pkh != null && pkh.Species != 0 && version == 1)
                         {
                             found++;
                             if (decrypted)
                             {
-                                string path = SetFileName(pkh, frm.GetPath(), target, false, i);
+                                string path = SetFileName(pkh, frm.GetPath(), target, frm.GetBoxFolderRequested(), false, i);
                                 SavePKH(pkh?.Data, path);
                             }
                             if (encrypted)
                             {
-                                string path = SetFileName(pkh, frm.GetPath(), target, true, i);
+                                string path = SetFileName(pkh, frm.GetPath(), target, frm.GetBoxFolderRequested(), true, i);
                                 SavePKH(ekh, path);
                             }
                         }
+                        i++;
 
-                        switch(target)
+
+                        switch (target)
                         {
                             case DumpTarget.TargetAll:
                                 bgWorker.ReportProgress(i);
@@ -139,7 +141,7 @@ namespace HOME
             }
         }
 
-        public void ProcessLocal(MainForm frm, DumpFormat originFormat, string file, string path)
+        public void ProcessLocal(DumpForm frm, DumpFormat originFormat, string file, string path)
         {
             var data = File.ReadAllBytes(file);
 
@@ -152,34 +154,208 @@ namespace HOME
             switch (originFormat)
             {
                 case DumpFormat.Encrypted:
+                    MessageBox.Show("To Decrypt");
                     data = DecryptEH1(data)!.Data;
                     break;
                 case DumpFormat.Decrypted:
+                    MessageBox.Show("To Encrypt");
                     data = HomeCrypto.Encrypt(data);
                     break;
             }
 
-            SavePKH(data, $"{path}/{Path.GetFileNameWithoutExtension(file)}.{(originFormat == DumpFormat.Encrypted ? "ph1" : "eh1")}");
+            SavePKH(data, $"{path}\\{Path.GetFileNameWithoutExtension(file)}.{(originFormat == DumpFormat.Encrypted ? "ph1" : "eh1")}");
         }
 
-        private string SetFileName(PKM? pkm, string path, DumpTarget target, bool encrypted, int i = 0)
+        public void StartViewer(ViewForm frm, System.ComponentModel.BackgroundWorker? bgWorker)
         {
-            var name = $"{path}/";
-            if (target == DumpTarget.TargetAll)
-                name += $"Box {(i / 30) + 1}/";
+            HomeController? controller = new HomeController(SaveFileEditor, PKMEditor, frm.GetConnectionType());
+            if (controller != null && bgWorker != null)
+            {
+                try
+                {
+                    GetSavAvalableBoxAndSlots(out int savSlots, out int savBoxes);
+                    controller.Bot = new PokeSysBotMini(frm.GetConnectionType())
+                    {
+                        sys = { IP = frm.GetIP(), Port = frm.GetPort() }
+                    };
+                    controller.Bot.sys.Connect();
+                    frm.WriteLog("Connecting...");
+
+                    var selection = frm.GetBoxIndex();
+                    var qty = CalcBoxQtyInSelection(selection);
+                    for (int i = 0; i < qty; i++)
+                    {
+                        controller.ReadBox(selection, i, frm.GetForceConversion());
+                        bgWorker.ReportProgress(100 / savBoxes * i);
+                    }
+                    frm.WriteLog("Conversion completed.");
+                    bgWorker.ReportProgress(100);
+                    SaveFileEditor.ReloadSlots();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                    frm.WriteLog("Something went wrong :-( \nCheck your sys-botbase installation and input the correct IP address.");
+                }
+            }
+        }
+
+        private int CalcBoxQtyInSelection(int boxIndex)
+        {
+            GetSavAvalableBoxAndSlots(out int savSlots, out int savBoxes);
+            var pastSlots = boxIndex * savSlots * savBoxes;
+            var totalSlots = HomeController.HomeSlots * HomeController.HomeBoxes;
+            var toReadSlots = totalSlots - pastSlots;
+            var necessarySavBoxes = toReadSlots / savSlots;
+            return necessarySavBoxes > savBoxes ? savBoxes : necessarySavBoxes;
+        }
+
+        private void GetSavAvalableBoxAndSlots(out int savSlots, out int savBoxes)
+        {
+            if (SaveFileEditor.SAV is SAV7b)
+            {
+                savSlots = HomeController.LGPESlots;
+                savBoxes = HomeController.LGPEBoxes;
+            }
+            else if (SaveFileEditor.SAV is SAV8SWSH)
+            {
+                savSlots = HomeController.SwShSlots;
+                savBoxes = HomeController.SwShBoxes;
+            }
+            else if (SaveFileEditor.SAV is SAV8BS)
+            {
+                savSlots = HomeController.BSSlots;
+                savBoxes = HomeController.BSSBoxes;
+            }
+            else if (SaveFileEditor.SAV is SAV8LA)
+            {
+                savSlots = HomeController.LASlots;
+                savBoxes = HomeController.LABoxes;
+            }
+            else
+                throw new ArgumentException($"Unrecognized save file type {SaveFileEditor.SAV.GetType()}");
+        }
+
+        public string[] CalculateBoxes()
+        {
+            GetSavAvalableBoxAndSlots(out int savSlots, out int savBoxes);
+
+            var totalRemoteSlots = HomeController.HomeSlots * HomeController.HomeBoxes;
+            var totalLocalSlots = savSlots * savBoxes;
+            var necesaryIndexes = (int)Math.Ceiling((float)totalRemoteSlots / (float)totalLocalSlots);
+            var res = new String[necesaryIndexes];
+
+            if (savSlots == HomeController.HomeSlots)
+            {
+                var needRemainder = totalRemoteSlots % totalLocalSlots != 0;
+                var remainderBoxes = needRemainder ? HomeController.HomeBoxes - (savBoxes * (necesaryIndexes - 1)) : 0;
+
+                for (int i = 0; i < necesaryIndexes; i++)
+                    if (i == necesaryIndexes - 1 && needRemainder)
+                        res[i] = $"Box {i * savBoxes + 1} - Box {(i * savBoxes) + remainderBoxes}";
+                    else
+                        res[i] = $"Box {i * savBoxes + 1} - Box {(i + 1) * savBoxes}";
+            }
+            else
+            {
+                var remoteBoxPerIndex = (HomeController.HomeBoxes / necesaryIndexes);
+                var remainderSlots = totalLocalSlots - remoteBoxPerIndex * HomeController.HomeSlots;
+
+                var lastBox = 0;
+                var lastRemainder = 0;
+                for (int boxIndex = 0; boxIndex < necesaryIndexes; boxIndex++)
+                {
+                    var str = GetBoxStrings(remainderSlots, boxIndex, remoteBoxPerIndex, ref lastBox, ref lastRemainder);
+                    res[boxIndex] = $"Box {str[0]} - Box {str[1]}";
+                }
+            }
+
+            return res;
+        }
+
+        //Make a different function and do not abbreviate if-else conditions for better logic flow/understanding
+        private string[] GetBoxStrings(int remainder, int index, int boxPerIndex, ref int lastBox, ref int lastRemainder)
+        {
+            int startingBox;
+            int endingBox;
+
+            int startingRemainder;
+            int endingRemainder;
+
+            string res1, res2;
+
+            if (remainder == 0)
+            {
+                startingBox = lastBox;
+                endingBox = startingBox + boxPerIndex;
+                lastBox = endingBox;
+
+                startingRemainder = 0;
+                endingRemainder = startingRemainder + remainder;
+                lastRemainder = endingRemainder;
+            }
+            else
+            {
+                if (index == 0)
+                {
+                    startingBox = lastBox;
+                    endingBox = startingBox + boxPerIndex;
+                    lastBox = endingBox;
+
+                    startingRemainder = 0;
+                    endingRemainder = startingRemainder + remainder;
+                    lastRemainder = endingRemainder;
+                }
+                else
+                {
+                    startingBox = lastBox;
+                    endingBox = startingBox + boxPerIndex;
+
+                    startingRemainder = lastRemainder;
+                    endingRemainder = startingRemainder + remainder;
+
+                    if (endingRemainder >= HomeController.HomeSlots)
+                    {
+                        endingRemainder -= HomeController.HomeSlots;
+                        endingBox += 1;
+                    }
+
+                    lastBox = endingBox;
+                    lastRemainder = endingRemainder;
+                }
+            }
+
+            if (startingRemainder == 0)
+                res1 = $"{startingBox + 1}";
+            else
+                res1 = $"{startingBox} Slot {startingRemainder + 1}";
+
+            if (endingRemainder == 0)
+                res2 = $"{endingBox}";
+            else
+                res2 = $"{endingBox} Slot {endingRemainder}";
+
+            return new string[] { res1, res2 };
+        }
+
+        private string SetFileName(PKM? pkm, string path, DumpTarget target, bool boxFolderReq, bool encrypted, int i = 0)
+        {
+            var name = $"{path}\\";
+            if (target == DumpTarget.TargetAll && boxFolderReq)
+                name += $"Box {(i / 30) + 1}\\";
             if (pkm != null && pkm.Species != 0)
             {
-                name += $"{pkm.Species}";
+                name += $"{pkm.Species:000}";
                 if (pkm.Form > 0)
                     name += $"-{pkm.Form:00}";
-                if (pkm.ShinyXor < 16)
+                if (pkm.IsShiny)
                 {
-                    if (pkm.ShinyXor == 0)
+                    if (pkm.ShinyXor == 0 || pkm.FatefulEncounter)
                         name += " ■";
                     else
                         name += " ★";
                 }
-                name += $" - {Regex.Replace(pkm.Nickname, @"[^0-9a-zA-Z\._ ]", "")}";
+                name += $" - {NameFilter(pkm.Nickname)}";
                 name += $" {pkm.EncryptionConstant:X8}{pkm.PID:X8}";
                 if(encrypted)
                     name += $".eh1";
@@ -189,16 +365,13 @@ namespace HOME
             return name;
         }
 
-        private ushort DataVersion(byte[] ekh) => ReadUInt16LittleEndian(ekh.AsSpan(0x00));
-
-        private PKH? DecryptEH1(byte[]? ek1)
+        private string NameFilter(string str)
         {
-            if (ek1 != null)
-            {
-                if (HomeCrypto.GetIsEncrypted1(ek1))
-                    return new PKH(ek1);
-            }
-            return null;
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in str)
+                if (c != '\\' && c != '/' && c != ':' && c != '*' && c != '?' && c != '"' && c != '<' && c != '>' && c != '|')
+                    sb.Append(c);
+            return sb.ToString();
         }
         
         private static void SavePKH(byte[]? data, string path)
@@ -211,6 +384,29 @@ namespace HOME
             else
                 throw new ArgumentException("Data is null.");
         }
+
+        private PKH? DecryptEH1(byte[]? ek1)
+        {
+            if (ek1 != null)
+            {
+                //Different PKHeX versions have different methods
+                try
+                {
+                    if (HomeCrypto.GetIsEncrypted1(ek1.AsSpan()))
+                        return new PKH(ek1);
+                }
+                catch
+                {
+                    if (HomeCrypto.GetIsEncrypted1(ek1))
+                        return new PKH(ek1);
+                }
+            }
+            return null;
+        }
+
+        private ushort DataVersion(byte[] ekh) => ReadUInt16LittleEndian(ekh.AsSpan(0x00));
+
+        public bool GetNonForceableConvSaveFile() => SaveFileEditor.SAV is SAV7b;
 
         public void NotifySaveLoaded()
         {

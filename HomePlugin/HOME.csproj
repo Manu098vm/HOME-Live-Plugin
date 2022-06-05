@@ -6,13 +6,13 @@
     <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
-    <BaseOutputPath>bin\</BaseOutputPath>
+    <BaseOutputPath>D:\Projects\PKHeX\PKHeX.WinForms\bin\Release\net46\plugins</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
     <PackageReference Include="LibUsbDotNet" Version="2.2.29" />
-    <PackageReference Include="PKHeX.Core" Version="22.5.8" />
+    <PackageReference Include="PKHeX.Core" Version="22.6.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,5 +29,9 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="D:\Projects\PKHeX\PKHeX.WinForms\bin\Release\net46\PKHeX.exe" />
+  </Target>
 
 </Project>
