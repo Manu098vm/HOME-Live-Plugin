@@ -80,6 +80,7 @@ namespace HOME
             GrpPath.Enabled = false;
             BtnConnect.Enabled = false;
             toolsToolStripMenuItem.Enabled = false;
+            ChkBoxFolders.Enabled = false;
 
             BackgroundWorker.RunWorkerAsync();
         }
@@ -133,6 +134,7 @@ namespace HOME
                 GrpPath.Enabled = true;
                 BtnConnect.Enabled = true;
                 toolsToolStripMenuItem.Enabled = true;
+                ChkBoxFolders.Enabled = true;
             }
         }
 

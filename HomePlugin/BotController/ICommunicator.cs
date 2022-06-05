@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace HOME
+﻿namespace HOME
 {
     public interface ICommunicator
     {

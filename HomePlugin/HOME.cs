@@ -128,16 +128,16 @@ namespace HOME
                                 break;
                         };
 
-                        frm.WriteLog($"Dumping [{(encrypted && decrypted ? found*2 : found)}] file(s).");
+                        frm.WriteLog($"Dumping [{(encrypted && decrypted ? found*2 : found)}] file(s).\nDo note that the Home Data format might change in the future.");
                     } while ((target == DumpTarget.TargetAll && i < 6000) || (target == DumpTarget.TargetBox && i < 30));
 
-                    frm.WriteLog($"Process completed. [{(encrypted && decrypted ? found * 2 : found)}] file(s) dumped.");
+                    frm.WriteLog($"Process completed. [{(encrypted && decrypted ? found * 2 : found)}] file(s) dumped.\nDo note that the Home Data format might change in the future.");
                     return;
 
                 } catch (Exception ex)
                 {
                     MessageBox.Show(ex.ToString());
-                    frm.WriteLog("Something went wrong :-( \nCheck your sys-botbase installation and input the correct IP address.");
+                    frm.WriteLog("Something went wrong :-( \nCheck your configurations and sys-modules installation.");
                 }
             }
         }
@@ -155,11 +155,9 @@ namespace HOME
             switch (originFormat)
             {
                 case DumpFormat.Encrypted:
-                    MessageBox.Show("To Decrypt");
                     data = DecryptEH1(data)!.Data;
                     break;
                 case DumpFormat.Decrypted:
-                    MessageBox.Show("To Encrypt");
                     data = HomeCrypto.Encrypt(data);
                     break;
             }
@@ -196,7 +194,7 @@ namespace HOME
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.ToString());
-                    frm.WriteLog("Something went wrong :-( \nCheck your sys-botbase installation and input the correct IP address.");
+                    frm.WriteLog("Something went wrong :-( \nCheck your configurations and sys-modules installation.");
                 }
             }
         }
@@ -389,19 +387,7 @@ namespace HOME
         public PKH? DecryptEH1(byte[]? ek1)
         {
             if (ek1 != null)
-            {
-                //Different PKHeX versions have different methods
-                try
-                {
-                    if (HomeCrypto.GetIsEncrypted1(ek1.AsSpan()))
-                        return new PKH(ek1);
-                }
-                catch (Exception)
-                {
-                    if (HomeCrypto.GetIsEncrypted1(ek1))
-                        return new PKH(ek1);
-                }
-            }
+                return new PKH(ek1);
             return null;
         }
 
