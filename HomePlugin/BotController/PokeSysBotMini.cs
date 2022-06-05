@@ -2,7 +2,7 @@
 using HOME;
 using static System.Buffers.Binary.BinaryPrimitives;
 
-namespace PKHeX.Core.Injection
+namespace HOME
 {
     public class PokeSysBotMini
     {
@@ -33,7 +33,7 @@ namespace PKHeX.Core.Injection
             var offset = GetB1S1Offset() + box * boxSize;
             return sys.ReadBytes((ulong)offset, boxSize);
         }
-        public byte[]? ReadSlot(int box, int slot) 
+        public byte[]? ReadSlot(int box, int slot)
         {
             var offset = GetSlotOffset(box, slot);
             return ReadBytesPKH(offset);
@@ -42,7 +42,6 @@ namespace PKHeX.Core.Injection
         {
             var data = sys.ReadBytes(offset, 0x10);
 
-            //TBD check if proper enc data
             if (ReadUInt64LittleEndian(data.AsSpan(0x02)) == 0)
                 return null;
 

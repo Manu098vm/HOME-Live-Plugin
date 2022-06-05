@@ -2,7 +2,7 @@
 
 using System;
 
-namespace PKHeX.Core.Injection
+namespace HOME
 {
     public static class Decoder
     {

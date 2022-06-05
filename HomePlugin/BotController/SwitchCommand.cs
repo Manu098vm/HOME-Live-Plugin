@@ -1,6 +1,6 @@
 ﻿//Taken from Live Hex
 
-namespace PKHeX.Core.Injection
+namespace HOME
 {
     /// <summary>
     /// Encodes commands for a <see cref="SysBotMini"/> to be sent as a <see cref="byte"/> array.

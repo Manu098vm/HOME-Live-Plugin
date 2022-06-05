@@ -5,7 +5,7 @@ using System.Threading;
 using LibUsbDotNet;
 using LibUsbDotNet.Main;
 
-namespace PKHeX.Core.Injection
+namespace HOME
 {
     public class UsbBotMini : ICommunicator
     {

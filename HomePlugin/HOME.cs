@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using PKHeX.Core.Injection;
 using PKHeX.Core;
 using System.Text;
 using static System.Buffers.Binary.BinaryPrimitives;
@@ -44,7 +43,7 @@ namespace HOME
             viewer.Click += (s, e) => new ViewForm(this).Show();
         }
 
-        public void ProcessRemote(DumpForm frm, System.ComponentModel.BackgroundWorker? bgWorker)
+        public void StartDumper(DumpForm frm, System.ComponentModel.BackgroundWorker? bgWorker)
         {
             HomeController? controller = new HomeController(SaveFileEditor, PKMEditor, frm.GetConnectionType());
             if (controller != null && bgWorker != null)
@@ -101,12 +100,14 @@ namespace HOME
                             if (decrypted)
                             {
                                 string path = SetFileName(pkh, frm.GetPath(), target, frm.GetBoxFolderRequested(), false, i);
-                                SavePKH(pkh?.Data, path);
+                                if(!bgWorker.CancellationPending)
+                                    SavePKH(pkh?.Data, path);
                             }
                             if (encrypted)
                             {
                                 string path = SetFileName(pkh, frm.GetPath(), target, frm.GetBoxFolderRequested(), true, i);
-                                SavePKH(ekh, path);
+                                if (!bgWorker.CancellationPending)
+                                    SavePKH(ekh, path);
                             }
                         }
                         i++;
@@ -141,7 +142,7 @@ namespace HOME
             }
         }
 
-        public void ProcessLocal(DumpForm frm, DumpFormat originFormat, string file, string path)
+        public void StartEncryptorDecryptor(DumpForm frm, DumpFormat originFormat, string file, string path)
         {
             var data = File.ReadAllBytes(file);
 
@@ -385,7 +386,7 @@ namespace HOME
                 throw new ArgumentException("Data is null.");
         }
 
-        private PKH? DecryptEH1(byte[]? ek1)
+        public PKH? DecryptEH1(byte[]? ek1)
         {
             if (ek1 != null)
             {

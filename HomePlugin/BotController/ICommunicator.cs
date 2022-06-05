@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PKHeX.Core.Injection
+namespace HOME
 {
     public interface ICommunicator
     {

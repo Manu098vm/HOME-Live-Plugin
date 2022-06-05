@@ -103,7 +103,7 @@ namespace HOME
                 var i = 0;
                 foreach (String file in OpenFileDialog.FileNames)
                 {
-                    PluginInstance.ProcessLocal(this, (DumpFormat)e.Argument, file, SaveFileDialog.SelectedPath.ToString());
+                    PluginInstance.StartEncryptorDecryptor(this, (DumpFormat)e.Argument, file, SaveFileDialog.SelectedPath.ToString());
                     i++;
                     TxtBoxLog.Text = $"Loading [{i}] file(s).";
                     bgWorker.ReportProgress(6000 / OpenFileDialog.FileNames.Length * i);
@@ -115,7 +115,7 @@ namespace HOME
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            PluginInstance.ProcessRemote(this, sender as BackgroundWorker);
+            PluginInstance.StartDumper(this, sender as BackgroundWorker);
         }
 
         private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)

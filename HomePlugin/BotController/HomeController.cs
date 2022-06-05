@@ -1,9 +1,8 @@
 ﻿using System;
 using static System.Buffers.Binary.BinaryPrimitives;
-using HOME;
-using System.Windows.Forms;
+using PKHeX.Core;
 
-namespace PKHeX.Core.Injection
+namespace HOME
 {
     public class HomeController
     {
