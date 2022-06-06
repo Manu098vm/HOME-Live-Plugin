@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Windows.Forms;
 using System.ComponentModel;
 
@@ -80,6 +79,7 @@ namespace HOME
             GrpPath.Enabled = false;
             BtnConnect.Enabled = false;
             toolsToolStripMenuItem.Enabled = false;
+            ChkBoxFolders.Enabled = false;
 
             BackgroundWorker.RunWorkerAsync();
         }
@@ -133,6 +133,7 @@ namespace HOME
                 GrpPath.Enabled = true;
                 BtnConnect.Enabled = true;
                 toolsToolStripMenuItem.Enabled = true;
+                ChkBoxFolders.Enabled = true;
             }
         }
 
@@ -199,7 +200,7 @@ namespace HOME
         public int GetTargetBox() => ComboBox.SelectedIndex;
         public int GetTargetSlot() => ComboSlot.SelectedIndex;
         public string GetPath() => TxtBoxPath.Text;
-        public bool GetBoxFolderRequested() => ChkBoxFolders.Checked;
+        public bool GetBoxFolderRequested() => RadioTargetAll.Checked && ChkBoxFolders.Checked;
         public ConnectionType GetConnectionType()
         {
             if (RadioUSB.Checked)
@@ -227,6 +228,5 @@ namespace HOME
         }
         public void WriteLog(string str) => TxtBoxLog.Text = str;
         public void AppendLog(string str) => TxtBoxLog.AppendText(str);
-
     }
 }

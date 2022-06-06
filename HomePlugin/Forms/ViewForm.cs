@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Windows.Forms;
 using System.ComponentModel;
 
@@ -71,6 +70,8 @@ namespace HOME
             GrpConnection.Enabled = false;
             ComboBox.Enabled = false;
             BtnConnect.Enabled = false;
+            GrpForceConv.Enabled = false;
+            GrpWarning.Enabled = false;
 
             BackGroundWorker.RunWorkerAsync();
         }
@@ -92,6 +93,8 @@ namespace HOME
                 GrpConnection.Enabled = true;
                 ComboBox.Enabled = true;
                 BtnConnect.Enabled = true;
+                GrpForceConv.Enabled = true;
+                GrpWarning.Enabled = true;
             }
         }
 
@@ -129,18 +132,19 @@ namespace HOME
 
         private void ChkWarning_Click(object sender, EventArgs e)
         {
-            string warning = $"WARNING DISCLOSURE:\n" +
-                $"PKHeX will try to simulate a conversion from Pokémon Home data format (PH1) into standard PKM file format based on the current Save File type.\n" +
-                $"The process is still under development, and there is the chance it could never be as accurate as transfers with official approved tools.\n" +
-                $"If you proceed with the tool, you declare to comprehend and agree with the following statements:\n" +
-                $"- The PKM files from the conversion are NOT legitimate by any way, even if the original encounter was.\n" +
-                $"- The resulting files from the conversion might not even be legal in some circumstances.\n" +
-                $"- If using the 'Convert any PKM data if compatible with save file' process, it's more likely that the resulted Pokémon won't be legal.\n" +
-                $"- Do NOT use these PKM in online battles/trades.\n" +
-                $"- Do NOT use these files to report legality issues, nor in the Project Pokémon forums/discord nor in the PKHeX Dev discord.\n" +
-                $"- The Viewer goal is for reserch, learning and entertainment purposes.\n" +
-                $"- This Plugin is not developed by the PKHeX Dev discord staff, thus do NOT report problems or bug to them. Use the Project Pokémon thread instead.\n" +
-                $"\nIf you're willing to agree with the above, click the 'Yes' button. Click 'No' otherwise.";
+            string warning = $"WARNING/DISCLOSURE:\n" +
+                $"PKHeX simulates a conversion from the Pokémon HOME data format (PH1) to standard PKM file formats based on the current loaded save file.\n" +
+                $"This process is unofficial and there is always the chance that it does not accurately replicate an official transfer.\n" +
+                $"If you proceed with this tool, you accept the following:\n" +
+                $"- The PKM files from the conversion are NOT legitimate in any way, even if the original encounter was.\n" +
+                $"- The resulting files from the conversion may not even be legal in some circumstances.\n" +
+                $"- When using 'Convert any PKM data if compatible with save file', it is likely that the resulting Pokémon will be illegal.\n" +
+                $"- Do NOT use converted PKM in online battles/trades.\n" +
+                $"- Do NOT use converted files to report legality issues, whether in the Project Pokémon forums/Discord or in the PKHeX Development Projects Discord.\n" +
+                $"- The Viewer is intended for research, learning, and entertainment purposes.\n" +
+                $"- This Plugin is not developed by the PKHeX Development Projects server, so do NOT report problems or request support there. Use the Project Pokémon thread instead.\n" +
+                $"- The creators of this tool are not responsible for any adverse outcomes or side effects of using this tool.\n" +
+                $"\nIf you agree with the above, click the 'Yes' button. Click 'No' otherwise.";
 
             DialogResult disclaimer = MessageBox.Show(warning, "Disclaimer", MessageBoxButtons.YesNo);
             if (disclaimer == DialogResult.Yes)

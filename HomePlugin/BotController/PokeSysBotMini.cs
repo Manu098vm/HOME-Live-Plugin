@@ -1,5 +1,4 @@
 ﻿using System;
-using HOME;
 using static System.Buffers.Binary.BinaryPrimitives;
 
 namespace HOME
@@ -21,16 +20,12 @@ namespace HOME
             };
         }
 
-        public uint GetB1S1Offset() => BoxStart;
-        public uint GetSlotSize() => SlotSize;
-        public int GetSlotCount() => SlotCount;
-        public int GetBoxCount() => BoxCount;
         public uint GetBoxOffset(int box) => BoxStart + (uint)(SlotSize * SlotCount * box);
         public uint GetSlotOffset(int box, int slot) => GetBoxOffset(box) + (uint)(SlotSize * slot);
 
-        public byte[]? ReadBox(int box, int boxSize = (int)SlotSize)
+        public byte[]? ReadBox(int box, int boxSize = (int)SlotSize*SlotCount)
         {
-            var offset = GetB1S1Offset() + box * boxSize;
+            var offset = BoxStart + box * boxSize;
             return sys.ReadBytes((ulong)offset, boxSize);
         }
         public byte[]? ReadSlot(int box, int slot)
