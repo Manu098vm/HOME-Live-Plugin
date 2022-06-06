@@ -201,7 +201,7 @@ namespace HOME
         public int GetTargetBox() => ComboBox.SelectedIndex;
         public int GetTargetSlot() => ComboSlot.SelectedIndex;
         public string GetPath() => TxtBoxPath.Text;
-        public bool GetBoxFolderRequested() => ChkBoxFolders.Checked;
+        public bool GetBoxFolderRequested() => RadioTargetAll.Checked && ChkBoxFolders.Checked;
         public ConnectionType GetConnectionType()
         {
             if (RadioUSB.Checked)
