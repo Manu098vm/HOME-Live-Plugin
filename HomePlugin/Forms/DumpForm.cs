@@ -1,5 +1,4 @@
-using System;
-using System.IO;
+﻿using System;
 using System.Windows.Forms;
 using System.ComponentModel;
 
@@ -81,6 +80,7 @@ namespace HOME
             BtnConnect.Enabled = false;
             toolsToolStripMenuItem.Enabled = false;
             ChkBoxFolders.Enabled = false;
+
             BackgroundWorker.RunWorkerAsync();
         }
 
@@ -228,6 +228,5 @@ namespace HOME
         }
         public void WriteLog(string str) => TxtBoxLog.Text = str;
         public void AppendLog(string str) => TxtBoxLog.AppendText(str);
-
     }
 }

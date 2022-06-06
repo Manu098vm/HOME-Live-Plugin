@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Windows.Forms;
 using PKHeX.Core;
 using System.Text;
 using System.ComponentModel;
-
 using static System.Buffers.Binary.BinaryPrimitives;
 
 namespace HOME
@@ -29,7 +28,7 @@ namespace HOME
         public const int BSSlots = 30;
         public const int SwShBoxes = 32;
         public const int SwShSlots = 30;
-        
+
         public void Initialize(params object[] args)
         {
             SaveFileEditor = (ISaveFileProvider)Array.Find(args, z => z is ISaveFileProvider);
@@ -55,22 +54,13 @@ namespace HOME
             tools.DropDownItems.Add(viewer);
             dumper.Click += (s, e) => new DumpForm(this).Show();
             viewer.Click += (s, e) => new ViewForm(this).Show();
+        }
 
         public void StartDumper(DumpForm frm, BackgroundWorker? bgWorker)
         {
             if (bgWorker != null)
             {
-                startingBox = lastBox;
-                endingBox = startingBox + boxPerIndex;
-                lastBox = endingBox;
-
-                startingRemainder = 0;
-                endingRemainder = startingRemainder + remainder;
-                lastRemainder = endingRemainder;
-            }
-            else
-            {
-                if (index == 0)
+                try
                 {
                     var sav = SaveFileEditor.SAV;
                     var bot = new PokeSysBotMini(frm.GetConnectionType())
@@ -477,10 +467,6 @@ namespace HOME
             }
             return res;
         }
-
-        private ushort DataVersion(byte[] ekh) => ReadUInt16LittleEndian(ekh.AsSpan(0x00));
-
-        public bool GetNonForceableConvSaveFile() => SaveFileEditor.SAV is SAV7b;
 
         public void NotifySaveLoaded()
         {

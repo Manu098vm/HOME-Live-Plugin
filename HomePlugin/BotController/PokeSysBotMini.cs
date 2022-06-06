@@ -1,5 +1,4 @@
-using System;
-using HOME;
+﻿using System;
 using static System.Buffers.Binary.BinaryPrimitives;
 
 namespace HOME
