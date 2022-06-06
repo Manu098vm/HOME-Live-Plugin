@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using HOME;
 using static System.Buffers.Binary.BinaryPrimitives;
 

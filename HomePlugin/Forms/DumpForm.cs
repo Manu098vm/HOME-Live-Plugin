@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Windows.Forms;
 using System.ComponentModel;
@@ -81,7 +81,6 @@ namespace HOME
             BtnConnect.Enabled = false;
             toolsToolStripMenuItem.Enabled = false;
             ChkBoxFolders.Enabled = false;
-
             BackgroundWorker.RunWorkerAsync();
         }
 

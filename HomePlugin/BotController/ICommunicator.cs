@@ -1,4 +1,4 @@
-﻿namespace HOME
+namespace HOME
 {
     public interface ICommunicator
     {

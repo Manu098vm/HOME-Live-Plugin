@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Windows.Forms;
 using System.ComponentModel;
@@ -74,6 +74,7 @@ namespace HOME
             GrpForceConv.Enabled = false;
             GrpWarning.Enabled = false;
 
+
             BackGroundWorker.RunWorkerAsync();
         }
 
@@ -146,6 +147,7 @@ namespace HOME
                 $"- This Plugin is not developed by the PKHeX Development Projects server, so do NOT report problems or request support there. Use the Project Pokémon thread instead.\n" +
                 $"- The creators of this tool are not responsible for any adverse outcomes or side effects of using this tool.\n" +
                 $"\nIf you agree with the above, click the 'Yes' button. Click 'No' otherwise.";
+
 
             DialogResult disclaimer = MessageBox.Show(warning, "Disclaimer", MessageBoxButtons.YesNo);
             if (disclaimer == DialogResult.Yes)
