@@ -2,6 +2,12 @@
 
 This Plugin is meant to allow people to dump and view infos from those Pokémons that are stuck in HOME beyond the first Box, or that for some reason the owner does not want to transfer away (eg. Unique GO/HOME Symbol sticker or SWSH unavailable mons). This Plugin is not intended to allow users to edit Pokémon Infos directly from HOME and it will never allow to.
 
+This Plugin is not developed by the PKHeX Development Projects server, so do NOT report problems or request support there. Use the [Project Pokémon thread](https://projectpokemon.org/home/forums/topic/58311-pkhex-home-live-plugin-ram-viewer-thread/) instead.
+
+The creators of this tool are not responsible for any adverse outcomes or side effects of using this tool.
+
+We do not condone use of cheating and modified data to take advantage of others. Trading converted files without disclosure could be considered scam.
+
 # Disclosure about the Dumper feature:
 
 The Plugin creates a 1:1 dump for the encrypted Pokémon HOME data, in the EH1 format. If requested by the user, PKHeX can decrypt that dump in the PH1 format. Please be aware that these format structure might change in the future.
@@ -25,11 +31,6 @@ If you proceed with this tool, you accept the following:
 * Do NOT use converted files to report legality issues, whether in the Project Pokémon forums/Discord or in the PKHeX Development Projects Discord.
 
 * The Viewer is intended for research, learning, and entertainment purposes.
-
-
-This Plugin is not developed by the PKHeX Development Projects server, so do NOT report problems or request support there. Use the [Project Pokémon thread](https://projectpokemon.org/home/forums/topic/58311-pkhex-home-live-plugin-ram-viewer-thread/) instead.
-
-We do not condone use of cheating and modified data to take advantage of others. Trading converted files without disclosure could be considered scam.
 
 # Prerequisites
 
