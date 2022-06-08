@@ -426,7 +426,7 @@
             this.OpenFileDialog.ReadOnlyChecked = true;
             this.OpenFileDialog.ShowReadOnly = true;
             this.OpenFileDialog.SupportMultiDottedExtensions = true;
-            this.OpenFileDialog.Title = "Open encrypted Pokémon Home data file";
+            this.OpenFileDialog.Title = "Open Pokémon Home data file";
             // 
             // SaveFileDialog
             // 

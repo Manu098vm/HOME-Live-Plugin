@@ -123,9 +123,11 @@ namespace HOME
             switch (originFormat)
             {
                 case DumpFormat.Encrypted:
-                    data = DecryptEH1(data)!.Data;
+                    if(HomeCrypto.GetIsEncrypted1(data.AsSpan()))
+                        data = DecryptEH1(data)!.Data;
                     break;
                 case DumpFormat.Decrypted:
+                    if(!HomeCrypto.GetIsEncrypted1(data.AsSpan()))
                     data = HomeCrypto.Encrypt(data.AsSpan());
                     break;
             }
@@ -181,13 +183,13 @@ namespace HOME
             }
         }
 
-        public void StartLoader(DumpForm frm, string file, bool toBoxes,int box = 0, int slot = 0)
+        public bool StartLoader(DumpForm frm, string file, bool toBoxes,int box = 0, int slot = 0)
         {
             var data = File.ReadAllBytes(file);
             if (DataVersion(data) != 1)
             {
                 frm.WriteLog($"{file} is incompatible data.");
-                return;
+                return false;
             }
 
             var pkm = ConvertToPKM(DecryptEH1(data)!, true);
@@ -197,7 +199,9 @@ namespace HOME
                     SaveFileEditor.SAV.SetBoxSlotAtIndex(pkm, box, slot);
                 else
                     PKMEditor.PopulateFields(pkm!, false);
+                return true;
             }
+            return false;
         }
 
         private void HandleDump(byte[]? ekh, bool decrypted, bool encrypted, DumpForm frm, BackgroundWorker bgWorker, ref int found, int box = 0)

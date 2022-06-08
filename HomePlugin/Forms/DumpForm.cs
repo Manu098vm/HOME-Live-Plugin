@@ -94,64 +94,117 @@ namespace HOME
 
         private void LoadLocalFiles(DumpFormat? originFormat, bool toBoxes = false)
         {
+            if (originFormat == null && toBoxes == false)
+                OpenFileDialog.Multiselect = false;
+            else
+                OpenFileDialog.Multiselect = true;
+
             if (OpenFileDialog.ShowDialog() == DialogResult.OK)
-                if (originFormat == null)
-                    BackgroundLoader.RunWorkerAsync(argument: toBoxes);
-                else if (SaveFileDialog.ShowDialog() == DialogResult.OK)
-                    BackGroundWorkerLocal.RunWorkerAsync(argument: originFormat);
-        }
-
-        private void BackgroundLoader_DoWork(object sender, DoWorkEventArgs e)
-        {
-            var bgWorker = sender as BackgroundWorker;
-            if (bgWorker != null)
             {
-                var currSlot = 0;
-                var currBox = 0;
-                var i = 0;
-                PluginInstance.GetSavAvalableBoxAndSlots(out int savSlots, out int savBoxes);
-
-                foreach (String file in OpenFileDialog.FileNames)
+                if (originFormat == null)
                 {
-                    if (currSlot >= savSlots)
-                    {
-                        currSlot = 0;
-                        currBox++;
-                    }
-
-                    if (((bool)e.Argument == true && currBox < savBoxes) || ((bool)e.Argument == false && i == 0))
-                    {
-                        PluginInstance.StartLoader(this, file, (bool)e.Argument, currBox, currSlot);
-                        currSlot++;
-                        i++;
-                        TxtBoxLog.Text = $"Loading [{i}] file(s).";
-                    }
-                    else
-                        break;
-
-                    bgWorker.ReportProgress(6000 / OpenFileDialog.FileNames.Length * i);
+                    DisableAll();
+                    BackgroundLoader.RunWorkerAsync(argument: toBoxes);
                 }
-                PluginInstance.ReloadSav();
-                bgWorker.ReportProgress(6000);
-                TxtBoxLog.Text = $"Process completed. [{i}] file(s) elaborated.";
+                else if (SaveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    DisableAll();
+                    BackGroundWorkerLocal.RunWorkerAsync(argument: originFormat);
+                }
             }
         }
 
         private void BackGroundWorkerLocal_DoWork(object sender, DoWorkEventArgs e)
         {
+            try
+            {
+                var bgWorker = sender as BackgroundWorker;
+                if (bgWorker != null)
+                {
+                    var i = 0;
+                    foreach (String file in OpenFileDialog.FileNames)
+                    {
+                        i++;
+                        PluginInstance.StartEncryptorDecryptor(this, (DumpFormat)e.Argument, file, SaveFileDialog.SelectedPath.ToString());
+                        TxtBoxLog.Text = $"Loading [{i}] file(s).";
+                        bgWorker.ReportProgress(6000 / OpenFileDialog.FileNames.Length * i);
+                    }
+                    bgWorker.ReportProgress(6000);
+                    TxtBoxLog.Text = $"Process completed. [{i}] file(s) elaborated.";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+        private void BackgroundLoader_DoWork(object sender, DoWorkEventArgs e)
+        {
+            string warning = $"WARNING/DISCLOSURE:\n" +
+                $"PKHeX simulates a conversion from the Pokémon HOME data format (PH1) to standard PKM file formats based on the current loaded save file.\n" +
+                $"This process is unofficial and there is always the chance that it does not accurately replicate an official transfer.\n" +
+                $"If you proceed with this tool, you accept the following:\n" +
+                $"- The PKM files from the conversion are NOT legitimate in any way, even if the original encounter was.\n" +
+                $"- The resulting files from the conversion may not even be legal in some circumstances.\n" +
+                $"- If the File does not contain Specific Game Data, it is likely that the resulting Pokémon will be illegal.\n" +
+                $"- Do NOT use converted PKM in online battles/trades.\n" +
+                $"- Do NOT use converted files to report legality issues, whether in the Project Pokémon forums/Discord or in the PKHeX Development Projects Discord.\n" +
+                $"- This Plugin is intended for research, learning, and entertainment purposes.\n" +
+                $"- This Plugin is not developed by the PKHeX Development Projects server, so do NOT report problems or request support there. Use the Project Pokémon thread instead.\n" +
+                $"- The creators of this tool are not responsible for any adverse outcomes or side effects of using this tool.\n" +
+                $"\nIf you agree with the above, click the 'Yes' button. Click 'No' otherwise.";
+
             var bgWorker = sender as BackgroundWorker;
             if (bgWorker != null)
             {
-                var i = 0;
-                foreach (String file in OpenFileDialog.FileNames)
+                DialogResult disclaimer = MessageBox.Show(warning, "Disclaimer", MessageBoxButtons.YesNo);
+                if (disclaimer == DialogResult.Yes)
                 {
-                    i++;
-                    PluginInstance.StartEncryptorDecryptor(this, (DumpFormat)e.Argument, file, SaveFileDialog.SelectedPath.ToString());
-                    TxtBoxLog.Text = $"Loading [{i}] file(s).";
-                    bgWorker.ReportProgress(6000 / OpenFileDialog.FileNames.Length * i);
+
+                    if ((bool)e.Argument == false)
+                    {
+                        if (!PluginInstance.StartLoader(this, OpenFileDialog.FileName, (bool)e.Argument))
+                            TxtBoxLog.Text = "File not compatible with the current Save File";
+                        else
+                            TxtBoxLog.Text = "Process completed. [1] compatibile file elaborated.";
+                    }
+                    else
+                    {
+                        var currSlot = 0;
+                        var currBox = 0;
+                        var i = 0;
+                        PluginInstance.GetSavAvalableBoxAndSlots(out int savSlots, out int savBoxes);
+
+                        foreach (String file in OpenFileDialog.FileNames)
+                        {
+                            if (currSlot >= savSlots)
+                            {
+                                currSlot = 0;
+                                currBox++;
+                            }
+
+                            if (currBox < savBoxes)
+                            {
+                                if (PluginInstance.StartLoader(this, file, (bool)e.Argument, currBox, currSlot))
+                                {
+                                    currSlot++;
+                                    i++;
+                                }
+                                TxtBoxLog.Text = $"Loading [{i}] compatible file(s).";
+                            }
+                            else
+                                break;
+
+                            bgWorker.ReportProgress(6000 / OpenFileDialog.FileNames.Length * i);
+                        }
+                        TxtBoxLog.Text = $"Process completed. [{i}] compatibile file(s) elaborated.";
+                        PluginInstance.ReloadSav();
+                    }
+                    bgWorker.ReportProgress(6000);
                 }
-                bgWorker.ReportProgress(6000);
-                TxtBoxLog.Text = $"Process completed. [{i}] file(s) elaborated.";
+                else if (disclaimer == DialogResult.No)
+                    bgWorker.ReportProgress(6000);
             }
         }
 
@@ -168,15 +221,7 @@ namespace HOME
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled == false)
-            {
-                GrpConnection.Enabled = true;
-                GrpAction.Enabled = true;
-                GrpDump.Enabled = true;
-                GrpPath.Enabled = true;
-                BtnConnect.Enabled = true;
-                toolsToolStripMenuItem.Enabled = true;
-                ChkBoxFolders.Enabled = true;
-            }
+                EnableAll();
         }
 
         private void MainForm_Close(object sender, EventArgs e)
@@ -235,6 +280,28 @@ namespace HOME
             {
                 return true;
             }
+        }
+
+        private void EnableAll()
+        {
+            GrpConnection.Enabled = true;
+            GrpAction.Enabled = true;
+            GrpDump.Enabled = true;
+            GrpPath.Enabled = true;
+            BtnConnect.Enabled = true;
+            toolsToolStripMenuItem.Enabled = true;
+            ChkBoxFolders.Enabled = true;
+        }
+
+        private void DisableAll()
+        {
+            GrpConnection.Enabled = false;
+            GrpAction.Enabled = false;
+            GrpDump.Enabled = false;
+            GrpPath.Enabled = false;
+            BtnConnect.Enabled = false;
+            toolsToolStripMenuItem.Enabled = false;
+            ChkBoxFolders.Enabled = false;
         }
 
         public string GetIP() => TxtBoxIP.Text;

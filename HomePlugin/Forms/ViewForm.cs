@@ -141,7 +141,7 @@ namespace HOME
                 $"- When using 'Convert any PKM data if compatible with save file', it is likely that the resulting Pokémon will be illegal.\n" +
                 $"- Do NOT use converted PKM in online battles/trades.\n" +
                 $"- Do NOT use converted files to report legality issues, whether in the Project Pokémon forums/Discord or in the PKHeX Development Projects Discord.\n" +
-                $"- The Viewer is intended for research, learning, and entertainment purposes.\n" +
+                $"- This Plugin is intended for research, learning, and entertainment purposes.\n" +
                 $"- This Plugin is not developed by the PKHeX Development Projects server, so do NOT report problems or request support there. Use the Project Pokémon thread instead.\n" +
                 $"- The creators of this tool are not responsible for any adverse outcomes or side effects of using this tool.\n" +
                 $"\nIf you agree with the above, click the 'Yes' button. Click 'No' otherwise.";

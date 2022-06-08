@@ -6,7 +6,7 @@
     <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
-    <BaseOutputPath>C:\Users\wiima\OneDrive\Desktop\Pokémon\PKHeX\plugins</BaseOutputPath>
+    <BaseOutputPath>bin\</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,9 +33,5 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="C:\Users\wiima\OneDrive\Desktop\Pokémon\PKHeX\PKHeX.exe" />
-  </Target>
 
 </Project>
