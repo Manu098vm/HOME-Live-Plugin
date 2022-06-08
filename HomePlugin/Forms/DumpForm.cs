@@ -88,11 +88,53 @@ namespace HOME
 
         private void EncryptFromFiles_Click(object sender, EventArgs e) => LoadLocalFiles(DumpFormat.Decrypted);
 
-        private void LoadLocalFiles(DumpFormat originFormat)
+        private void LoadToEditor_Click(object sender, EventArgs e) => LoadLocalFiles(null);
+
+        private void LoadToBoxes_Click(object sender, EventArgs e) => LoadLocalFiles(null, true);
+
+        private void LoadLocalFiles(DumpFormat? originFormat, bool toBoxes = false)
         {
             if (OpenFileDialog.ShowDialog() == DialogResult.OK)
-                if (SaveFileDialog.ShowDialog() == DialogResult.OK)
+                if (originFormat == null)
+                    BackgroundLoader.RunWorkerAsync(argument: toBoxes);
+                else if (SaveFileDialog.ShowDialog() == DialogResult.OK)
                     BackGroundWorkerLocal.RunWorkerAsync(argument: originFormat);
+        }
+
+        private void BackgroundLoader_DoWork(object sender, DoWorkEventArgs e)
+        {
+            var bgWorker = sender as BackgroundWorker;
+            if (bgWorker != null)
+            {
+                var currSlot = 0;
+                var currBox = 0;
+                var i = 0;
+                PluginInstance.GetSavAvalableBoxAndSlots(out int savSlots, out int savBoxes);
+
+                foreach (String file in OpenFileDialog.FileNames)
+                {
+                    if (currSlot >= savSlots)
+                    {
+                        currSlot = 0;
+                        currBox++;
+                    }
+
+                    if (((bool)e.Argument == true && currBox < savBoxes) || ((bool)e.Argument == false && i == 0))
+                    {
+                        PluginInstance.StartLoader(this, file, (bool)e.Argument, currBox, currSlot);
+                        currSlot++;
+                        i++;
+                        TxtBoxLog.Text = $"Loading [{i}] file(s).";
+                    }
+                    else
+                        break;
+
+                    bgWorker.ReportProgress(6000 / OpenFileDialog.FileNames.Length * i);
+                }
+                PluginInstance.ReloadSav();
+                bgWorker.ReportProgress(6000);
+                TxtBoxLog.Text = $"Process completed. [{i}] file(s) elaborated.";
+            }
         }
 
         private void BackGroundWorkerLocal_DoWork(object sender, DoWorkEventArgs e)
@@ -103,16 +145,8 @@ namespace HOME
                 var i = 0;
                 foreach (String file in OpenFileDialog.FileNames)
                 {
-                    try
-                    {
-                        PluginInstance.StartEncryptorDecryptor(this, (DumpFormat)e.Argument, file, SaveFileDialog.SelectedPath.ToString());
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"This method is not available in the current PKHeX version:\n\n{ex}");
-                        return;
-                    }
                     i++;
+                    PluginInstance.StartEncryptorDecryptor(this, (DumpFormat)e.Argument, file, SaveFileDialog.SelectedPath.ToString());
                     TxtBoxLog.Text = $"Loading [{i}] file(s).";
                     bgWorker.ReportProgress(6000 / OpenFileDialog.FileNames.Length * i);
                 }

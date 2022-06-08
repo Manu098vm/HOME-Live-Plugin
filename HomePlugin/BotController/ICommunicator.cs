@@ -4,7 +4,7 @@
     {
         void Connect();
         void Disconnect();
-        byte[] ReadBytes(ulong offset, int length);
+        byte[] ReadBytes(uint offset, int length);
         bool Connected { get; set; }
         int Port { get; set; }
         string IP { get; set; }

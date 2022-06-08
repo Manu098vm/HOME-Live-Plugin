@@ -43,10 +43,9 @@ namespace HOME
                 if (SwDevice == null)
                     throw new Exception("USB device not found.");
 
-                IUsbDevice? usb = SwDevice as IUsbDevice;
-                if (SwDevice == null)
+                if (!(SwDevice is IUsbDevice usb))
                     throw new Exception("Device is using a WinUSB driver. Use libusbK and create a filter.");
-                if (usb!.UsbRegistryInfo.IsAlive)
+                if (!usb.UsbRegistryInfo.IsAlive)
                     usb.ResetDevice();
 
                 if (SwDevice.IsOpen)
@@ -100,17 +99,6 @@ namespace HOME
             }
         }
 
-        public byte[] ReadBytes(ulong offset, int length) => ReadBytesUSB(offset, length);
-
-        public byte[] ReadBytesUSB(ulong offset, int length)
-        {
-            lock (_sync)
-            {
-                SendInternal(SwitchCommand.Peek(offset, length, false));
-                return ReadBulkUSB();
-            }
-        }
-
         private int SendInternal(byte[] buffer)
         {
             if (writer == null)
@@ -130,6 +118,16 @@ namespace HOME
                 throw new Exception(UsbDevice.LastErrorString);
             }
             return l;
+        }
+
+        public byte[] ReadBytes(uint offset, int length)
+        {
+            lock (_sync)
+            {
+                var cmd = SwitchCommand.Peek(offset, length, false);
+                SendInternal(cmd);
+                return ReadBulkUSB();
+            }
         }
 
         private byte[] ReadBulkUSB()

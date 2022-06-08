@@ -23,6 +23,6 @@ namespace HOME
         /// <param name="count">Amount of bytes</param>
         /// <param name="addrn">Encoding selector. Default "true" for sys-botbase.</param>
         /// <returns>Encoded command bytes</returns>
-        public static byte[] Peek(ulong offset, int count, bool addrn = true) => Encode($"peek 0x{offset:X16} {count}", addrn);
+        public static byte[] Peek(uint offset, int count, bool addrn = true) => Encode($"peek 0x{offset:X8} {count}", addrn);
     }
 }

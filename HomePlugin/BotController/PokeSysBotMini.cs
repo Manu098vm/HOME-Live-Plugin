@@ -25,8 +25,8 @@ namespace HOME
 
         public byte[]? ReadBox(int box, int boxSize = (int)SlotSize*SlotCount)
         {
-            var offset = BoxStart + box * boxSize;
-            return sys.ReadBytes((ulong)offset, boxSize);
+            var offset = (uint)(BoxStart + box * boxSize);
+            return sys.ReadBytes(offset, boxSize);
         }
         public byte[]? ReadSlot(int box, int slot)
         {

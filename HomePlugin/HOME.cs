@@ -135,7 +135,6 @@ namespace HOME
 
         public void StartViewer(ViewForm frm, BackgroundWorker? bgWorker)
         {
-            var sav = SaveFileEditor.SAV;
             if (bgWorker != null)
             {
                 try
@@ -162,22 +161,9 @@ namespace HOME
                                 var data = ExtractFromBoxData(j, ref boxData);
                                 if (data != null)
                                 {
-                                    var pkh = new PKH(data);
-                                    PKM? pkm = null;
-                                    if (pkh != null && pkh.Species != 0)
-                                    {
-                                        if (sav is SAV7b && CheckLGPEAvailability(pkh) && (pkh.DataPB7 != null)) //PX8 -> PB7 is not possible
-                                            pkm = pkh.ConvertToPB7();
-                                        else if (sav is SAV8SWSH && CheckSwShAvailability(pkh) && (pkh.DataPK8 != null || frm.GetForceConversion()))
-                                            pkm = pkh.ConvertToPK8();
-                                        else if (sav is SAV8BS && CheckBDSPAvailability(pkh) && (pkh.DataPB8 != null || frm.GetForceConversion()))
-                                            pkm = pkh.ConvertToPB8();
-                                        else if (sav is SAV8LA && CheckPLAAvailability(pkh) && (pkh.DataPA8 != null || frm.GetForceConversion()))
-                                            pkm = pkh.ConvertToPA8();
-
-                                        if (pkm != null)
-                                            sav.SetBoxSlotAtIndex(pkm, i, j);
-                                    }
+                                    var pkm = ConvertToPKM(new PKH(data), frm.GetForceConversion());
+                                    if (pkm != null)
+                                        SaveFileEditor.SAV.SetBoxSlotAtIndex(pkm, i, j);
                                 }
                             }
                         }
@@ -192,6 +178,25 @@ namespace HOME
                     MessageBox.Show(ex.ToString());
                     frm.WriteLog("Something went wrong :-( \nCheck your configurations and sys-modules installation.");
                 }
+            }
+        }
+
+        public void StartLoader(DumpForm frm, string file, bool toBoxes,int box = 0, int slot = 0)
+        {
+            var data = File.ReadAllBytes(file);
+            if (DataVersion(data) != 1)
+            {
+                frm.WriteLog($"{file} is incompatible data.");
+                return;
+            }
+
+            var pkm = ConvertToPKM(DecryptEH1(data)!, true);
+            if (pkm != null)
+            {
+                if (toBoxes && pkm != null)
+                    SaveFileEditor.SAV.SetBoxSlotAtIndex(pkm, box, slot);
+                else
+                    PKMEditor.PopulateFields(pkm!, false);
             }
         }
 
@@ -230,6 +235,23 @@ namespace HOME
             return boxData.Slice(offset, 0x10 + EncodedDataSize);
         }
 
+        private PKM? ConvertToPKM(PKH? pkh, bool forceConversion)
+        {
+            if (pkh != null && pkh.Species > 0)
+            {
+                var sav = SaveFileEditor.SAV;
+                if (sav is SAV7b && CheckLGPEAvailability(pkh) && (pkh.DataPB7 != null)) //PX8 -> PB7 is not possible
+                    return pkh.ConvertToPB7();
+                else if (sav is SAV8SWSH && CheckSwShAvailability(pkh) && (pkh.DataPK8 != null || forceConversion))
+                    return pkh.ConvertToPK8();
+                else if (sav is SAV8BS && CheckBDSPAvailability(pkh) && (pkh.DataPB8 != null || forceConversion))
+                    return pkh.ConvertToPB8();
+                else if (sav is SAV8LA && CheckPLAAvailability(pkh) && (pkh.DataPA8 != null || forceConversion))
+                    return pkh.ConvertToPA8();
+            }
+            return null;
+        }
+
         private int CalcBoxQtyInSelection(int boxIndex)
         {
             GetSavAvalableBoxAndSlots(out int savSlots, out int savBoxes);
@@ -261,32 +283,6 @@ namespace HOME
             {
                 remoteBoxSize = HomeSlotSize * LASlots;
                 remoteBoxTarget = index * LABoxes;
-            }
-            else
-                throw new ArgumentException($"Unrecognized save file type {SaveFileEditor.SAV.GetType()}");
-        }
-
-        private void GetSavAvalableBoxAndSlots(out int savSlots, out int savBoxes)
-        {
-            if (SaveFileEditor.SAV is SAV7b)
-            {
-                savSlots = LGPESlots;
-                savBoxes = LGPEBoxes;
-            }
-            else if (SaveFileEditor.SAV is SAV8SWSH)
-            {
-                savSlots = SwShSlots;
-                savBoxes = SwShBoxes;
-            }
-            else if (SaveFileEditor.SAV is SAV8BS)
-            {
-                savSlots = BSSlots;
-                savBoxes = BSSBoxes;
-            }
-            else if (SaveFileEditor.SAV is SAV8LA)
-            {
-                savSlots = LASlots;
-                savBoxes = LABoxes;
             }
             else
                 throw new ArgumentException($"Unrecognized save file type {SaveFileEditor.SAV.GetType()}");
@@ -467,6 +463,34 @@ namespace HOME
             }
             return res;
         }
+
+        public void GetSavAvalableBoxAndSlots(out int savSlots, out int savBoxes)
+        {
+            if (SaveFileEditor.SAV is SAV7b)
+            {
+                savSlots = LGPESlots;
+                savBoxes = LGPEBoxes;
+            }
+            else if (SaveFileEditor.SAV is SAV8SWSH)
+            {
+                savSlots = SwShSlots;
+                savBoxes = SwShBoxes;
+            }
+            else if (SaveFileEditor.SAV is SAV8BS)
+            {
+                savSlots = BSSlots;
+                savBoxes = BSSBoxes;
+            }
+            else if (SaveFileEditor.SAV is SAV8LA)
+            {
+                savSlots = LASlots;
+                savBoxes = LABoxes;
+            }
+            else
+                throw new ArgumentException($"Unrecognized save file type {SaveFileEditor.SAV.GetType()}");
+        }
+
+        public void ReloadSav() => SaveFileEditor.ReloadSlots();
 
         public void NotifySaveLoaded()
         {

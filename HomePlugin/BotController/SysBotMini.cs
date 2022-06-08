@@ -49,7 +49,7 @@ namespace HOME
 
         private int SendInternal(byte[] buffer) => Connection.Send(buffer);
 
-        public byte[] ReadBytes(ulong offset, int length)
+        public byte[] ReadBytes(uint offset, int length)
         {
             lock (_sync)
             {

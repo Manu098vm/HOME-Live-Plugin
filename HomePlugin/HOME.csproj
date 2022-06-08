@@ -6,11 +6,15 @@
     <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
-    <BaseOutputPath>bin\</BaseOutputPath>
+    <BaseOutputPath>C:\Users\wiima\OneDrive\Desktop\Pokémon\PKHeX\plugins</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
+    <PackageReference Include="Costura.Fody" Version="5.7.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="LibUsbDotNet" Version="2.2.29" />
     <PackageReference Include="PKHeX.Core" Version="22.6.1" />
   </ItemGroup>
@@ -29,5 +33,9 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="C:\Users\wiima\OneDrive\Desktop\Pokémon\PKHeX\PKHeX.exe" />
+  </Target>
 
 </Project>

@@ -135,4 +135,7 @@
   <metadata name="BackGroundWorkerLocal.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>779, 19</value>
   </metadata>
+  <metadata name="BackgroundLoader.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>1004, 19</value>
+  </metadata>
 </root>
