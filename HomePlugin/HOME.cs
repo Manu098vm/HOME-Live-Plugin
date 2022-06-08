@@ -90,7 +90,7 @@ namespace HOME
                                 for (int i = 0; i < HomeSlots; i++)
                                 {
                                     var ekh = ExtractFromBoxData(i, ref boxData!);
-                                    HandleDump(ekh, decrypted, encrypted, frm, bgWorker, ref found, i);
+                                    HandleDump(ekh, decrypted, encrypted, frm, bgWorker, ref found, completedBoxes + 1);
                                     progress = (target is DumpTarget.TargetBox) ? (i+1 * HomeBoxes) : i * (completedBoxes+1);
                                 }
                                 bgWorker.ReportProgress(progress);
@@ -113,7 +113,7 @@ namespace HOME
         public void StartEncryptorDecryptor(DumpForm frm, DumpFormat originFormat, string file, string path)
         {
             var data = File.ReadAllBytes(file);
-
+            
             if (DataVersion(data) != 1)
             {
                 frm.WriteLog($"{file} is incompatible data.");
@@ -126,7 +126,7 @@ namespace HOME
                     data = DecryptEH1(data)!.Data;
                     break;
                 case DumpFormat.Decrypted:
-                    data = HomeCrypto.Encrypt(data);
+                    data = HomeCrypto.Encrypt(data.AsSpan());
                     break;
             }
 
@@ -195,7 +195,7 @@ namespace HOME
             }
         }
 
-        private void HandleDump(byte[]? ekh, bool decrypted, bool encrypted, DumpForm frm, BackgroundWorker bgWorker, ref int found, int i = 0)
+        private void HandleDump(byte[]? ekh, bool decrypted, bool encrypted, DumpForm frm, BackgroundWorker bgWorker, ref int found, int box = 0)
         {
             int version = DataVersion(ekh!);
             if (version == 0)
@@ -209,10 +209,10 @@ namespace HOME
                 found++;
                 if (decrypted)
                     if (!bgWorker.CancellationPending)
-                        SavePKH(pkh.Data, SetFileName(pkh, frm.GetPath(), frm.GetBoxFolderRequested(), false, i));
+                        SavePKH(pkh.Data, SetFileName(pkh, frm.GetPath(), frm.GetBoxFolderRequested(), false, box));
                 if (encrypted)
                     if (!bgWorker.CancellationPending)
-                        SavePKH(ekh, SetFileName(pkh, frm.GetPath(), frm.GetBoxFolderRequested(), true, i));
+                        SavePKH(ekh, SetFileName(pkh, frm.GetPath(), frm.GetBoxFolderRequested(), true, box));
             }
         }
 
@@ -357,11 +357,11 @@ namespace HOME
             return new string[] { res1, res2 };
         }
 
-        private string SetFileName(PKM? pkm, string path, bool boxFolderReq, bool encrypted, int i = 0)
+        private string SetFileName(PKM? pkm, string path, bool boxFolderReq, bool encrypted, int box)
         {
             var name = $"{path}\\";
             if (boxFolderReq)
-                name += $"Box {((i / 30) + 1):000}\\";
+                name += $"Box {box:000}\\";
             if (pkm != null && pkm.Species != 0)
             {
                 name += $"{pkm.Species:000}";

@@ -103,7 +103,15 @@ namespace HOME
                 var i = 0;
                 foreach (String file in OpenFileDialog.FileNames)
                 {
-                    PluginInstance.StartEncryptorDecryptor(this, (DumpFormat)e.Argument, file, SaveFileDialog.SelectedPath.ToString());
+                    try
+                    {
+                        PluginInstance.StartEncryptorDecryptor(this, (DumpFormat)e.Argument, file, SaveFileDialog.SelectedPath.ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"This method is not available in the current PKHeX version:\n\n{ex}");
+                        return;
+                    }
                     i++;
                     TxtBoxLog.Text = $"Loading [{i}] file(s).";
                     bgWorker.ReportProgress(6000 / OpenFileDialog.FileNames.Length * i);
