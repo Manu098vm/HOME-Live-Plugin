@@ -164,6 +164,11 @@ namespace HOME
                                 if (data != null)
                                 {
                                     var pkm = ConvertToPKM(new PKH(data), frm.GetForceConversion());
+                                    if ((Move)pkm!.Move1 == Move.None)
+                                        if (pkm is G8PKM g)
+                                            g.ResetMoves();
+                                        else if (pkm is PA8 p)
+                                            p.ResetMoves();
                                     if (pkm != null)
                                         SaveFileEditor.SAV.SetBoxSlotAtIndex(pkm, i, j);
                                 }
@@ -195,10 +200,15 @@ namespace HOME
             var pkm = ConvertToPKM(DecryptEH1(data)!, true);
             if (pkm != null)
             {
+                if ((Move)pkm.Move1 == Move.None)
+                    if (pkm is G8PKM g)
+                        g.ResetMoves();
+                    else if (pkm is PA8 p)
+                        p.ResetMoves();
                 if (toBoxes && pkm != null)
                     SaveFileEditor.SAV.SetBoxSlotAtIndex(pkm, box, slot);
-                else
-                    PKMEditor.PopulateFields(pkm!, false);
+                else if(pkm != null)
+                    PKMEditor.PopulateFields(pkm, true);
                 return true;
             }
             return false;
@@ -356,8 +366,8 @@ namespace HOME
 
             return new string[] { res1, res2 };
         }
-
-        private string SetFileName(PKM? pkm, string path, bool boxFolderReq, bool encrypted, int box)
+         
+        private string SetFileName(PKH? pkm, string path, bool boxFolderReq, bool encrypted, int box)
         {
             var name = $"{path}\\";
             if (boxFolderReq)
@@ -365,8 +375,10 @@ namespace HOME
             if (pkm != null && pkm.Species != 0)
             {
                 name += $"{pkm.Species:000}";
-                if (pkm.Form > 0)
+                if (pkm.Form > 0 || pkm.Species == 869)
                     name += $"-{pkm.Form:00}";
+                if (pkm.Species == 869 && pkm is IFormArgument f)
+                    name += $"-{f.FormArgument:00}";
                 if (pkm.IsShiny)
                 {
                     if (pkm.ShinyXor == 0 || pkm.FatefulEncounter)
@@ -374,6 +386,15 @@ namespace HOME
                     else
                         name += " ★";
                 }
+                if (pkm.ConvertToPK8() is IGigantamax g)
+                    if (g.CanGigantamax)
+                        name += " (GMax)";
+                if (pkm.ConvertToPA8() is IAlpha a)
+                    if (a.IsAlpha)
+                        name += " (Alpha)";
+                if (pkm is INoble n)
+                    if (n.IsNoble)
+                        name += " (Noble)";
                 name += $" - {NameFilter(pkm.Nickname)}";
                 name += $" {pkm.EncryptionConstant:X8}{pkm.PID:X8}";
                 if(encrypted)
