@@ -147,7 +147,7 @@ namespace HOME
                         sys = { IP = frm.GetIP(), Port = frm.GetPort() }
                     };
                     bot.sys.Connect();
-                    frm.WriteLog("Connecting...");
+                    frm.WriteLog("Connected...");
 
                     var selection = frm.GetBoxIndex();
                     var qty = CalcBoxQtyInSelection(selection);
@@ -164,13 +164,15 @@ namespace HOME
                                 if (data != null)
                                 {
                                     var pkm = ConvertToPKM(new PKH(data), frm.GetForceConversion());
-                                    if ((Move)pkm!.Move1 == Move.None)
-                                        if (pkm is G8PKM g)
-                                            g.ResetMoves();
-                                        else if (pkm is PA8 p)
-                                            p.ResetMoves();
                                     if (pkm != null)
+                                    {
+                                        if ((Move)pkm!.Move1 == Move.None)
+                                            if (pkm is G8PKM g)
+                                                g.ResetMoves();
+                                            else if (pkm is PA8 p)
+                                                p.ResetMoves();
                                         SaveFileEditor.SAV.SetBoxSlotAtIndex(pkm, i, j);
+                                    }
                                 }
                             }
                         }
@@ -188,7 +190,7 @@ namespace HOME
             }
         }
 
-        public bool StartLoader(DumpForm frm, string file, bool toBoxes,int box = 0, int slot = 0)
+        public bool StartLoader(DumpForm frm, string file, bool toBoxes, int box = 0, int slot = 0)
         {
             var data = File.ReadAllBytes(file);
             if (DataVersion(data) != 1)
@@ -205,9 +207,9 @@ namespace HOME
                         g.ResetMoves();
                     else if (pkm is PA8 p)
                         p.ResetMoves();
-                if (toBoxes && pkm != null)
+                if (toBoxes)
                     SaveFileEditor.SAV.SetBoxSlotAtIndex(pkm, box, slot);
-                else if(pkm != null)
+                else
                     PKMEditor.PopulateFields(pkm, true);
                 return true;
             }
@@ -366,8 +368,8 @@ namespace HOME
 
             return new string[] { res1, res2 };
         }
-         
-        private string SetFileName(PKH? pkm, string path, bool boxFolderReq, bool encrypted, int box)
+
+        private string SetFileName(PKH? pkm, string path, bool boxFolderReq, bool encrypted, int box = 0)
         {
             var name = $"{path}\\";
             if (boxFolderReq)
@@ -392,12 +394,12 @@ namespace HOME
                 if (pkm.ConvertToPA8() is IAlpha a)
                     if (a.IsAlpha)
                         name += " (Alpha)";
-                if (pkm is INoble n)
+                if (pkm.ConvertToPA8() is INoble n)
                     if (n.IsNoble)
                         name += " (Noble)";
                 name += $" - {NameFilter(pkm.Nickname)}";
                 name += $" {pkm.EncryptionConstant:X8}{pkm.PID:X8}";
-                if(encrypted)
+                if (encrypted)
                     name += $".eh1";
                 else
                     name += $".ph1";
