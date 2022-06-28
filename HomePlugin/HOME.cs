@@ -2,10 +2,8 @@
 using System.IO;
 using System.Windows.Forms;
 using PKHeX.Core;
-using System.Linq;
 using System.Text;
 using System.ComponentModel;
-using System.Collections.Generic;
 using static System.Buffers.Binary.BinaryPrimitives;
 
 namespace HOME
@@ -210,8 +208,6 @@ namespace HOME
             return false;
         }
 
-
-
         private void HandleDump(byte[]? ekh, bool decrypted, bool encrypted, DumpForm frm, BackgroundWorker bgWorker, ref int found, int box = 0)
         {
             int version = DataVersion(ekh!);
@@ -394,7 +390,7 @@ namespace HOME
                     if (n.IsNoble)
                         name += " (Noble)";
                 name += $" - {NameFilter(pkm.Nickname)}";
-                name += $" {pkm.Tracker:X64}";
+                name += $" {pkm.Tracker:X16}";
                 if (encrypted)
                     name += $".eh1";
                 else
