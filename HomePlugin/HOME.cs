@@ -2,8 +2,10 @@
 using System.IO;
 using System.Windows.Forms;
 using PKHeX.Core;
+using System.Linq;
 using System.Text;
 using System.ComponentModel;
+using System.Collections.Generic;
 using static System.Buffers.Binary.BinaryPrimitives;
 
 namespace HOME
@@ -166,11 +168,7 @@ namespace HOME
                                     var pkm = ConvertToPKM(new PKH(data), frm.GetForceConversion());
                                     if (pkm != null)
                                     {
-                                        if ((Move)pkm!.Move1 == Move.None)
-                                            if (pkm is G8PKM g)
-                                                g.ResetMoves();
-                                            else if (pkm is PA8 p)
-                                                p.ResetMoves();
+                                        LegalityHelper.CheckAndFixLegality(pkm);
                                         SaveFileEditor.SAV.SetBoxSlotAtIndex(pkm, i, j);
                                     }
                                 }
@@ -202,11 +200,7 @@ namespace HOME
             var pkm = ConvertToPKM(DecryptEH1(data)!, true);
             if (pkm != null)
             {
-                if ((Move)pkm.Move1 == Move.None)
-                    if (pkm is G8PKM g)
-                        g.ResetMoves();
-                    else if (pkm is PA8 p)
-                        p.ResetMoves();
+                LegalityHelper.CheckAndFixLegality(pkm);
                 if (toBoxes)
                     SaveFileEditor.SAV.SetBoxSlotAtIndex(pkm, box, slot);
                 else
@@ -215,6 +209,8 @@ namespace HOME
             }
             return false;
         }
+
+
 
         private void HandleDump(byte[]? ekh, bool decrypted, bool encrypted, DumpForm frm, BackgroundWorker bgWorker, ref int found, int box = 0)
         {
@@ -398,7 +394,7 @@ namespace HOME
                     if (n.IsNoble)
                         name += " (Noble)";
                 name += $" - {NameFilter(pkm.Nickname)}";
-                name += $" {pkm.EncryptionConstant:X8}{pkm.PID:X8}";
+                name += $" {pkm.Tracker:X64}";
                 if (encrypted)
                     name += $".eh1";
                 else
@@ -416,7 +412,7 @@ namespace HOME
             return sb.ToString();
         }
         
-        private static void SavePKH(byte[]? data, string path)
+        private void SavePKH(byte[]? data, string path)
         {
             if (data != null)
             {
