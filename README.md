@@ -1,6 +1,6 @@
 # About
 
-This Plugin is meant to allow people to dump and view infos from those Pokémons that are stuck in HOME beyond the first Box, or that for some reason the owner does not want to transfer away (eg. Unique GO/HOME Symbol sticker or SWSH unavailable mons). This Plugin is not intended to allow users to edit Pokémon Infos directly from HOME and it will never allow to.
+This Plugin is meant to allow people to dump and view infos from those Pokémons that are stuck in HOME beyond the first Box, or that for some reason the owner does not want to transfer away (eg. Unique GO/HOME Symbol sticker or game-specific unavailable mons). This Plugin is not intended to allow users to edit Pokémon Infos directly from HOME and it will never allow to.
 
 This Plugin is not developed by the PKHeX Development Projects server, so do NOT report problems or request support there. Use the [Project Pokémon thread](https://projectpokemon.org/home/forums/topic/58311-pkhex-home-live-plugin-ram-viewer-thread/) instead.
 
@@ -50,7 +50,7 @@ For Windows users, right click on the DLL, go to properties and select "Unlock".
 
 Move the DLL to your PKHeX/Plugins folder, if you don't have it, just create it.
 
-Open PKHeX with a Sword/Shield Save File, or a Blank SWSH save, and click on Tools->HOME to open the Plugin.
+Open PKHeX with a Let's Go/Sword/Shield/Brilliant Diamond/Shining Pearl/Legends Arceus save file type, and click on Tools->Home Live Dumper or Tools -> Home Live Viewer to open the Plugin.
 
 Open the Pokémon HOME application from your Nintendo Switch and tap the screen and least once. 
 
