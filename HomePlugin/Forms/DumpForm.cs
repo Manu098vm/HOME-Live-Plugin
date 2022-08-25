@@ -191,17 +191,13 @@ namespace HOME
                                 TxtBoxLog.Text = $"Loading [{i}] compatible file(s).";
                             }
                             else
-                            {
-                                TxtBoxLog.Text = "Sono nel break";
                                 break;
-                            }
 
                             bgWorker.ReportProgress(6000 / OpenFileDialog.FileNames.Length * i);
                         }
                         TxtBoxLog.Text = $"Process completed. [{i}] compatibile file(s) elaborated.";
                         PluginInstance.ReloadSav();
                     }
-                    TxtBoxLog.Text = "Done.";
                     bgWorker.ReportProgress(6000);
                 }
                 else if (disclaimer == DialogResult.No)
