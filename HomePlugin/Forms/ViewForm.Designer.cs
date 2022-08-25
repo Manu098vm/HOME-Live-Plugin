@@ -46,6 +46,7 @@
             this.RadioConvertSpecific = new System.Windows.Forms.RadioButton();
             this.GrpWarning = new System.Windows.Forms.GroupBox();
             this.ChkWarning = new System.Windows.Forms.CheckBox();
+            this.RadioConvertAny = new System.Windows.Forms.RadioButton();
             this.GrpConnection.SuspendLayout();
             this.GrpForceConv.SuspendLayout();
             this.GrpWarning.SuspendLayout();
@@ -130,7 +131,7 @@
             // 
             this.BtnConnect.Enabled = false;
             this.BtnConnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BtnConnect.Location = new System.Drawing.Point(12, 363);
+            this.BtnConnect.Location = new System.Drawing.Point(12, 382);
             this.BtnConnect.Name = "BtnConnect";
             this.BtnConnect.Size = new System.Drawing.Size(327, 64);
             this.BtnConnect.TabIndex = 2;
@@ -141,7 +142,7 @@
             // LblBoxes
             // 
             this.LblBoxes.AutoSize = true;
-            this.LblBoxes.Location = new System.Drawing.Point(25, 300);
+            this.LblBoxes.Location = new System.Drawing.Point(25, 319);
             this.LblBoxes.Name = "LblBoxes";
             this.LblBoxes.Size = new System.Drawing.Size(89, 16);
             this.LblBoxes.TabIndex = 3;
@@ -150,7 +151,7 @@
             // ComboBox
             // 
             this.ComboBox.FormattingEnabled = true;
-            this.ComboBox.Location = new System.Drawing.Point(12, 319);
+            this.ComboBox.Location = new System.Drawing.Point(12, 338);
             this.ComboBox.Name = "ComboBox";
             this.ComboBox.Size = new System.Drawing.Size(327, 24);
             this.ComboBox.TabIndex = 4;
@@ -158,7 +159,7 @@
             // TxtLog
             // 
             this.TxtLog.Enabled = false;
-            this.TxtLog.Location = new System.Drawing.Point(12, 444);
+            this.TxtLog.Location = new System.Drawing.Point(12, 463);
             this.TxtLog.Name = "TxtLog";
             this.TxtLog.Size = new System.Drawing.Size(327, 72);
             this.TxtLog.TabIndex = 5;
@@ -166,7 +167,7 @@
             // 
             // ProgressBar
             // 
-            this.ProgressBar.Location = new System.Drawing.Point(12, 522);
+            this.ProgressBar.Location = new System.Drawing.Point(12, 541);
             this.ProgressBar.Name = "ProgressBar";
             this.ProgressBar.Size = new System.Drawing.Size(327, 23);
             this.ProgressBar.TabIndex = 6;
@@ -181,11 +182,12 @@
             // 
             // GrpForceConv
             // 
+            this.GrpForceConv.Controls.Add(this.RadioConvertAny);
             this.GrpForceConv.Controls.Add(this.RadioConvertForce);
             this.GrpForceConv.Controls.Add(this.RadioConvertSpecific);
             this.GrpForceConv.Location = new System.Drawing.Point(12, 148);
             this.GrpForceConv.Name = "GrpForceConv";
-            this.GrpForceConv.Size = new System.Drawing.Size(327, 85);
+            this.GrpForceConv.Size = new System.Drawing.Size(327, 104);
             this.GrpForceConv.TabIndex = 7;
             this.GrpForceConv.TabStop = false;
             this.GrpForceConv.Text = "Conversion Method";
@@ -215,7 +217,7 @@
             // GrpWarning
             // 
             this.GrpWarning.Controls.Add(this.ChkWarning);
-            this.GrpWarning.Location = new System.Drawing.Point(12, 239);
+            this.GrpWarning.Location = new System.Drawing.Point(12, 258);
             this.GrpWarning.Name = "GrpWarning";
             this.GrpWarning.Size = new System.Drawing.Size(327, 58);
             this.GrpWarning.TabIndex = 8;
@@ -233,11 +235,22 @@
             this.ChkWarning.UseVisualStyleBackColor = true;
             this.ChkWarning.Click += new System.EventHandler(this.ChkWarning_Click);
             // 
+            // RadioConvertAny
+            // 
+            this.RadioConvertAny.AutoSize = true;
+            this.RadioConvertAny.Location = new System.Drawing.Point(7, 75);
+            this.RadioConvertAny.Name = "RadioConvertAny";
+            this.RadioConvertAny.Size = new System.Drawing.Size(210, 20);
+            this.RadioConvertAny.TabIndex = 2;
+            this.RadioConvertAny.TabStop = true;
+            this.RadioConvertAny.Text = "Convert any PKM data (illegal!)";
+            this.RadioConvertAny.UseVisualStyleBackColor = true;
+            // 
             // ViewForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(351, 555);
+            this.ClientSize = new System.Drawing.Size(351, 574);
             this.Controls.Add(this.GrpWarning);
             this.Controls.Add(this.GrpForceConv);
             this.Controls.Add(this.ProgressBar);
@@ -282,5 +295,6 @@
         private System.Windows.Forms.RadioButton RadioConvertSpecific;
         private System.Windows.Forms.GroupBox GrpWarning;
         private System.Windows.Forms.CheckBox ChkWarning;
+        private System.Windows.Forms.RadioButton RadioConvertAny;
     }
 }

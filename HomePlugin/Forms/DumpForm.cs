@@ -161,7 +161,6 @@ namespace HOME
                 DialogResult disclaimer = MessageBox.Show(warning, "Disclaimer", MessageBoxButtons.YesNo);
                 if (disclaimer == DialogResult.Yes)
                 {
-
                     if ((bool)e.Argument == false)
                     {
                         if (!PluginInstance.StartLoader(this, OpenFileDialog.FileName, (bool)e.Argument))
@@ -175,7 +174,6 @@ namespace HOME
                         var currBox = 0;
                         var i = 0;
                         PluginInstance.GetSavAvalableBoxAndSlots(out int savSlots, out int savBoxes);
-
                         foreach (String file in OpenFileDialog.FileNames)
                         {
                             if (currSlot >= savSlots)
@@ -183,7 +181,6 @@ namespace HOME
                                 currSlot = 0;
                                 currBox++;
                             }
-
                             if (currBox < savBoxes)
                             {
                                 if (PluginInstance.StartLoader(this, file, (bool)e.Argument, currBox, currSlot))
@@ -194,13 +191,17 @@ namespace HOME
                                 TxtBoxLog.Text = $"Loading [{i}] compatible file(s).";
                             }
                             else
+                            {
+                                TxtBoxLog.Text = "Sono nel break";
                                 break;
+                            }
 
                             bgWorker.ReportProgress(6000 / OpenFileDialog.FileNames.Length * i);
                         }
                         TxtBoxLog.Text = $"Process completed. [{i}] compatibile file(s) elaborated.";
                         PluginInstance.ReloadSav();
                     }
+                    TxtBoxLog.Text = "Done.";
                     bgWorker.ReportProgress(6000);
                 }
                 else if (disclaimer == DialogResult.No)

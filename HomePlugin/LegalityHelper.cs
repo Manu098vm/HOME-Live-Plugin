@@ -15,13 +15,13 @@ namespace HOME
             {
 
                 //As of PKHeX 22.06.26, If Specific Game Data was not existing, the converted format ends up with no moves.
-                if ((Move)pkm.Move1 == Move.None)
-                    pkm.SetMoves(l.GetSuggestedCurrentMoves().AsSpan(), false);
+                /*if ((Move)pkm.Move1 == Move.None)
+                    pkm.SetMoves(l.GetSuggestedCurrentMoves().AsSpan(), false);*/
 
                 //Handle HOME PP bug and PKM details
                 pkm.Heal();
-                if (pkm is PA8 || pkm is G8PKM)
-                    new LegalityRejuvenator().Rejuvenate(pkm, pkm);
+                /*if (pkm is PA8 || pkm is G8PKM)
+                    new LegalityRejuvenator().Rejuvenate(pkm, pkm);*/
 
                 //Converted Data sometimes uncorrectly set Battle Memory and Contest Memory Ribbons for unknown reason, making the resulting Pokémon Illegal.
                 var report = l.Report();
