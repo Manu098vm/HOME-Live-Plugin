@@ -24,7 +24,10 @@ namespace HOME
             ComboBox.SelectedIndex = 0;
 
             if (instance.GetNonForceableConvSaveFile())
+            {
                 RadioConvertForce.Enabled = false;
+                RadioConvertAny.Enabled = false;
+            }
         }
 
         private void RadioWiFi_CheckedChanged(object sender, EventArgs e)
@@ -54,7 +57,7 @@ namespace HOME
                 TxtLog.Text = "Insert a proper Port.";
                 return;
             }
-            else if(!RadioConvertForce.Checked && !RadioConvertSpecific.Checked)
+            else if(!RadioConvertForce.Checked && !RadioConvertSpecific.Checked && !RadioConvertAny.Checked)
             {
                 TxtLog.Text = "Select the conversion method.";
                 return;
@@ -125,7 +128,15 @@ namespace HOME
         public string GetIP() => TxtAddress.Text;
         public int GetPort() => (int)UInt32.Parse(TxtPort.Text);
 
-        public bool GetForceConversion() => RadioConvertForce.Checked;
+        public ConversionType GetConversionType()
+        {
+            if (RadioConvertForce.Checked)
+                return ConversionType.CompatibleData;
+            else if (RadioConvertAny.Checked)
+                return ConversionType.AnyData;
+            else
+                return ConversionType.SpecificData;
+        }
 
         public int GetCurrentProgress() => ProgressBar.Value;
         public void WriteLog(string str) => TxtLog.Text = str;
@@ -138,7 +149,7 @@ namespace HOME
                 $"If you proceed with this tool, you accept the following:\n" +
                 $"- The PKM files from the conversion are NOT legitimate in any way, even if the original encounter was.\n" +
                 $"- The resulting files from the conversion may not even be legal in some circumstances.\n" +
-                $"- When using 'Convert any PKM data if compatible with save file', it is likely that the resulting Pokémon will be illegal.\n" +
+                $"- When using 'Convert any PKM data' methods, it is likely that the resulting Pokémon will be illegal.\n" +
                 $"- Do NOT use converted PKM in online battles/trades.\n" +
                 $"- Do NOT use converted files to report legality issues, whether in the Project Pokémon forums/Discord or in the PKHeX Development Projects Discord.\n" +
                 $"- This Plugin is intended for research, learning, and entertainment purposes.\n" +

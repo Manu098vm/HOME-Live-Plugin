@@ -163,7 +163,7 @@ namespace HOME
                                 var data = ExtractFromBoxData(j, ref boxData);
                                 if (data != null)
                                 {
-                                    var pkm = ConvertToPKM(new PKH(data), frm.GetForceConversion());
+                                    var pkm = ConvertToPKM(new PKH(data), frm.GetConversionType());
                                     if (pkm != null)
                                     {
                                         LegalityHelper.CheckAndFixLegality(pkm);
@@ -195,7 +195,7 @@ namespace HOME
                 return false;
             }
 
-            var pkm = ConvertToPKM(DecryptEH1(data)!, true);
+            var pkm = ConvertToPKM(DecryptEH1(data)!, ConversionType.AnyData);
             if (pkm != null)
             {
                 LegalityHelper.CheckAndFixLegality(pkm);
@@ -205,6 +205,7 @@ namespace HOME
                     PKMEditor.PopulateFields(pkm, true);
                 return true;
             }
+
             return false;
         }
 
@@ -243,21 +244,62 @@ namespace HOME
             return boxData.Slice(offset, 0x10 + EncodedDataSize);
         }
 
-        private PKM? ConvertToPKM(PKH? pkh, bool forceConversion)
+        private PKM? ConvertToPKM(PKH? pkh, ConversionType conv)
+        {
+            if(pkh != null && CanConvert(pkh, conv))
+            {
+                var sav = SaveFileEditor.SAV;
+                if (sav is SAV7b)
+                    return pkh.ConvertToPB7();
+                else if (sav is SAV8SWSH)
+                    return pkh.ConvertToPK8();
+                else if (sav is SAV8BS)
+                    return pkh.ConvertToPB8();
+                else if (sav is SAV8LA)
+                    return pkh.ConvertToPA8();
+            }
+            return null;
+        }
+
+        private bool CanConvert(PKH? pkh, ConversionType conv)
         {
             if (pkh != null && pkh.Species > 0)
             {
                 var sav = SaveFileEditor.SAV;
-                if (sav is SAV7b && CheckLGPEAvailability(pkh) && (pkh.DataPB7 != null)) //PX8 -> PB7 is not possible
-                    return pkh.ConvertToPB7();
-                else if (sav is SAV8SWSH && CheckSwShAvailability(pkh) && (pkh.DataPK8 != null || forceConversion))
-                    return pkh.ConvertToPK8();
-                else if (sav is SAV8BS && CheckBDSPAvailability(pkh) && (pkh.DataPB8 != null || forceConversion))
-                    return pkh.ConvertToPB8();
-                else if (sav is SAV8LA && CheckPLAAvailability(pkh) && (pkh.DataPA8 != null || forceConversion))
-                    return pkh.ConvertToPA8();
+                if (sav is SAV7b)
+                {
+                    if (conv is ConversionType.SpecificData && CheckLGPEAvailability(pkh) && pkh.DataPB7 != null)
+                        return true;
+                }
+                else if(sav is SAV8SWSH)
+                {
+                    if (conv is ConversionType.SpecificData && CheckSwShAvailability(pkh) && pkh.DataPK8 != null)
+                        return true;
+                    else if (conv is ConversionType.CompatibleData && CheckSwShAvailability(pkh))
+                        return true;
+                    else if (conv is ConversionType.AnyData)
+                        return true;
+                }
+                else if(sav is SAV8BS)
+                {
+                    if (conv is ConversionType.SpecificData && CheckBDSPAvailability(pkh) && pkh.DataPB8 != null)
+                        return true;
+                    else if (conv is ConversionType.CompatibleData && CheckBDSPAvailability(pkh))
+                        return true;
+                    else if (conv is ConversionType.AnyData)
+                        return true;
+                }
+                else if (sav is SAV8LA)
+                {
+                    if (conv is ConversionType.SpecificData && CheckPLAAvailability(pkh) && pkh.DataPA8 != null)
+                        return true;
+                    else if (conv is ConversionType.CompatibleData && CheckPLAAvailability(pkh))
+                        return true;
+                    else if (conv is ConversionType.AnyData)
+                        return true;
+                }
             }
-            return null;
+            return false;
         }
 
         private int CalcBoxQtyInSelection(int boxIndex)

@@ -19,4 +19,11 @@
         Decrypted = 2,
         EncAndDec = 3,
     }
+
+    public enum ConversionType : int
+    {
+        SpecificData = 1,
+        CompatibleData = 2,
+        AnyData = 3,
+    }
 }

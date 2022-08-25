@@ -24,7 +24,7 @@ If you proceed with this tool, you accept the following:
 
 * The resulting files from the conversion may not even be legal in some circumstances.
 
-* When using 'Convert any PKM data if compatible with save file', it is likely that the resulting Pokémon will be illegal.
+* When using 'Convert any PKM data' methods, it is likely that the resulting Pokémon will be illegal.
 
 * Do NOT use converted PKM in online battles/trades.
 
