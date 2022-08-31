@@ -27,39 +27,13 @@ namespace HOME
                 var report = l.Report();
                 if (report.Contains(string.Format(LegalityCheckStrings.LRibbonFInvalid_0, "")))
                 {
-                    var val = string.Format(LegalityCheckStrings.LRibbonFInvalid_0, "");
-                    string[] ribbonList = GetRequiredRibbons(report, val);
-                    var invalidRibbons = GetRibbonsRequired(pkm, ribbonList);
-                    pkm.RemoveMemoryRibbon(invalidRibbons);
+                    var val = new RibbonVerifierArguments(pkm, l.EncounterMatch, l.Info.EvoChainsAllGens);
+                    RibbonApplicator.FixInvalidRibbons(val);
                 }
 
                 l.ResetParse();
             }
             return l.Valid;
-        }
-
-        private static string[] GetRequiredRibbons(string Report, string val)
-        {
-            return Report.Split(new[] { val }, StringSplitOptions.None)[1].Split(new[] { "\r\n" }, StringSplitOptions.None)[0].Split(new[] { ", " }, StringSplitOptions.None);
-        }
-
-        private static IEnumerable<string> GetRibbonsRequired(PKM pk, string[] ribbonList)
-        {
-            foreach (var RibbonName in GetRibbonNames(pk))
-            {
-                string v = RibbonStrings.GetName(RibbonName).Replace("Ribbon", "");
-                if (ribbonList.Contains(v))
-                    yield return RibbonName;
-            }
-        }
-
-        private static IEnumerable<string> GetRibbonNames(PKM pk) => ReflectUtil.GetPropertiesStartWithPrefix(pk.GetType(), "Ribbon").Distinct();
-
-        private static void RemoveMemoryRibbon(this PKM pk, IEnumerable<string> ribNames)
-        {
-            foreach (string rName in ribNames)
-                if (rName is nameof(PK6.RibbonCountMemoryBattle) || rName is nameof(PK6.RibbonCountMemoryContest))
-                    ReflectUtil.SetValue(pk, rName, 0);
         }
     }
 }
