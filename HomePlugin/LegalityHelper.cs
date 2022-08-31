@@ -1,8 +1,4 @@
-﻿//Most of code in these functions is taken from PKHeX Plugins.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using PKHeX.Core;
+﻿using PKHeX.Core;
 
 namespace HOME
 {
@@ -14,7 +10,7 @@ namespace HOME
             if (!l.Valid)
             {
 
-                //As of PKHeX 22.06.26, If Specific Game Data was not existing, the converted format ends up with no moves.
+                //As of PKHeX 22.08.31, If Specific Game Data was not existing, the converted format ends up with no moves.
                 /*if ((Move)pkm.Move1 == Move.None)
                     pkm.SetMoves(l.GetSuggestedCurrentMoves().AsSpan(), false);*/
 
