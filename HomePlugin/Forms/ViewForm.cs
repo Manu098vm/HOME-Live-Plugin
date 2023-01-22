@@ -121,7 +121,17 @@ namespace HOME
                 return ConnectionType.WiFi;
         }
 
-        public int GetBoxIndex() => ComboBox.SelectedIndex;
+        public int GetBoxIndex()
+        {
+            if (ComboBox.InvokeRequired)
+            {
+                var res = 0;
+                ComboBox.Invoke(() => { res = ComboBox.SelectedIndex; });
+                return res;
+            }
+            else
+                return ComboBox.SelectedIndex;
+        }
 
         public bool IsLastIndex() => ComboBox.SelectedIndex+1 == ComboBox.Items.Count;
 
@@ -139,7 +149,14 @@ namespace HOME
         }
 
         public int GetCurrentProgress() => ProgressBar.Value;
-        public void WriteLog(string str) => TxtLog.Text = str;
+
+        public void WriteLog(string str)
+        {
+            if(TxtLog.InvokeRequired)
+                TxtLog.Invoke(() => { TxtLog.Text = str; });
+            else 
+                TxtLog.Text = str;
+        }
 
         private void ChkWarning_Click(object sender, EventArgs e)
         {

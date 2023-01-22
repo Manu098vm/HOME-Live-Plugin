@@ -4,30 +4,21 @@ namespace HOME
 {
     public static class LegalityHelper
     {
-        public static bool CheckAndFixLegality(PKM pkm)
+        //This is only used when loading PKH to Pokémon Editors/Sav Boxes. Files dumped are not altered.
+        public static bool CheckAndFixLegality(PKM pkm, SaveFile? sav = null)
         {
             var l = new LegalityAnalysis(pkm);
             if (!l.Valid)
             {
-
-                //As of PKHeX 22.08.31, If Specific Game Data was not existing, the converted format ends up with no moves.
-                /*if ((Move)pkm.Move1 == Move.None)
-                    pkm.SetMoves(l.GetSuggestedCurrentMoves().AsSpan(), false);*/
-
-                //Handle HOME PP bug and PKM details
                 pkm.Heal();
-                /*if (pkm is PA8 || pkm is G8PKM)
-                    new LegalityRejuvenator().Rejuvenate(pkm, pkm);*/
 
-                //Converted Data sometimes uncorrectly set Battle Memory and Contest Memory Ribbons for unknown reason, making the resulting Pokémon Illegal.
-                var report = l.Report();
-                if (report.Contains(string.Format(LegalityCheckStrings.LRibbonFInvalid_0, "")))
+                if ((Move)pkm.Move1 == Move.None)
                 {
-                    var val = new RibbonVerifierArguments(pkm, l.EncounterMatch, l.Info.EvoChainsAllGens);
-                    RibbonApplicator.FixInvalidRibbons(val);
+                    pkm.SetRelearnMoves(l.GetSuggestedRelearnMoves());
+                    pkm.SetMoves(l.GetSuggestedCurrentMoves(), false);
                 }
 
-                l.ResetParse();
+                l = new LegalityAnalysis(pkm);
             }
             return l.Valid;
         }

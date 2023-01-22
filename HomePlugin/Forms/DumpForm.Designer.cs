@@ -73,11 +73,11 @@
             // 
             // BtnConnect
             // 
-            this.BtnConnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BtnConnect.Location = new System.Drawing.Point(12, 377);
+            this.BtnConnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.BtnConnect.Location = new System.Drawing.Point(12, 471);
             this.BtnConnect.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.BtnConnect.Name = "BtnConnect";
-            this.BtnConnect.Size = new System.Drawing.Size(439, 59);
+            this.BtnConnect.Size = new System.Drawing.Size(439, 74);
             this.BtnConnect.TabIndex = 0;
             this.BtnConnect.Text = "Connect";
             this.BtnConnect.UseVisualStyleBackColor = true;
@@ -86,30 +86,30 @@
             // TxtBoxLog
             // 
             this.TxtBoxLog.Enabled = false;
-            this.TxtBoxLog.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtBoxLog.Location = new System.Drawing.Point(12, 441);
+            this.TxtBoxLog.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.TxtBoxLog.Location = new System.Drawing.Point(12, 551);
             this.TxtBoxLog.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TxtBoxLog.Name = "TxtBoxLog";
-            this.TxtBoxLog.Size = new System.Drawing.Size(439, 77);
+            this.TxtBoxLog.Size = new System.Drawing.Size(439, 95);
             this.TxtBoxLog.TabIndex = 1;
             this.TxtBoxLog.Text = "";
             // 
             // TxtBoxIP
             // 
-            this.TxtBoxIP.Location = new System.Drawing.Point(91, 53);
+            this.TxtBoxIP.Location = new System.Drawing.Point(91, 66);
             this.TxtBoxIP.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TxtBoxIP.Name = "TxtBoxIP";
-            this.TxtBoxIP.Size = new System.Drawing.Size(200, 22);
+            this.TxtBoxIP.Size = new System.Drawing.Size(200, 27);
             this.TxtBoxIP.TabIndex = 2;
             this.TxtBoxIP.Text = "192.168.1.1";
             this.TxtBoxIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // TxtBoxPort
             // 
-            this.TxtBoxPort.Location = new System.Drawing.Point(348, 53);
+            this.TxtBoxPort.Location = new System.Drawing.Point(348, 66);
             this.TxtBoxPort.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TxtBoxPort.Name = "TxtBoxPort";
-            this.TxtBoxPort.Size = new System.Drawing.Size(76, 22);
+            this.TxtBoxPort.Size = new System.Drawing.Size(76, 27);
             this.TxtBoxPort.TabIndex = 3;
             this.TxtBoxPort.Text = "6000";
             this.TxtBoxPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -117,28 +117,28 @@
             // LblIP
             // 
             this.LblIP.AutoSize = true;
-            this.LblIP.Location = new System.Drawing.Point(5, 53);
+            this.LblIP.Location = new System.Drawing.Point(5, 66);
             this.LblIP.Name = "LblIP";
-            this.LblIP.Size = new System.Drawing.Size(79, 16);
+            this.LblIP.Size = new System.Drawing.Size(85, 20);
             this.LblIP.TabIndex = 4;
             this.LblIP.Text = "IP Address :";
             // 
             // LblPort
             // 
             this.LblPort.AutoSize = true;
-            this.LblPort.Location = new System.Drawing.Point(305, 53);
+            this.LblPort.Location = new System.Drawing.Point(305, 66);
             this.LblPort.Name = "LblPort";
-            this.LblPort.Size = new System.Drawing.Size(37, 16);
+            this.LblPort.Size = new System.Drawing.Size(42, 20);
             this.LblPort.TabIndex = 5;
             this.LblPort.Text = "Port :";
             // 
             // RadioEncrypted
             // 
             this.RadioEncrypted.AutoSize = true;
-            this.RadioEncrypted.Location = new System.Drawing.Point(21, 21);
+            this.RadioEncrypted.Location = new System.Drawing.Point(21, 26);
             this.RadioEncrypted.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.RadioEncrypted.Name = "RadioEncrypted";
-            this.RadioEncrypted.Size = new System.Drawing.Size(89, 20);
+            this.RadioEncrypted.Size = new System.Drawing.Size(96, 24);
             this.RadioEncrypted.TabIndex = 6;
             this.RadioEncrypted.TabStop = true;
             this.RadioEncrypted.Text = "Encrypted";
@@ -147,10 +147,10 @@
             // RadioDecrypted
             // 
             this.RadioDecrypted.AutoSize = true;
-            this.RadioDecrypted.Location = new System.Drawing.Point(131, 21);
+            this.RadioDecrypted.Location = new System.Drawing.Point(131, 26);
             this.RadioDecrypted.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.RadioDecrypted.Name = "RadioDecrypted";
-            this.RadioDecrypted.Size = new System.Drawing.Size(91, 20);
+            this.RadioDecrypted.Size = new System.Drawing.Size(99, 24);
             this.RadioDecrypted.TabIndex = 7;
             this.RadioDecrypted.TabStop = true;
             this.RadioDecrypted.Text = "Decrypted";
@@ -159,10 +159,10 @@
             // RadioEncAndDec
             // 
             this.RadioEncAndDec.AutoSize = true;
-            this.RadioEncAndDec.Location = new System.Drawing.Point(243, 21);
+            this.RadioEncAndDec.Location = new System.Drawing.Point(243, 26);
             this.RadioEncAndDec.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.RadioEncAndDec.Name = "RadioEncAndDec";
-            this.RadioEncAndDec.Size = new System.Drawing.Size(181, 20);
+            this.RadioEncAndDec.Size = new System.Drawing.Size(198, 24);
             this.RadioEncAndDec.TabIndex = 8;
             this.RadioEncAndDec.TabStop = true;
             this.RadioEncAndDec.Text = "Encrypted and Decrypted";
@@ -173,11 +173,11 @@
             this.GrpDump.Controls.Add(this.RadioEncrypted);
             this.GrpDump.Controls.Add(this.RadioEncAndDec);
             this.GrpDump.Controls.Add(this.RadioDecrypted);
-            this.GrpDump.Location = new System.Drawing.Point(12, 249);
+            this.GrpDump.Location = new System.Drawing.Point(12, 311);
             this.GrpDump.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.GrpDump.Name = "GrpDump";
             this.GrpDump.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.GrpDump.Size = new System.Drawing.Size(439, 60);
+            this.GrpDump.Size = new System.Drawing.Size(439, 75);
             this.GrpDump.TabIndex = 9;
             this.GrpDump.TabStop = false;
             this.GrpDump.Text = "Dump Format";
@@ -190,11 +190,11 @@
             this.GrpConnection.Controls.Add(this.TxtBoxIP);
             this.GrpConnection.Controls.Add(this.TxtBoxPort);
             this.GrpConnection.Controls.Add(this.LblPort);
-            this.GrpConnection.Location = new System.Drawing.Point(12, 32);
+            this.GrpConnection.Location = new System.Drawing.Point(12, 40);
             this.GrpConnection.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.GrpConnection.Name = "GrpConnection";
             this.GrpConnection.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.GrpConnection.Size = new System.Drawing.Size(439, 102);
+            this.GrpConnection.Size = new System.Drawing.Size(439, 128);
             this.GrpConnection.TabIndex = 10;
             this.GrpConnection.TabStop = false;
             this.GrpConnection.Text = "Connection";
@@ -202,10 +202,10 @@
             // RadioUSB
             // 
             this.RadioUSB.AutoSize = true;
-            this.RadioUSB.Location = new System.Drawing.Point(268, 20);
+            this.RadioUSB.Location = new System.Drawing.Point(268, 25);
             this.RadioUSB.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.RadioUSB.Name = "RadioUSB";
-            this.RadioUSB.Size = new System.Drawing.Size(56, 20);
+            this.RadioUSB.Size = new System.Drawing.Size(57, 24);
             this.RadioUSB.TabIndex = 1;
             this.RadioUSB.TabStop = true;
             this.RadioUSB.Text = "USB";
@@ -215,10 +215,10 @@
             // RadioWiFi
             // 
             this.RadioWiFi.AutoSize = true;
-            this.RadioWiFi.Location = new System.Drawing.Point(108, 20);
+            this.RadioWiFi.Location = new System.Drawing.Point(108, 25);
             this.RadioWiFi.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.RadioWiFi.Name = "RadioWiFi";
-            this.RadioWiFi.Size = new System.Drawing.Size(59, 20);
+            this.RadioWiFi.Size = new System.Drawing.Size(65, 24);
             this.RadioWiFi.TabIndex = 0;
             this.RadioWiFi.TabStop = true;
             this.RadioWiFi.Text = "Wi-Fi";
@@ -233,11 +233,11 @@
             this.GrpAction.Controls.Add(this.RadioSlot);
             this.GrpAction.Controls.Add(this.RadioBox);
             this.GrpAction.Controls.Add(this.RadioTargetAll);
-            this.GrpAction.Location = new System.Drawing.Point(12, 140);
+            this.GrpAction.Location = new System.Drawing.Point(12, 175);
             this.GrpAction.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.GrpAction.Name = "GrpAction";
             this.GrpAction.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.GrpAction.Size = new System.Drawing.Size(439, 102);
+            this.GrpAction.Size = new System.Drawing.Size(439, 128);
             this.GrpAction.TabIndex = 11;
             this.GrpAction.TabStop = false;
             this.GrpAction.Text = "Dump Target";
@@ -246,10 +246,11 @@
             // 
             this.ChkBoxFolders.AutoSize = true;
             this.ChkBoxFolders.Enabled = false;
-            this.ChkBoxFolders.Location = new System.Drawing.Point(261, 63);
+            this.ChkBoxFolders.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.ChkBoxFolders.Location = new System.Drawing.Point(261, 79);
             this.ChkBoxFolders.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ChkBoxFolders.Name = "ChkBoxFolders";
-            this.ChkBoxFolders.Size = new System.Drawing.Size(171, 20);
+            this.ChkBoxFolders.Size = new System.Drawing.Size(173, 21);
             this.ChkBoxFolders.TabIndex = 6;
             this.ChkBoxFolders.Text = "Create folders for boxes";
             this.ChkBoxFolders.UseVisualStyleBackColor = true;
@@ -257,28 +258,28 @@
             // ComboSlot
             // 
             this.ComboSlot.FormattingEnabled = true;
-            this.ComboSlot.Location = new System.Drawing.Point(147, 63);
+            this.ComboSlot.Location = new System.Drawing.Point(147, 79);
             this.ComboSlot.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ComboSlot.Name = "ComboSlot";
-            this.ComboSlot.Size = new System.Drawing.Size(103, 24);
+            this.ComboSlot.Size = new System.Drawing.Size(103, 28);
             this.ComboSlot.TabIndex = 5;
             // 
             // ComboBox
             // 
             this.ComboBox.FormattingEnabled = true;
-            this.ComboBox.Location = new System.Drawing.Point(8, 63);
+            this.ComboBox.Location = new System.Drawing.Point(8, 79);
             this.ComboBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ComboBox.Name = "ComboBox";
-            this.ComboBox.Size = new System.Drawing.Size(103, 24);
+            this.ComboBox.Size = new System.Drawing.Size(103, 28);
             this.ComboBox.TabIndex = 4;
             // 
             // RadioSlot
             // 
             this.RadioSlot.AutoSize = true;
-            this.RadioSlot.Location = new System.Drawing.Point(147, 21);
+            this.RadioSlot.Location = new System.Drawing.Point(147, 26);
             this.RadioSlot.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.RadioSlot.Name = "RadioSlot";
-            this.RadioSlot.Size = new System.Drawing.Size(99, 20);
+            this.RadioSlot.Size = new System.Drawing.Size(108, 24);
             this.RadioSlot.TabIndex = 3;
             this.RadioSlot.TabStop = true;
             this.RadioSlot.Text = "Specifc Slot";
@@ -288,10 +289,10 @@
             // RadioBox
             // 
             this.RadioBox.AutoSize = true;
-            this.RadioBox.Location = new System.Drawing.Point(8, 21);
+            this.RadioBox.Location = new System.Drawing.Point(8, 26);
             this.RadioBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.RadioBox.Name = "RadioBox";
-            this.RadioBox.Size = new System.Drawing.Size(102, 20);
+            this.RadioBox.Size = new System.Drawing.Size(111, 24);
             this.RadioBox.TabIndex = 2;
             this.RadioBox.TabStop = true;
             this.RadioBox.Text = "Specific Box";
@@ -301,10 +302,10 @@
             // RadioTargetAll
             // 
             this.RadioTargetAll.AutoSize = true;
-            this.RadioTargetAll.Location = new System.Drawing.Point(268, 21);
+            this.RadioTargetAll.Location = new System.Drawing.Point(268, 26);
             this.RadioTargetAll.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.RadioTargetAll.Name = "RadioTargetAll";
-            this.RadioTargetAll.Size = new System.Drawing.Size(143, 20);
+            this.RadioTargetAll.Size = new System.Drawing.Size(156, 24);
             this.RadioTargetAll.TabIndex = 1;
             this.RadioTargetAll.TabStop = true;
             this.RadioTargetAll.Text = "All Boxes and Slots";
@@ -319,21 +320,21 @@
             // 
             this.GrpPath.Controls.Add(this.BtnBrowse);
             this.GrpPath.Controls.Add(this.TxtBoxPath);
-            this.GrpPath.Location = new System.Drawing.Point(12, 314);
+            this.GrpPath.Location = new System.Drawing.Point(12, 392);
             this.GrpPath.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.GrpPath.Name = "GrpPath";
             this.GrpPath.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.GrpPath.Size = new System.Drawing.Size(439, 57);
+            this.GrpPath.Size = new System.Drawing.Size(439, 71);
             this.GrpPath.TabIndex = 13;
             this.GrpPath.TabStop = false;
             this.GrpPath.Text = "Dump Folder Path";
             // 
             // BtnBrowse
             // 
-            this.BtnBrowse.Location = new System.Drawing.Point(360, 21);
+            this.BtnBrowse.Location = new System.Drawing.Point(360, 26);
             this.BtnBrowse.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.BtnBrowse.Name = "BtnBrowse";
-            this.BtnBrowse.Size = new System.Drawing.Size(73, 25);
+            this.BtnBrowse.Size = new System.Drawing.Size(73, 31);
             this.BtnBrowse.TabIndex = 1;
             this.BtnBrowse.Text = "Browse";
             this.BtnBrowse.UseVisualStyleBackColor = true;
@@ -341,19 +342,19 @@
             // 
             // TxtBoxPath
             // 
-            this.TxtBoxPath.Location = new System.Drawing.Point(21, 21);
+            this.TxtBoxPath.Location = new System.Drawing.Point(21, 26);
             this.TxtBoxPath.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TxtBoxPath.Name = "TxtBoxPath";
-            this.TxtBoxPath.Size = new System.Drawing.Size(333, 22);
+            this.TxtBoxPath.Size = new System.Drawing.Size(333, 27);
             this.TxtBoxPath.TabIndex = 0;
             // 
             // ProgressBar
             // 
-            this.ProgressBar.Location = new System.Drawing.Point(12, 524);
+            this.ProgressBar.Location = new System.Drawing.Point(12, 655);
             this.ProgressBar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ProgressBar.Maximum = 6000;
             this.ProgressBar.Name = "ProgressBar";
-            this.ProgressBar.Size = new System.Drawing.Size(439, 26);
+            this.ProgressBar.Size = new System.Drawing.Size(439, 32);
             this.ProgressBar.Step = 1;
             this.ProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.ProgressBar.TabIndex = 14;
@@ -368,6 +369,7 @@
             // 
             // Tools
             // 
+            this.Tools.BackColor = System.Drawing.SystemColors.MenuBar;
             this.Tools.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.Tools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolsToolStripMenuItem});
@@ -380,6 +382,7 @@
             // 
             // toolsToolStripMenuItem
             // 
+            this.toolsToolStripMenuItem.BackColor = System.Drawing.SystemColors.MenuBar;
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.decryptFromFilesToolStripMenuItem,
             this.encryptFromFilesToolStripMenuItem,
@@ -450,9 +453,9 @@
             // 
             // DumpForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(457, 562);
+            this.ClientSize = new System.Drawing.Size(457, 702);
             this.Controls.Add(this.ProgressBar);
             this.Controls.Add(this.GrpPath);
             this.Controls.Add(this.GrpAction);

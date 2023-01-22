@@ -34,7 +34,9 @@ namespace HOME
                 // Find and open the usb device.
                 foreach (UsbRegistry ur in UsbDevice.AllDevices)
                 {
-                    ur.DeviceProperties.TryGetValue("Address", out object port);
+                    ur.DeviceProperties.TryGetValue("Address", out object? port);
+                    if (port is null)
+                        continue;
                     if (ur.Vid == 1406 && ur.Pid == 12288 && Port == (int)port)
                         SwDevice = ur.Device;
                 }
@@ -43,7 +45,7 @@ namespace HOME
                 if (SwDevice == null)
                     throw new Exception("USB device not found.");
 
-                if (!(SwDevice is IUsbDevice usb))
+                if (SwDevice is not IUsbDevice usb)
                     throw new Exception("Device is using a WinUSB driver. Use libusbK and create a filter.");
                 if (!usb.UsbRegistryInfo.IsAlive)
                     usb.ResetDevice();

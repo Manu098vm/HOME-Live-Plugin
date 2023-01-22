@@ -6,7 +6,6 @@ namespace HOME
 {
     public partial class DumpForm : Form
     {
-
         HOME PluginInstance = null!;
 
         public DumpForm(HOME instance)
@@ -36,32 +35,32 @@ namespace HOME
         {
             if (!RadioWiFi.Checked && !RadioUSB.Checked)
             {
-                TxtBoxLog.Text = "Select the connection method.";
+                WriteLog("Select the connection method.");
                 return;
             }
             else if (TxtBoxIP.Enabled && string.IsNullOrWhiteSpace(TxtBoxIP.Text))
             {
-                TxtBoxLog.Text = "Insert a proper IP Address.";
+                WriteLog("Insert a proper IP Address.");
                 return;
             }
             else if (string.IsNullOrWhiteSpace(TxtBoxPort.Text) || CheckPortTxt())
             {
-                TxtBoxLog.Text = "Insert a proper Port.";
+                WriteLog("Insert a proper Port.");
                 return;
             }
             else if(!RadioBox.Checked && !RadioSlot.Checked && !RadioTargetAll.Checked)
             {
-                TxtBoxLog.Text = "Select the dump Target.";
+                WriteLog("Select the dump Target.");
                 return;
             }
             else if(!RadioEncrypted.Checked && !RadioDecrypted.Checked && !RadioEncAndDec.Checked)
             {
-                TxtBoxLog.Text = "Select the dump Format.";
+                WriteLog("Select the dump Format.");
                 return;
             }
             else if (string.IsNullOrWhiteSpace(TxtBoxPath.Text))
             {
-                TxtBoxLog.Text = "Insert a proper IP Address.";
+                WriteLog("Insert a proper IP Address.");
                 return;
             }
 
@@ -72,7 +71,7 @@ namespace HOME
             Properties.Settings.Default["Path"] = TxtBoxPath.Text;
             Properties.Settings.Default.Save();
 
-            TxtBoxLog.Text = "Connecting....";
+            WriteLog("Connecting....");
             GrpConnection.Enabled = false;
             GrpAction.Enabled = false;
             GrpDump.Enabled = false;
@@ -125,12 +124,12 @@ namespace HOME
                     foreach (String file in OpenFileDialog.FileNames)
                     {
                         i++;
-                        PluginInstance.StartEncryptorDecryptor(this, (DumpFormat)e.Argument, file, SaveFileDialog.SelectedPath.ToString());
-                        TxtBoxLog.Text = $"Loading [{i}] file(s).";
+                        PluginInstance.StartEncryptorDecryptor(this, (DumpFormat)e.Argument!, file, SaveFileDialog.SelectedPath.ToString());
+                        WriteLog($"Loading [{i}] file(s).");
                         bgWorker.ReportProgress(6000 / OpenFileDialog.FileNames.Length * i);
                     }
                     bgWorker.ReportProgress(6000);
-                    TxtBoxLog.Text = $"Process completed. [{i}] file(s) elaborated.";
+                    WriteLog($"Process completed. [{i}] file(s) elaborated.");
                 }
             }
             catch (Exception ex)
@@ -161,12 +160,12 @@ namespace HOME
                 DialogResult disclaimer = MessageBox.Show(warning, "Disclaimer", MessageBoxButtons.YesNo);
                 if (disclaimer == DialogResult.Yes)
                 {
-                    if ((bool)e.Argument == false)
+                    if ((bool)e.Argument! == false)
                     {
                         if (!PluginInstance.StartLoader(this, OpenFileDialog.FileName, (bool)e.Argument))
-                            TxtBoxLog.Text = "File not compatible with the current Save File";
+                            WriteLog("File not compatible with the current Save File");
                         else
-                            TxtBoxLog.Text = "Process completed. [1] compatibile file elaborated.";
+                            WriteLog("Process completed. [1] compatibile file elaborated.");
                     }
                     else
                     {
@@ -188,14 +187,14 @@ namespace HOME
                                     currSlot++;
                                     i++;
                                 }
-                                TxtBoxLog.Text = $"Loading [{i}] compatible file(s).";
+                                WriteLog($"Loading [{i}] compatible file(s).");
                             }
                             else
                                 break;
 
                             bgWorker.ReportProgress(6000 / OpenFileDialog.FileNames.Length * i);
                         }
-                        TxtBoxLog.Text = $"Process completed. [{i}] compatibile file(s) elaborated.";
+                        WriteLog($"Process completed. [{i}] compatibile file(s) elaborated.");
                         PluginInstance.ReloadSav();
                     }
                     bgWorker.ReportProgress(6000);
@@ -303,10 +302,68 @@ namespace HOME
 
         public string GetIP() => TxtBoxIP.Text;
         public int GetPort() => (int)UInt32.Parse(TxtBoxPort.Text);
-        public int GetTargetBox() => ComboBox.SelectedIndex;
-        public int GetTargetSlot() => ComboSlot.SelectedIndex;
-        public string GetPath() => TxtBoxPath.Text;
-        public bool GetBoxFolderRequested() => RadioTargetAll.Checked && ChkBoxFolders.Checked;
+
+        public int GetTargetBox()
+        {
+            if(ComboBox.InvokeRequired)
+            {
+                var res = 0;
+                ComboBox.Invoke(() => { res = ComboBox.SelectedIndex; });
+                return res;
+            }
+            else
+                return ComboBox.SelectedIndex;
+        }
+
+        public int GetTargetSlot()
+        {
+            if (ComboSlot.InvokeRequired)
+            {
+                var res = 0;
+                ComboSlot.Invoke(() => { res = ComboSlot.SelectedIndex; });
+                return res;
+            }
+            else
+                return ComboSlot.SelectedIndex;
+        }
+
+        public string GetPath()
+        {
+            if (TxtBoxPath.InvokeRequired)
+            {
+                var res = "";
+                TxtBoxPath.Invoke(() => { res = TxtBoxPath.Text; });
+                return res;
+            }
+            else 
+            if (TxtBoxPath.InvokeRequired)
+            {
+                var res = "";
+                TxtBoxPath.Invoke(() => { res = TxtBoxPath.Text; });
+                return res;
+            }
+            else
+                return TxtBoxPath.Text;
+        }
+
+        public bool GetBoxFolderRequested()
+        {
+            var radio = false;
+            var check = false;
+
+            if(RadioTargetAll.InvokeRequired)
+                RadioTargetAll.Invoke(() => { radio = RadioTargetAll.Checked; });
+            else
+                radio = RadioTargetAll.Checked;
+
+            if (ChkBoxFolders.InvokeRequired)
+                ChkBoxFolders.Invoke(() => { check = ChkBoxFolders.Checked; });
+            else
+                check = ChkBoxFolders.Checked;
+
+            return radio && check;
+        }
+
         public ConnectionType GetConnectionType()
         {
             if (RadioUSB.Checked)
@@ -332,7 +389,21 @@ namespace HOME
             else
                 return DumpFormat.Encrypted;
         }
-        public void WriteLog(string str) => TxtBoxLog.Text = str;
-        public void AppendLog(string str) => TxtBoxLog.AppendText(str);
+
+        public void WriteLog(string str) 
+        {
+            if(TxtBoxLog.InvokeRequired)
+                TxtBoxLog.Invoke(() => { TxtBoxLog.Text = str; });
+            else
+                TxtBoxLog.Text = str;
+        }
+
+        public void AppendLog(string str) 
+        {
+            if (TxtBoxLog.InvokeRequired)
+                TxtBoxLog.Invoke(() => { TxtBoxLog.AppendText(str); });
+            else 
+                TxtBoxLog.AppendText(str);
+        }
     }
 }

@@ -5,6 +5,7 @@ using PKHeX.Core;
 using System.Text;
 using System.ComponentModel;
 using static System.Buffers.Binary.BinaryPrimitives;
+using System.Collections.Generic;
 
 namespace HOME
 {
@@ -17,6 +18,8 @@ namespace HOME
         public ISaveFileProvider SaveFileEditor { get; private set; } = null!;
         public IPKMView PKMEditor { get; private set; } = null!;
 
+        private readonly ToolStripMenuItem Plugin = new("Home Live Plugin");
+
         public const int HomeSlotSize = 584;
         public const int HomeBoxes = 200;
         public const int HomeSlots = 30;
@@ -28,14 +31,16 @@ namespace HOME
         public const int BSSlots = 30;
         public const int SwShBoxes = 32;
         public const int SwShSlots = 30;
+        public const int SVBoxes = 32;
+        public const int SVSlots = 30;
 
         public void Initialize(params object[] args)
         {
-            SaveFileEditor = (ISaveFileProvider)Array.Find(args, z => z is ISaveFileProvider);
-            PKMEditor = (IPKMView)Array.Find(args, z => z is IPKMView);
-            
-            var menu = (ToolStrip)Array.Find(args, z => z is ToolStrip);
+            SaveFileEditor = (ISaveFileProvider)Array.Find(args, z => z is ISaveFileProvider)!;
+            PKMEditor = (IPKMView)Array.Find(args, z => z is IPKMView)!;
+            var menu = (ToolStrip)Array.Find(args, z => z is ToolStrip)!;
             LoadMenuStrip(menu);
+            NotifySaveLoaded();
         }
 
         private void LoadMenuStrip(ToolStrip menuStrip)
@@ -50,8 +55,9 @@ namespace HOME
         {
             var dumper = new ToolStripMenuItem("Home Live Dumper");
             var viewer = new ToolStripMenuItem("Home Live Viewer");
-            tools.DropDownItems.Add(dumper);
-            tools.DropDownItems.Add(viewer);
+            Plugin.DropDownItems.Add(dumper);
+            Plugin.DropDownItems.Add(viewer);
+            tools.DropDownItems.Add(Plugin);
             dumper.Click += (s, e) => new DumpForm(this).Show();
             viewer.Click += (s, e) => new ViewForm(this).Show();
         }
@@ -137,7 +143,7 @@ namespace HOME
 
         public void StartViewer(ViewForm frm, BackgroundWorker? bgWorker)
         {
-            if (bgWorker != null)
+            if (bgWorker is not null)
             {
                 try
                 {
@@ -163,7 +169,17 @@ namespace HOME
                                 var data = ExtractFromBoxData(j, ref boxData);
                                 if (data != null)
                                 {
-                                    var pkm = ConvertToPKM(new PKH(data), frm.GetConversionType());
+                                    PKM? pkm = null;
+                                    try
+                                    {
+                                        pkm = ConvertToPKM(new PKH(data), frm.GetConversionType());
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        MessageBox.Show($"{ex.Message}");
+                                        return;
+                                    }
+
                                     if (pkm != null)
                                     {
                                         LegalityHelper.CheckAndFixLegality(pkm);
@@ -176,7 +192,11 @@ namespace HOME
                     }
                     frm.WriteLog("Conversion completed.");
                     bgWorker.ReportProgress(100);
-                    SaveFileEditor.ReloadSlots();
+
+                    if (SaveFileEditor is UserControl u && u.InvokeRequired)
+                        u.Invoke(SaveFileEditor.ReloadSlots);
+                    else
+                        SaveFileEditor.ReloadSlots();
                 }
                 catch (Exception ex)
                 {
@@ -195,14 +215,31 @@ namespace HOME
                 return false;
             }
 
-            var pkm = ConvertToPKM(DecryptEH1(data)!, ConversionType.AnyData);
+            PKM? pkm = null;
+            try
+            {
+                pkm = ConvertToPKM(DecryptEH1(data)!, ConversionType.AnyData);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex.Message}");
+                if (SaveFileEditor.SAV is SAV9SV)
+                    return false;
+            }
+
             if (pkm != null)
             {
-                LegalityHelper.CheckAndFixLegality(pkm);
+                LegalityHelper.CheckAndFixLegality(pkm, SaveFileEditor.SAV);
                 if (toBoxes)
                     SaveFileEditor.SAV.SetBoxSlotAtIndex(pkm, box, slot);
                 else
-                    PKMEditor.PopulateFields(pkm, true);
+                {
+                    SaveFileEditor.SAV.AdaptPKM(pkm);
+                    if (PKMEditor is UserControl u && u.InvokeRequired)
+                        u.Invoke(() => { PKMEditor.PopulateFields(pkm, true); });
+                    else
+                        PKMEditor.PopulateFields(pkm, true);
+                }
                 return true;
             }
 
@@ -246,19 +283,93 @@ namespace HOME
 
         private PKM? ConvertToPKM(PKH? pkh, ConversionType conv)
         {
-            if(pkh != null && CanConvert(pkh, conv))
-            {
-                var sav = SaveFileEditor.SAV;
-                if (sav is SAV7b)
-                    return pkh.ConvertToPB7();
-                else if (sav is SAV8SWSH)
-                    return pkh.ConvertToPK8();
-                else if (sav is SAV8BS)
-                    return pkh.ConvertToPB8();
-                else if (sav is SAV8LA)
-                    return pkh.ConvertToPA8();
-            }
+            if (pkh != null && CanConvert(pkh, conv))
+                return SimulateTransferAndConvert(pkh);
             return null;
+        }
+
+        private PKM? SimulateTransferAndConvert(PKH pkh)
+        {
+            var sav = SaveFileEditor.SAV;
+            if (sav is SAV7b)
+            {
+                return pkh.ConvertToPB7();
+            }
+            else if (sav is SAV8SWSH)
+            {
+                if (pkh.DataPK8 is not null)
+                    return pkh.ConvertToPK8();
+                else
+                {
+                    EntityConverter.RejuvenateHOME = EntityRejuvenationSetting.MissingDataHOME;
+                    var pk = EntityConverter.ConvertToType(GetAvailablePkmData(pkh)!, typeof(PK8), out var success);
+                    if ((int)success < 4)
+                        return pk;
+                    else
+                        return pkh.ConvertToPK8();
+                }
+            }
+            else if (sav is SAV8BS)
+            {
+                if (pkh.DataPB8 is not null)
+                    return pkh.ConvertToPB8();
+                else
+                {
+                    EntityConverter.RejuvenateHOME = EntityRejuvenationSetting.MissingDataHOME;
+                    var pk = EntityConverter.ConvertToType(GetAvailablePkmData(pkh)!, typeof(PB8), out var success);
+                    if ((int)success < 4)
+                        return pk;
+                    else
+                        return pkh.ConvertToPB8();
+                }
+            }
+            else if (sav is SAV8LA)
+            {
+                if (pkh.DataPA8 is not null)
+                    return pkh.ConvertToPA8();
+                else
+                {
+                    EntityConverter.RejuvenateHOME = EntityRejuvenationSetting.MissingDataHOME;
+                    var pk = EntityConverter.ConvertToType(GetAvailablePkmData(pkh)!, typeof(PA8), out var success);
+                    if ((int)success < 4)
+                        return pk;
+                    else
+                        return pkh.ConvertToPA8();
+                }
+            }
+            else if (sav is SAV9SV)
+            {
+                if (pkh.DataPK9 is not null)
+                    return pkh.ConvertToPK9();
+                else
+                {
+                    //EntityConverter.RejuvenateHOME = EntityRejuvenationSetting.MissingDataHOME;
+                    //var pk = EntityConverter.ConvertToType(GetAvailablePkmData(pkh)!, typeof(PK9), out var success);
+                    //if ((int)success < 4)
+                        //return pk;
+                    //else
+                        //return pkh.ConvertToPK9();
+                    throw new Exception("No route for PKH -> PK9. Please wait patiently for a Pokémon HOME update.\n");
+                }
+            }
+            else 
+                throw new ArgumentOutOfRangeException(nameof(sav));
+        }
+
+        private PKM? GetAvailablePkmData(PKH pkh)
+        {
+            if (pkh.DataPK8 is not null)
+                return pkh.ConvertToPK8();
+            else if (pkh.DataPB8 is not null)
+                return pkh.ConvertToPB8();
+            else if(pkh.DataPA8 is not null)
+                return pkh.ConvertToPA8();
+            else if(pkh.DataPK9 is not null)
+                return pkh.ConvertToPK9();
+            else if(pkh.DataPB7 is not null)
+                return pkh.ConvertToPB7();
+            else 
+                throw new ArgumentOutOfRangeException();
         }
 
         private bool CanConvert(PKH? pkh, ConversionType conv)
@@ -268,12 +379,12 @@ namespace HOME
                 var sav = SaveFileEditor.SAV;
                 if (sav is SAV7b)
                 {
-                    if (conv is ConversionType.SpecificData && CheckLGPEAvailability(pkh) && pkh.DataPB7 != null)
+                    if (conv is ConversionType.SpecificData && CheckLGPEAvailability(pkh) && pkh.DataPB7 is not null)
                         return true;
                 }
                 else if(sav is SAV8SWSH)
                 {
-                    if (conv is ConversionType.SpecificData && CheckSwShAvailability(pkh) && pkh.DataPK8 != null)
+                    if (conv is ConversionType.SpecificData && CheckSwShAvailability(pkh) && pkh.DataPK8 is not null)
                         return true;
                     else if (conv is ConversionType.CompatibleData && CheckSwShAvailability(pkh))
                         return true;
@@ -282,7 +393,7 @@ namespace HOME
                 }
                 else if(sav is SAV8BS)
                 {
-                    if (conv is ConversionType.SpecificData && CheckBDSPAvailability(pkh) && pkh.DataPB8 != null)
+                    if (conv is ConversionType.SpecificData && CheckBDSPAvailability(pkh) && pkh.DataPB8 is not null)
                         return true;
                     else if (conv is ConversionType.CompatibleData && CheckBDSPAvailability(pkh))
                         return true;
@@ -291,9 +402,18 @@ namespace HOME
                 }
                 else if (sav is SAV8LA)
                 {
-                    if (conv is ConversionType.SpecificData && CheckPLAAvailability(pkh) && pkh.DataPA8 != null)
+                    if (conv is ConversionType.SpecificData && CheckPLAAvailability(pkh) && pkh.DataPA8 is not null)
                         return true;
                     else if (conv is ConversionType.CompatibleData && CheckPLAAvailability(pkh))
+                        return true;
+                    else if (conv is ConversionType.AnyData)
+                        return true;
+                }
+                else if(sav is SAV9SV)
+                {
+                    if (conv is ConversionType.SpecificData && CheckSVAvailability(pkh) && pkh.DataPK9 is not null)
+                        return true;
+                    else if (conv is ConversionType.CompatibleData && CheckSVAvailability(pkh))
                         return true;
                     else if (conv is ConversionType.AnyData)
                         return true;
@@ -333,6 +453,11 @@ namespace HOME
             {
                 remoteBoxSize = HomeSlotSize * LASlots;
                 remoteBoxTarget = index * LABoxes;
+            }
+            else if(SaveFileEditor.SAV is SAV9SV)
+            {
+                remoteBoxSize= HomeSlotSize * SVSlots;
+                remoteBoxTarget = index * SVBoxes;
             }
             else
                 throw new ArgumentException($"Unrecognized save file type {SaveFileEditor.SAV.GetType()}");
@@ -454,7 +579,7 @@ namespace HOME
         {
             if (data != null)
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(path));
+                Directory.CreateDirectory(Path.GetDirectoryName(path)!);
                 File.WriteAllBytes(path, data);
             }
             else
@@ -482,6 +607,7 @@ namespace HOME
             return version;
         }
 
+        private bool CheckSVAvailability(PKM pk) => PersonalTable.SV.IsPresentInGame(pk.Species, pk.Form);
         private bool CheckPLAAvailability(PKM pk) => PersonalTable.LA.IsPresentInGame(pk.Species, pk.Form);
         private bool CheckBDSPAvailability(PKM pk) => PersonalTable.BDSP.IsPresentInGame(pk.Species, pk.Form);
         private bool CheckSwShAvailability(PKM pk) => PersonalTable.SWSH.IsPresentInGame(pk.Species, pk.Form);
@@ -547,21 +673,107 @@ namespace HOME
                 savSlots = LASlots;
                 savBoxes = LABoxes;
             }
+            else if (SaveFileEditor.SAV is SAV9SV)
+            {
+                savSlots = SVSlots;
+                savBoxes = SVBoxes;
+            }
             else
                 throw new ArgumentException($"Unrecognized save file type {SaveFileEditor.SAV.GetType()}");
         }
 
-        public void ReloadSav() => SaveFileEditor.ReloadSlots();
+        public void ReloadSav()
+        {
+            if (SaveFileEditor is UserControl u && u.InvokeRequired)
+                u.Invoke(SaveFileEditor.ReloadSlots);
+            else
+                SaveFileEditor.ReloadSlots();
+        }
 
         public void NotifySaveLoaded()
         {
-            Console.WriteLine($"{Name} was notified that a Save File was just loaded.");
+            if (SaveFileEditor.SAV is SAV9SV or SAV8LA or SAV8BS or SAV8SWSH or SAV7b)
+                Plugin.Enabled = true;
+            else
+                Plugin.Enabled = false;
         }
 
         public bool TryLoadFile(string filePath)
         {
-            Console.WriteLine($"{Name} was provided with the file path, but chose to do nothing with it.");
-            return false; // no action taken
+            var pkhlist = new List<PKH>();
+
+            if (Directory.Exists(filePath))
+            {
+                var files = Directory.EnumerateFiles(filePath, "*.*", SearchOption.AllDirectories);
+                foreach (var file in files)
+                    TryAddPkh(file, pkhlist);
+            }
+
+            else if(File.Exists(filePath))
+                TryAddPkh(filePath, pkhlist);
+
+            var pklist = new List<PKM>();
+            foreach (var pkh in pkhlist)
+            {
+                PKM? pkm = null;
+                try
+                {
+                    pkm = ConvertToPKM(pkh, ConversionType.AnyData);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"{ex.Message}");
+                    return false;
+                }
+                if (pkm != null)
+                {
+                    SaveFileEditor.SAV.AdaptPKM(pkm);
+                    LegalityHelper.CheckAndFixLegality(pkm, SaveFileEditor.SAV);
+                    pklist.Add(pkm);
+                }
+            }
+
+            if (pklist.Count > 1)
+            {
+                if(SaveFileEditor is UserControl u && u.InvokeRequired)
+                    u.Invoke(() => { SaveFileEditor.SAV.LoadBoxes(pklist, out _, SaveFileEditor.CurrentBox, false, true); });
+                else
+                    SaveFileEditor.SAV.LoadBoxes(pklist, out _, SaveFileEditor.CurrentBox, false, true);
+
+                ReloadSav();
+                return true;
+            }
+
+            else if (pklist.Count == 1)
+            {
+                if (PKMEditor is UserControl u && u.InvokeRequired)
+                    u.Invoke(() => { PKMEditor.PopulateFields(pklist[0]); });
+                else
+                    PKMEditor.PopulateFields(pklist[0]);
+                return true;
+            }
+
+            return false;
+        }
+
+        private void TryAddPkh(string file, List<PKH> pkhlist)
+        {
+            if (Path.GetExtension(file).Equals(".pkh") ||
+                Path.GetExtension(file).Equals(".ekh") ||
+                Path.GetExtension(file).Equals(".ph1") || 
+                Path.GetExtension(file).Equals(".eh1"))
+            {
+                try
+                {
+                    var data = File.ReadAllBytes(file);
+                    if (DataVersion(data) != 1)
+                        return;
+                    var pkh = DecryptEH1(data);
+                    if (pkh!.Valid)
+                        pkhlist.Add(pkh);
+                }
+                catch { }
+            }
         }
     }
 }
