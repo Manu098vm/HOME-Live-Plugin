@@ -6,11 +6,14 @@ using System.Text;
 using System.ComponentModel;
 using static System.Buffers.Binary.BinaryPrimitives;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HOME
 {
     public class HOME : IPlugin
     {
+        public const string Version = "2.0.4";
+
         public string Name => nameof(HOME);
         public int Priority => 1;
 
@@ -36,6 +39,7 @@ namespace HOME
 
         public void Initialize(params object[] args)
         {
+            Task.Run(GitHubUtil.TryUpdate).Wait();
             SaveFileEditor = (ISaveFileProvider)Array.Find(args, z => z is ISaveFileProvider)!;
             PKMEditor = (IPKMView)Array.Find(args, z => z is IPKMView)!;
             var menu = (ToolStrip)Array.Find(args, z => z is ToolStrip)!;

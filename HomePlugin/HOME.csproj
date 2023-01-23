@@ -47,6 +47,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.0" />
+    <PackageReference Include="Octokit" Version="5.0.0" />
   </ItemGroup>
 	
 	<ItemGroup>
