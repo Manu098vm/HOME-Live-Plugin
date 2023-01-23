@@ -25,6 +25,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DebugType>embedded</DebugType>
   </PropertyGroup>
+	
   <ItemGroup>
     <None Include="..\LICENSE">
       <Pack>True</Pack>
@@ -35,18 +36,25 @@
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
+	
   <ItemGroup>
+    <PackageReference Include="Costura.Fody" Version="5.7.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive; compile</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="LibUsbDotNet" Version="2.2.29" />
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.355802">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.0" />
   </ItemGroup>
+	
 	<ItemGroup>
 		<Reference Include="PKHeX.Core">
 			<HintPath>deps\PKHeX.Core.dll</HintPath>
 		</Reference>
 	</ItemGroup>
+	
   <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -54,14 +62,17 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
   </ItemGroup>
+	
   <ItemGroup>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
+	
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(OS)' == 'Windows_NT'">
 		<RemoveDir Directories="$(OUTDIR)\cs; $(OUTDIR)\de; $(OUTDIR)\es; $(OUTDIR)\fr; $(OUTDIR)\it; $(OUTDIR)\ja; $(OUTDIR)\ko; $(OUTDIR)\pl; $(OUTDIR)\pt-BR; $(OUTDIR)\ru; $(OUTDIR)\tr; $(OUTDIR)\zh-Hans; $(OUTDIR)\zh-Hant; $(OUTDIR)\runtimes" />
 		<Delete Files="$(OUTDIR)\HOME.deps.json" />
 	</Target>
+	
 </Project>
