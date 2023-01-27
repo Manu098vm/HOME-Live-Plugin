@@ -12,7 +12,7 @@ namespace HOME
 {
     public class HOME : IPlugin
     {
-        public const string Version = "2.0.4";
+        public const string Version = "2.0.5";
 
         public string Name => nameof(HOME);
         public int Priority => 1;
