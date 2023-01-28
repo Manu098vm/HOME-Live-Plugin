@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DumpForm));
             this.BtnConnect = new System.Windows.Forms.Button();
             this.TxtBoxLog = new System.Windows.Forms.RichTextBox();
             this.TxtBoxIP = new System.Windows.Forms.TextBox();
@@ -395,28 +396,28 @@
             // decryptFromFilesToolStripMenuItem
             // 
             this.decryptFromFilesToolStripMenuItem.Name = "decryptFromFilesToolStripMenuItem";
-            this.decryptFromFilesToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.decryptFromFilesToolStripMenuItem.Size = new System.Drawing.Size(217, 26);
             this.decryptFromFilesToolStripMenuItem.Text = "Decrypt from files";
             this.decryptFromFilesToolStripMenuItem.Click += new System.EventHandler(this.DecryptFromFiles_Click);
             // 
             // encryptFromFilesToolStripMenuItem
             // 
             this.encryptFromFilesToolStripMenuItem.Name = "encryptFromFilesToolStripMenuItem";
-            this.encryptFromFilesToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.encryptFromFilesToolStripMenuItem.Size = new System.Drawing.Size(217, 26);
             this.encryptFromFilesToolStripMenuItem.Text = "Encrypt from files";
             this.encryptFromFilesToolStripMenuItem.Click += new System.EventHandler(this.EncryptFromFiles_Click);
             // 
             // loadFileToEditorToolStripMenuItem
             // 
             this.loadFileToEditorToolStripMenuItem.Name = "loadFileToEditorToolStripMenuItem";
-            this.loadFileToEditorToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.loadFileToEditorToolStripMenuItem.Size = new System.Drawing.Size(217, 26);
             this.loadFileToEditorToolStripMenuItem.Text = "Load file to Editor";
             this.loadFileToEditorToolStripMenuItem.Click += new System.EventHandler(this.LoadToEditor_Click);
             // 
             // loadFilesToBoxesToolStripMenuItem
             // 
             this.loadFilesToBoxesToolStripMenuItem.Name = "loadFilesToBoxesToolStripMenuItem";
-            this.loadFilesToBoxesToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.loadFilesToBoxesToolStripMenuItem.Size = new System.Drawing.Size(217, 26);
             this.loadFilesToBoxesToolStripMenuItem.Text = "Load files to Boxes";
             this.loadFilesToBoxesToolStripMenuItem.Click += new System.EventHandler(this.LoadToBoxes_Click);
             // 
@@ -464,11 +465,11 @@
             this.Controls.Add(this.TxtBoxLog);
             this.Controls.Add(this.BtnConnect);
             this.Controls.Add(this.Tools);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DumpForm";
-            this.ShowIcon = false;
             this.Text = "Home Plugin";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_Close);
             this.GrpDump.ResumeLayout(false);

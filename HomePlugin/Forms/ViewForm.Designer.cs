@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ViewForm));
             this.LblAddress = new System.Windows.Forms.Label();
             this.GrpConnection = new System.Windows.Forms.GroupBox();
             this.TxtPort = new System.Windows.Forms.TextBox();
@@ -277,11 +278,11 @@
             this.Controls.Add(this.LblBoxes);
             this.Controls.Add(this.BtnConnect);
             this.Controls.Add(this.GrpConnection);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ViewForm";
-            this.ShowIcon = false;
             this.Text = "Home Plugin";
             this.GrpConnection.ResumeLayout(false);
             this.GrpConnection.PerformLayout();
