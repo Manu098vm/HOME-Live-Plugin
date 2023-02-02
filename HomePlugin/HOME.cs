@@ -45,11 +45,11 @@ namespace HOME
         public void Initialize(params object[] args)
         {
             Plugin.Image = Properties.Resources.icon.ToBitmap();
-            Task.Run(GitHubUtil.TryUpdate).Wait();
             SaveFileEditor = (ISaveFileProvider)Array.Find(args, z => z is ISaveFileProvider)!;
             PKMEditor = (IPKMView)Array.Find(args, z => z is IPKMView)!;
             var menu = (ToolStrip)Array.Find(args, z => z is ToolStrip)!;
             NotifySaveLoaded();
+            Task.Run(async () => { await GitHubUtil.TryUpdate(Language); }).Wait();
             LoadMenuStrip(menu);
             GenerateDictionary();
             TranslateDictionary(Language);

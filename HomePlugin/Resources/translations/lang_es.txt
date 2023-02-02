@@ -86,3 +86,6 @@ Warning.MismatchVersion=This plugin currently can handle only DataVersion [1]. P
 Warning.NoRoutePK9=No route for PKH -> PK9. Please wait patiently for a Pokémon HOME update.
 Warning.Unrecognized=Unrecognized save file type
 Warning.DataNull=Data is null.
+
+Update.Popup=Update available
+Update.Message=A Home Live Plugin update is available. Do you want to download the latest release?

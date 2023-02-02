@@ -86,3 +86,6 @@ Warning.MismatchVersion=Questo plugin attualmente può elaborare solamente DataVe
 Warning.NoRoutePK9=Impossibile convertire PKH -> PK9. per favore, aspetta pazientemente per un update di Pokémon Home o di questo Plugin.
 Warning.Unrecognized=Salvataggio non riconosciuto
 Warning.DataNull=Data è null.
+
+Update.Popup=Aggiornamento disponibile
+Update.Message=Un aggiornamento per Home Live Plugin è disponibile. Vuoi scaricare l'ultima release?

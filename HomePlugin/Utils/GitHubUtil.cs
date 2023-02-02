@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -8,11 +9,17 @@ namespace HOME
 {
     public static class GitHubUtil
     {
-        public static async Task TryUpdate()
+        public static async Task TryUpdate(string language)
         {
+            var strings = new Dictionary<string, string>
+            {
+                { "Update.Popup", "" },
+                { "Update.Message", "" }
+            }.TranslateInnerStrings(language);
+
             if (await IsUpdateAvailable())
             {
-                var result = MessageBox.Show("A Home Live Plugin update is available. Do you want to download the latest release?", "Update available", MessageBoxButtons.YesNo);
+                var result = MessageBox.Show(strings["Update.Message"], strings["Update.Popup"], MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
                     Process.Start(new ProcessStartInfo { FileName = @"https://github.com/Manu098vm/HOME-Live-Plugin/releases", UseShellExecute = true } );
             }
