@@ -234,7 +234,7 @@ namespace HOME
 
             if (pkm != null)
             {
-                LegalityHelper.CheckAndFixLegality(pkm, SaveFileEditor.SAV);
+                LegalityHelper.CheckAndFixLegality(pkm);
                 if (toBoxes)
                     SaveFileEditor.SAV.SetBoxSlotAtIndex(pkm, box, slot);
                 else
@@ -733,7 +733,7 @@ namespace HOME
                 if (pkm != null)
                 {
                     SaveFileEditor.SAV.AdaptPKM(pkm);
-                    LegalityHelper.CheckAndFixLegality(pkm, SaveFileEditor.SAV);
+                    LegalityHelper.CheckAndFixLegality(pkm);
                     pklist.Add(pkm);
                 }
             }

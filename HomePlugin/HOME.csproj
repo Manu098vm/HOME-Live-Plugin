@@ -48,7 +48,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.0" />
     <PackageReference Include="Octokit" Version="5.0.0" />
-    <PackageReference Include="PKHeX.Core" Version="23.1.26" />
+    <PackageReference Include="PKHeX.Core" Version="23.1.30" />
   </ItemGroup>
 	
 	<ItemGroup>

@@ -5,7 +5,7 @@ namespace HOME
     public static class LegalityHelper
     {
         //This is only used when loading PKH to Pokémon Editors/Sav Boxes. Files dumped are not altered.
-        public static bool CheckAndFixLegality(PKM pkm, SaveFile? sav = null)
+        public static bool CheckAndFixLegality(PKM pkm)
         {
             var l = new LegalityAnalysis(pkm);
             if (!l.Valid)
