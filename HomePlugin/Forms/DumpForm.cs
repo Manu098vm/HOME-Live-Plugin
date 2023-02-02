@@ -1,22 +1,29 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.ComponentModel;
+using Microsoft.VisualBasic;
+using System.Collections.Generic;
 
 namespace HOME
 {
     public partial class DumpForm : Form
     {
-        HOME PluginInstance = null!;
+        private HOME PluginInstance = null!;
+        private Dictionary<string, string> Strings = null!;
 
         public DumpForm(HOME instance)
         {
             InitializeComponent();
             PluginInstance = instance;
 
+            GenerateDictionary();
+            TranslateDictionary(PluginInstance.Language);
+            this.TranslateInterface(PluginInstance.Language);
+
             for (int i = 1; i <= 200; i++)
-                ComboBox.Items.Add($"Box {i}");
+                ComboBox.Items.Add($"{Strings["Word.Box"]} {i}");
             for (int i = 1; i <= 30; i++)
-                ComboSlot.Items.Add($"Slot {i}");
+                ComboSlot.Items.Add($"{Strings["Word.Slot"]} {i}");
             ComboBox.SelectedIndex = 0;
             ComboSlot.SelectedIndex = 0;
 
@@ -31,36 +38,75 @@ namespace HOME
             TxtBoxPath.Text = Properties.Settings.Default["Path"].ToString();
         }
 
+        private void GenerateDictionary()
+        {
+            Strings = new Dictionary<string, string>
+            {
+                { "Action.Connecting", "" },
+                { "Warning.ConnectionMethod", "" },
+                { "Warning.IpAddress", "" },
+                { "Warning.Port", "" },
+                { "Warning.Conversion", "" },
+                { "Warning.DumpTarget", "" },
+                { "Warning.DumpFormat", "" },
+                { "Warning.BoxPath", "" },
+                { "Action.Loading", "" },
+                { "Action.Completed", "" },
+                { "Action.Compatible", "" },
+                { "Action.Files", "" },
+                { "Action.Elaborated", "" },
+                { "Warning.IncompatibleFile", "" },
+                { "Warning.Name1", "" },
+                { "Warning.Name2", "" },
+                { "Warning.Line1", "" },
+                { "Warning.Line2", "" },
+                { "Warning.Line3", "" },
+                { "Warning.Line4", "" },
+                { "Warning.Line5", "" },
+                { "Warning.Line6b", "" },
+                { "Warning.Line7", "" },
+                { "Warning.Line8", "" },
+                { "Warning.Line9", "" },
+                { "Warning.Line10", "" },
+                { "Warning.Line11", "" },
+                { "Warning.Line12", "" },
+                { "Word.Box", "" },
+                { "Word.Slot", "" },
+            };
+        }
+
+        private void TranslateDictionary(string language) => Strings = Strings.TranslateInnerStrings(language);
+
         private void BtnConnect_Click(object sender, EventArgs e)
         {
             if (!RadioWiFi.Checked && !RadioUSB.Checked)
             {
-                WriteLog("Select the connection method.");
+                WriteLog(Strings["Warning.ConnectionMethod"]);
                 return;
             }
             else if (TxtBoxIP.Enabled && string.IsNullOrWhiteSpace(TxtBoxIP.Text))
             {
-                WriteLog("Insert a proper IP Address.");
+                WriteLog(Strings["Warning.IpAddress"]);
                 return;
             }
             else if (string.IsNullOrWhiteSpace(TxtBoxPort.Text) || CheckPortTxt())
             {
-                WriteLog("Insert a proper Port.");
+                WriteLog(Strings["Warning.Port"]);
                 return;
             }
             else if(!RadioBox.Checked && !RadioSlot.Checked && !RadioTargetAll.Checked)
             {
-                WriteLog("Select the dump Target.");
+                WriteLog(Strings["Warning.DumpTarget"]);
                 return;
             }
             else if(!RadioEncrypted.Checked && !RadioDecrypted.Checked && !RadioEncAndDec.Checked)
             {
-                WriteLog("Select the dump Format.");
+                WriteLog(Strings["Warning.DumpFormat"]);
                 return;
             }
             else if (string.IsNullOrWhiteSpace(TxtBoxPath.Text))
             {
-                WriteLog("Insert a proper IP Address.");
+                WriteLog(Strings["Warning.BoxPath"]);
                 return;
             }
 
@@ -71,7 +117,7 @@ namespace HOME
             Properties.Settings.Default["Path"] = TxtBoxPath.Text;
             Properties.Settings.Default.Save();
 
-            WriteLog("Connecting....");
+            WriteLog(Strings["Action.Connecting"]);
             GrpConnection.Enabled = false;
             GrpAction.Enabled = false;
             GrpDump.Enabled = false;
@@ -125,11 +171,11 @@ namespace HOME
                     {
                         i++;
                         PluginInstance.StartEncryptorDecryptor(this, (DumpFormat)e.Argument!, file, SaveFileDialog.SelectedPath.ToString());
-                        WriteLog($"Loading [{i}] file(s).");
+                        WriteLog($"{Strings["Action.Loading"]} [{i}] {Strings["Action.Files"]}.");
                         bgWorker.ReportProgress(6000 / OpenFileDialog.FileNames.Length * i);
                     }
                     bgWorker.ReportProgress(6000);
-                    WriteLog($"Process completed. [{i}] file(s) elaborated.");
+                    WriteLog($"{Strings["Action.Completed"]} [{i}] {Strings["Action.Files"]} {Strings["Action.Elaborated"]}.");
                 }
             }
             catch (Exception ex)
@@ -140,32 +186,32 @@ namespace HOME
 
         private void BackgroundLoader_DoWork(object sender, DoWorkEventArgs e)
         {
-            string warning = $"WARNING/DISCLOSURE:\n" +
-                $"PKHeX simulates a conversion from the Pokémon HOME data format (PH1) to standard PKM file formats based on the current loaded save file.\n" +
-                $"This process is unofficial and there is always the chance that it does not accurately replicate an official transfer.\n" +
-                $"If you proceed with this tool, you accept the following:\n" +
-                $"- The PKM files from the conversion are NOT legitimate in any way, even if the original encounter was.\n" +
-                $"- The resulting files from the conversion may not even be legal in some circumstances.\n" +
-                $"- If the File does not contain Specific Game Data, it is likely that the resulting Pokémon will be illegal.\n" +
-                $"- Do NOT use converted PKM in online battles/trades.\n" +
-                $"- Do NOT use converted files to report legality issues, whether in the Project Pokémon forums/Discord or in the PKHeX Development Projects Discord.\n" +
-                $"- This Plugin is intended for research, learning, and entertainment purposes.\n" +
-                $"- This Plugin is not developed by the PKHeX Development Projects server, so do NOT report problems or request support there. Use the Project Pokémon thread instead.\n" +
-                $"- The creators of this tool are not responsible for any adverse outcomes or side effects of using this tool.\n" +
-                $"\nIf you agree with the above, click the 'Yes' button. Click 'No' otherwise.";
+            string warning = $"{Strings["Warning.Name1"]}\n" +
+                $"{Strings["Warning.Line1"]}\n" +
+                $"{Strings["Warning.Line2"]}\n" +
+                $"{Strings["Warning.Line3"]}\n" +
+                $"{Strings["Warning.Line4"]}\n" +
+                $"{Strings["Warning.Line5"]}\n" +
+                $"{Strings["Warning.Line6b"]}\n" +
+                $"{Strings["Warning.Line7"]}\n" +
+                $"{Strings["Warning.Line8"]}\n" +
+                $"{Strings["Warning.Line9"]}\n" +
+                $"{Strings["Warning.Line10"]}\n" +
+                $"{Strings["Warning.Line11"]}\n" +
+                $"\n{Strings["Warning.Line12"]}";
 
             var bgWorker = sender as BackgroundWorker;
             if (bgWorker != null)
             {
-                DialogResult disclaimer = MessageBox.Show(warning, "Disclaimer", MessageBoxButtons.YesNo);
+                DialogResult disclaimer = MessageBox.Show(warning, Strings["Warning.Name1"], MessageBoxButtons.YesNo);
                 if (disclaimer == DialogResult.Yes)
                 {
                     if ((bool)e.Argument! == false)
                     {
                         if (!PluginInstance.StartLoader(this, OpenFileDialog.FileName, (bool)e.Argument))
-                            WriteLog("File not compatible with the current Save File");
+                            WriteLog(Strings["Warning.IncompatibleFile"]);
                         else
-                            WriteLog("Process completed. [1] compatibile file elaborated.");
+                            WriteLog($"{Strings["Action.Completed"]} [1] {Strings["Action.Compatible"]} {Strings["Action.Files"]} {Strings["Action.Elaborated"]}.");
                     }
                     else
                     {
@@ -187,14 +233,14 @@ namespace HOME
                                     currSlot++;
                                     i++;
                                 }
-                                WriteLog($"Loading [{i}] compatible file(s).");
+                                WriteLog($"{Strings["Action.Loading"]} [{i}] {Strings["Action.Compatible"]} {Strings["Action.Files"]}.");
                             }
                             else
                                 break;
 
                             bgWorker.ReportProgress(6000 / OpenFileDialog.FileNames.Length * i);
                         }
-                        WriteLog($"Process completed. [{i}] compatibile file(s) elaborated.");
+                        WriteLog($"{Strings["Action.Completed"]} [{i}] {Strings["Action.Compatible"]} {Strings["Action.Files"]} {Strings["Action.Elaborated"]}.");
                         PluginInstance.ReloadSav();
                     }
                     bgWorker.ReportProgress(6000);

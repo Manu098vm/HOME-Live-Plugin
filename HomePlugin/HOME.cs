@@ -16,12 +16,17 @@ namespace HOME
 
         public string Name => nameof(HOME);
         public int Priority => 1;
+        public string Language = null!;
 
         // Initialized on plugin load
         public ISaveFileProvider SaveFileEditor { get; private set; } = null!;
         public IPKMView PKMEditor { get; private set; } = null!;
 
         private readonly ToolStripMenuItem Plugin = new("Home Live Plugin");
+        private readonly ToolStripMenuItem Dumper = new ToolStripMenuItem("Home Live Dumper");
+        private readonly ToolStripMenuItem Viewer = new ToolStripMenuItem("Home Live Viewer");
+
+        private Dictionary<string, string> Strings = null!;
 
         public const int HomeSlotSize = 584;
         public const int HomeBoxes = 200;
@@ -44,9 +49,38 @@ namespace HOME
             SaveFileEditor = (ISaveFileProvider)Array.Find(args, z => z is ISaveFileProvider)!;
             PKMEditor = (IPKMView)Array.Find(args, z => z is IPKMView)!;
             var menu = (ToolStrip)Array.Find(args, z => z is ToolStrip)!;
-            LoadMenuStrip(menu);
             NotifySaveLoaded();
+            LoadMenuStrip(menu);
+            GenerateDictionary();
+            TranslateDictionary(Language);
         }
+
+        private void GenerateDictionary()
+        {
+            Strings = new Dictionary<string, string>
+            {
+                { "Action.Connected", "" },
+                { "Action.Dumping", "" },
+                { "Action.Dumped", "" },
+                { "Action.Completed", "" },
+                { "Action.Files", "" },
+                { "Warning.FormatChanges", "" },
+
+                { "Word.Box", "" },
+                { "Word.Slot", "" },
+
+                { "Warning.SomethingWrong", "" },
+                { "Warning.CheckInstallation", "" },
+                { "Warning.IncompatibleData", "" },
+                { "Warning.EmptySlot", "" },
+                { "Warning.MismatchVersion", "" },
+                { "Warning.NoRoutePK9", "" },
+                { "Warning.Unrecognized", "" },
+                { "Warning.DataNull", "" }
+            };
+        }
+
+        private void TranslateDictionary(string language) => Strings = Strings.TranslateInnerStrings(language);
 
         private void LoadMenuStrip(ToolStrip menuStrip)
         {
@@ -58,13 +92,26 @@ namespace HOME
 
         private void AddPluginControl(ToolStripDropDownItem tools)
         {
-            var dumper = new ToolStripMenuItem("Home Live Dumper");
-            var viewer = new ToolStripMenuItem("Home Live Viewer");
-            Plugin.DropDownItems.Add(dumper);
-            Plugin.DropDownItems.Add(viewer);
+
+            Plugin.DropDownItems.Add(Dumper);
+            Plugin.DropDownItems.Add(Viewer);
             tools.DropDownItems.Add(Plugin);
-            dumper.Click += (s, e) => new DumpForm(this).Show();
-            viewer.Click += (s, e) => new ViewForm(this).Show();
+            Dumper.Click += (s, e) => new DumpForm(this).Show();
+            Viewer.Click += (s, e) => new ViewForm(this).Show();
+        }
+
+        private void TranslatePlugins()
+        {
+            var dic = new Dictionary<string, string>
+            {
+                { "Plugin.HomeLivePlugin", "Home Live Plugin" },
+                { "Plugin.DumperPlugin", "Home Live Dumper" },
+                { "Plugin.ViewerPlugin", "Home Live Viewer" }
+            }.TranslateInnerStrings(Language);
+
+            Plugin.Text = dic["Plugin.HomeLivePlugin"];
+            Dumper.Text = dic["Plugin.DumperPlugin"];
+            Viewer.Text = dic["Plugin.ViewerPlugin"];
         }
 
         public void StartDumper(DumpForm frm, BackgroundWorker? bgWorker)
@@ -105,18 +152,18 @@ namespace HOME
                                     progress = (target is DumpTarget.TargetBox) ? (i+1 * HomeBoxes) : i * (completedBoxes+1);
                                 }
                                 bgWorker.ReportProgress(progress);
-                                frm.WriteLog($"Dumping [{(encrypted && decrypted ? found * 2 : found)}] file(s).\nDo note that the Home Data format might change in the future.");
+                                frm.WriteLog($"{Strings["Action.Dumping"]} [{(encrypted && decrypted ? found * 2 : found)}] {Strings["Action.Files"]}.\n{Strings["Warning.FormatChanges"]}");
                                 completedBoxes++;
                             } while (target is DumpTarget.TargetAll && completedBoxes < HomeBoxes);
                             break;
                     }
                     bgWorker.ReportProgress(HomeBoxes * HomeSlots);
-                    frm.WriteLog($"Process completed. [{(encrypted && decrypted ? found * 2 : found)}] file(s) dumped.\nDo note that the Home Data format might change in the future.");
+                    frm.WriteLog($"{Strings["Action.Completed"]} [{(encrypted && decrypted ? found * 2 : found)}] {Strings["Action.Files"]} {Strings["Action.Dumped"]}.\n{Strings["Warning.FormatChanges"]}");
                     return;
                 } catch (Exception ex)
                 {
                     MessageBox.Show(ex.ToString());
-                    frm.WriteLog("Something went wrong :-( \nCheck your configurations and sys-modules installation.");
+                    frm.WriteLog($"{Strings["Warning.SomethingWrong"]}\n{Strings["Warning.CheckInstallation"]}");
                 }
             }
         }
@@ -127,7 +174,7 @@ namespace HOME
             
             if (DataVersion(data) != 1)
             {
-                frm.WriteLog($"{file} is incompatible data.");
+                frm.WriteLog($"{file} {Strings["Warning.IncompatibleData"]}");
                 return;
             }
 
@@ -158,7 +205,7 @@ namespace HOME
                         sys = { IP = frm.GetIP(), Port = frm.GetPort() }
                     };
                     bot.sys.Connect();
-                    frm.WriteLog("Connected...");
+                    frm.WriteLog(Strings["Action.Connected"]);
 
                     var selection = frm.GetBoxIndex();
                     var qty = CalcBoxQtyInSelection(selection);
@@ -195,7 +242,7 @@ namespace HOME
                         }
                         bgWorker.ReportProgress(100 / savBoxes * i);
                     }
-                    frm.WriteLog("Conversion completed.");
+                    frm.WriteLog(Strings["Action.Completed"]);
                     bgWorker.ReportProgress(100);
 
                     if (SaveFileEditor is UserControl u && u.InvokeRequired)
@@ -206,7 +253,7 @@ namespace HOME
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.ToString());
-                    frm.WriteLog("Something went wrong :-( \nCheck your configurations and sys-modules installation.");
+                    frm.WriteLog($"{Strings["Warning.SomethingWrong"]}\n{Strings["Warning.CheckInstallation"]}");
                 }
             }
         }
@@ -216,7 +263,7 @@ namespace HOME
             var data = File.ReadAllBytes(file);
             if (DataVersion(data) != 1)
             {
-                frm.WriteLog($"{file} is incompatible data.");
+                frm.WriteLog($"{file} {Strings["Warning.IncompatibleData"]}");
                 return false;
             }
 
@@ -255,9 +302,9 @@ namespace HOME
         {
             int version = DataVersion(ekh!);
             if (version == 0)
-                frm.WriteLog($"Found an empty slot.");
+                frm.WriteLog($"{Strings["Warning.EmptySlot"]}");
             if (version > 1)
-                throw new ArgumentException($"This plugin currently can handle only DataVersion [1]. PKH DataVersion is [{version}]");
+                throw new ArgumentException($"{Strings["Warning.MismatchVersion"]}[{version}]");
             var pkh = DecryptEH1(ekh);
 
             if (pkh != null && pkh.Species != 0 && version == 1)
@@ -354,7 +401,7 @@ namespace HOME
                         //return pk;
                     //else
                         //return pkh.ConvertToPK9();
-                    throw new Exception("No route for PKH -> PK9. Please wait patiently for a Pokémon HOME update.\n");
+                    throw new Exception($"{Strings["Warning.NoRoutePK9"]}\n");
                 }
             }
             else 
@@ -465,7 +512,7 @@ namespace HOME
                 remoteBoxTarget = index * SVBoxes;
             }
             else
-                throw new ArgumentException($"Unrecognized save file type {SaveFileEditor.SAV.GetType()}");
+                throw new ArgumentException($"{Strings["Warning.Unrecognized"]} {SaveFileEditor.SAV.GetType()}");
         }
 
         //Make a different function and do not abbreviate if-else conditions for better logic flow/understanding
@@ -523,12 +570,12 @@ namespace HOME
             if (startingRemainder == 0)
                 res1 = $"{startingBox + 1}";
             else
-                res1 = $"{startingBox} Slot {startingRemainder + 1}";
+                res1 = $"{startingBox} {Strings["Word.Slot"]} { startingRemainder + 1}";
 
             if (endingRemainder == 0)
                 res2 = $"{endingBox}";
             else
-                res2 = $"{endingBox} Slot {endingRemainder}";
+                res2 = $"{endingBox} {Strings["Word.Slot"]} {endingRemainder}";
 
             return new string[] { res1, res2 };
         }
@@ -537,7 +584,7 @@ namespace HOME
         {
             var name = $"{path}\\";
             if (boxFolderReq)
-                name += $"Box {box:000}\\";
+                name += $"{Strings["Word.Box"]} {box:000}\\";
             if (pkm != null && pkm.Species != 0)
             {
                 name += $"{pkm.Species:000}";
@@ -588,7 +635,7 @@ namespace HOME
                 File.WriteAllBytes(path, data);
             }
             else
-                throw new ArgumentException("Data is null.");
+                throw new ArgumentException(Strings["Warning.DataNull"]);
         }
 
         private PKH? DecryptEH1(byte[]? ek1)
@@ -636,9 +683,9 @@ namespace HOME
 
                 for (int i = 0; i < necesaryIndexes; i++)
                     if (i == necesaryIndexes - 1 && needRemainder)
-                        res[i] = $"Box {i * savBoxes + 1} - Box {(i * savBoxes) + remainderBoxes}";
+                        res[i] = $"{Strings["Word.Box"]} {i * savBoxes + 1} - {Strings["Word.Box"]} {(i * savBoxes) + remainderBoxes}";
                     else
-                        res[i] = $"Box {i * savBoxes + 1} - Box {(i + 1) * savBoxes}";
+                        res[i] = $"{Strings["Word.Box"]} {i * savBoxes + 1} - {Strings["Word.Box"]} {(i + 1) * savBoxes}";
             }
             else
             {
@@ -650,7 +697,7 @@ namespace HOME
                 for (int boxIndex = 0; boxIndex < necesaryIndexes; boxIndex++)
                 {
                     var str = GetBoxStrings(remainderSlots, boxIndex, remoteBoxPerIndex, ref lastBox, ref lastRemainder);
-                    res[boxIndex] = $"Box {str[0]} - Box {str[1]}";
+                    res[boxIndex] = $"{Strings["Word.Box"]} {str[0]} - {Strings["Word.Box"]} {str[1]}";
                 }
             }
             return res;
@@ -684,7 +731,7 @@ namespace HOME
                 savBoxes = SVBoxes;
             }
             else
-                throw new ArgumentException($"Unrecognized save file type {SaveFileEditor.SAV.GetType()}");
+                throw new ArgumentException($"{Strings["Warning.Unrecognized"]} {SaveFileEditor.SAV.GetType()}");
         }
 
         public void ReloadSav()
@@ -698,7 +745,11 @@ namespace HOME
         public void NotifySaveLoaded()
         {
             if (SaveFileEditor.SAV is SAV9SV or SAV8LA or SAV8BS or SAV8SWSH or SAV7b)
+            {
+                Language = GameInfo.CurrentLanguage;
+                TranslatePlugins();
                 Plugin.Enabled = true;
+            }
             else
                 Plugin.Enabled = false;
         }

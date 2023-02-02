@@ -1,16 +1,24 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.ComponentModel;
+using Microsoft.VisualBasic;
+using System.Collections.Generic;
 
 namespace HOME
 {
     public partial class ViewForm : Form
     {
-        HOME PluginInstance = null!;
+        private HOME PluginInstance = null!;
+        private Dictionary<string, string> Strings = null!;
+
         public ViewForm(HOME instance)
         {
             InitializeComponent();
             PluginInstance = instance;
+
+            GenerateDictionary();
+            TranslateDictionary(PluginInstance.Language);
+            this.TranslateInterface(PluginInstance.Language);
 
             if ((bool)Properties.Settings.Default["WiFi"])
                 RadioWiFi.Select();
@@ -30,6 +38,34 @@ namespace HOME
             }
         }
 
+        private void GenerateDictionary()
+        {
+            Strings = new Dictionary<string, string>
+            {
+                { "Action.Connecting", "" },
+                { "Warning.ConnectionMethod", "" },
+                { "Warning.IpAddress", "" },
+                { "Warning.Port", "" },
+                { "Warning.Conversion", "" },
+                { "Warning.Name1", "" },
+                { "Warning.Name2", "" },
+                { "Warning.Line1", "" },
+                { "Warning.Line2", "" },
+                { "Warning.Line3", "" },
+                { "Warning.Line4", "" },
+                { "Warning.Line5", "" },
+                { "Warning.Line6", "" },
+                { "Warning.Line7", "" },
+                { "Warning.Line8", "" },
+                { "Warning.Line9", "" },
+                { "Warning.Line10", "" },
+                { "Warning.Line11", "" },
+                { "Warning.Line12", "" },
+            };
+        }
+
+        private void TranslateDictionary(string language) => Strings = Strings.TranslateInnerStrings(language);
+
         private void RadioWiFi_CheckedChanged(object sender, EventArgs e)
         {
             TxtAddress.Enabled = true;
@@ -44,22 +80,22 @@ namespace HOME
         {
             if (!RadioWiFi.Checked && !RadioUSB.Checked)
             {
-                TxtLog.Text = "Select the connection method.";
+                TxtLog.Text = Strings["Warning.ConnectionMethod"];
                 return;
             }
             else if (TxtAddress.Enabled && string.IsNullOrWhiteSpace(TxtAddress.Text))
             {
-                TxtLog.Text = "Insert a proper IP Address.";
+                TxtLog.Text = Strings["Warning.IpAddress"];
                 return;
             }
             else if (string.IsNullOrWhiteSpace(TxtPort.Text) || CheckPortTxt())
             {
-                TxtLog.Text = "Insert a proper Port.";
+                TxtLog.Text = Strings["Warning.Port"];
                 return;
             }
             else if(!RadioConvertForce.Checked && !RadioConvertSpecific.Checked && !RadioConvertAny.Checked)
             {
-                TxtLog.Text = "Select the conversion method.";
+                TxtLog.Text = Strings["Warning.Conversion"];
                 return;
             }
 
@@ -69,7 +105,7 @@ namespace HOME
             Properties.Settings.Default["Port"] = UInt32.Parse(TxtPort.Text);
             Properties.Settings.Default.Save();
 
-            TxtLog.Text = "Connecting....";
+            TxtLog.Text = Strings["Action.Connecting"];
             GrpConnection.Enabled = false;
             ComboBox.Enabled = false;
             BtnConnect.Enabled = false;
@@ -160,21 +196,21 @@ namespace HOME
 
         private void ChkWarning_Click(object sender, EventArgs e)
         {
-            string warning = $"WARNING/DISCLOSURE:\n" +
-                $"PKHeX simulates a conversion from the Pokémon HOME data format (PH1) to standard PKM file formats based on the current loaded save file.\n" +
-                $"This process is unofficial and there is always the chance that it does not accurately replicate an official transfer.\n" +
-                $"If you proceed with this tool, you accept the following:\n" +
-                $"- The PKM files from the conversion are NOT legitimate in any way, even if the original encounter was.\n" +
-                $"- The resulting files from the conversion may not even be legal in some circumstances.\n" +
-                $"- When using 'Convert any PKM data' methods, it is likely that the resulting Pokémon will be illegal.\n" +
-                $"- Do NOT use converted PKM in online battles/trades.\n" +
-                $"- Do NOT use converted files to report legality issues, whether in the Project Pokémon forums/Discord or in the PKHeX Development Projects Discord.\n" +
-                $"- This Plugin is intended for research, learning, and entertainment purposes.\n" +
-                $"- This Plugin is not developed by the PKHeX Development Projects server, so do NOT report problems or request support there. Use the Project Pokémon thread instead.\n" +
-                $"- The creators of this tool are not responsible for any adverse outcomes or side effects of using this tool.\n" +
-                $"\nIf you agree with the above, click the 'Yes' button. Click 'No' otherwise.";
+            string warning = $"{Strings["Warning.Name1"]}\n" +
+                $"{Strings["Warning.Line1"]}\n" +
+                $"{Strings["Warning.Line2"]}\n" +
+                $"{Strings["Warning.Line3"]}\n" +
+                $"{Strings["Warning.Line4"]}\n" +
+                $"{Strings["Warning.Line5"]}\n" +
+                $"{Strings["Warning.Line6"]}\n" +
+                $"{Strings["Warning.Line7"]}\n" +
+                $"{Strings["Warning.Line8"]}\n" +
+                $"{Strings["Warning.Line9"]}\n" +
+                $"{Strings["Warning.Line10"]}\n" +
+                $"{Strings["Warning.Line11"]}\n" +
+                $"\n{Strings["Warning.Line12"]}";
 
-            DialogResult disclaimer = MessageBox.Show(warning, "Disclaimer", MessageBoxButtons.YesNo);
+            DialogResult disclaimer = MessageBox.Show(warning, Strings["Warning.Name2"], MessageBoxButtons.YesNo);
             if (disclaimer == DialogResult.Yes)
             {
                 ChkWarning.Checked = true;
