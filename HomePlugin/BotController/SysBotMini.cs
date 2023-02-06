@@ -29,7 +29,7 @@ namespace HOME
                 Connection.Connect(IP, Port);
                 Connected = true;
             }
-            var title = GetTitleID().Trim();
+            var title = GetTitleID();
             if (!title.Equals(HOME.TitleID))
             {
                 Disconnect();
