@@ -12,7 +12,7 @@ namespace HOME
 {
     public class HOME : IPlugin
     {
-        public const string Version = "2.0.5";
+        public const string Version = "2.1.0";
 
         public string Name => nameof(HOME);
         public int Priority => 1;
@@ -27,6 +27,8 @@ namespace HOME
         private readonly ToolStripMenuItem Viewer = new ToolStripMenuItem("Home Live Viewer");
 
         private Dictionary<string, string> Strings = null!;
+
+        public const string TitleID = "010015F008C54000";
 
         public const int HomeSlotSize = 584;
         public const int HomeBoxes = 200;

@@ -1,8 +1,9 @@
 ﻿//Taken from Live Hex
 
+using System;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
-
 namespace HOME
 {
     public class SysBotMini : ICommunicator
@@ -27,6 +28,12 @@ namespace HOME
                 Connection = new Socket(SocketType.Stream, ProtocolType.Tcp);
                 Connection.Connect(IP, Port);
                 Connected = true;
+            }
+            var title = GetTitleID();
+            if (!title.Equals(HOME.TitleID))
+            {
+                Disconnect();
+                throw new ArgumentOutOfRangeException($"Invalid Title ID {title}");
             }
         }
 
@@ -60,6 +67,20 @@ namespace HOME
                 var buffer = new byte[(length * 2) + 1];
                 var _ = ReadInternal(buffer);
                 return Decoder.ConvertHexByteStringToBytes(buffer);
+            }
+        }
+
+        private string GetTitleID()
+        {
+            lock (_sync)
+            {
+                SendInternal(SwitchCommand.GetTitleID());
+                var length = 17;
+                // give it time to push data back
+                Thread.Sleep((length / 256) + 100);
+                var buffer = new byte[(length * 2) + 1];
+                var _ = ReadInternal(buffer);
+                return Encoding.ASCII.GetString(buffer).Trim();
             }
         }
     }

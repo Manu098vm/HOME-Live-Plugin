@@ -2,6 +2,7 @@
 
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using LibUsbDotNet;
 using LibUsbDotNet.Main;
 
@@ -82,6 +83,12 @@ namespace HOME
 
                 Connected = true;
             }
+            var title = GetTitleID();
+            if (!title.Equals(HOME.TitleID))
+            {
+                Disconnect();
+                throw new ArgumentOutOfRangeException($"Invalid Title ID {title}");
+            }
         }
 
         public void Disconnect()
@@ -120,6 +127,16 @@ namespace HOME
                 throw new Exception(UsbDevice.LastErrorString);
             }
             return l;
+        }
+
+        private string GetTitleID()
+        {
+            lock (_sync)
+            {
+                SendInternal(SwitchCommand.GetTitleID(false));
+                byte[] baseBytes = ReadBulkUSB();
+                return BitConverter.ToUInt64(baseBytes, 0).ToString("X16").Trim();
+            }
         }
 
         public byte[] ReadBytes(uint offset, int length)

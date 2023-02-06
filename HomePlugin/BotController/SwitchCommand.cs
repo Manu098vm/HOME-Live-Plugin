@@ -24,5 +24,18 @@ namespace HOME
         /// <param name="addrn">Encoding selector. Default "true" for sys-botbase.</param>
         /// <returns>Encoded command bytes</returns>
         public static byte[] Peek(uint offset, int count, bool addrn = true) => Encode($"peek 0x{offset:X8} {count}", addrn);
+
+        /* 
+         *
+         * Process Info Commands
+         *
+         */
+
+        /// <summary>
+        /// Requests the title id of attached process.
+        /// </summary>
+        /// <param name="crlf">Line terminator (unused by USB protocol)</param>
+        /// <returns>Encoded command bytes</returns>
+        public static byte[] GetTitleID(bool crlf = true) => Encode("getTitleID", crlf);
     }
 }
