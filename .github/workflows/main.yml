@@ -93,4 +93,6 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: HomeLivePlugin
-        path: HomePlugin/bin
+        path: |
+          HomePlugin/bin
+          !HomePlugin/bin/PKHeX.Core.dll
