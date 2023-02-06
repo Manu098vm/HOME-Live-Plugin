@@ -95,4 +95,4 @@ jobs:
         name: HomeLivePlugin
         path: |
           HomePlugin/bin
-          !HomePlugin/bin/PKHeX.Core.dll
+          !HomePlugin/bin/Release/net7.0-windows/PKHeX.Core.dll
