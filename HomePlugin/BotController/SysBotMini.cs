@@ -29,7 +29,7 @@ namespace HOME
                 Connection.Connect(IP, Port);
                 Connected = true;
             }
-            var title = GetTitleID();
+            var title = GetTitleID().Trim();
             if (!title.Equals(HOME.TitleID))
             {
                 Disconnect();
@@ -80,7 +80,7 @@ namespace HOME
                 Thread.Sleep((length / 256) + 100);
                 var buffer = new byte[(length * 2) + 1];
                 var _ = ReadInternal(buffer);
-                return Encoding.ASCII.GetString(buffer).Trim();
+                return Encoding.ASCII.GetString(buffer).Trim().Replace("\n","").Replace("\0","");
             }
         }
     }

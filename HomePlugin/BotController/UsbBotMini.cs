@@ -135,7 +135,7 @@ namespace HOME
             {
                 SendInternal(SwitchCommand.GetTitleID(false));
                 byte[] baseBytes = ReadBulkUSB();
-                return BitConverter.ToUInt64(baseBytes, 0).ToString("X16").Trim();
+                return BitConverter.ToUInt64(baseBytes, 0).ToString("X16").Trim().Replace("\n", "").Replace("\0", "");
             }
         }
 
