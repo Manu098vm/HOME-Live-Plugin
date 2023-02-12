@@ -10,11 +10,11 @@ using System.Windows.Forms;
 
 namespace HOME;
 
-public static class HomeWinFormsTranslator
+public static class WinFormsTranslator
 {
     private static readonly Dictionary<string, TranslationContext> Context = new();
     public static void TranslateInterface(this Control form, string lang) => TranslateForm(form, GetContext(lang));
-    public static Dictionary<string, string> TranslateInnerStrings(this Dictionary<string, string> strings, string lang) => HomeWinFormsTranslator.TranslateStrings(strings, GetContext(lang));
+    public static Dictionary<string, string> TranslateInnerStrings(this Dictionary<string, string> strings, string lang) => TranslateStrings(strings, GetContext(lang));
 
     private static string GetTranslationFileNameInternal(string lang) => $"lang_{lang}";
     private static string GetTranslationFileNameExternal(string lang) => $"lang_{lang}.txt";
