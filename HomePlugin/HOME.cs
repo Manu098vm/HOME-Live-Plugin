@@ -746,12 +746,10 @@ namespace HOME
 
         public void NotifySaveLoaded()
         {
+            Language = GameInfo.CurrentLanguage;
+            TranslatePlugins();
             if (SaveFileEditor.SAV is SAV9SV or SAV8LA or SAV8BS or SAV8SWSH or SAV7b)
-            {
-                Language = GameInfo.CurrentLanguage;
-                TranslatePlugins();
                 Plugin.Enabled = true;
-            }
             else
                 Plugin.Enabled = false;
         }
