@@ -1,4 +1,5 @@
 ﻿using PKHeX.Core;
+using System;
 
 namespace HOME
 {
@@ -14,8 +15,13 @@ namespace HOME
 
                 if ((Move)pkm.Move1 == Move.None)
                 {
-                    pkm.SetRelearnMoves(l.GetSuggestedRelearnMoves());
-                    pkm.SetMoves(l.GetSuggestedCurrentMoves(), false);
+                    Span<ushort> relearn = stackalloc ushort[4];
+                    l.GetSuggestedRelearnMoves(relearn);
+                    pkm.SetRelearnMoves(relearn);
+
+                    Span<ushort> moves = stackalloc ushort[4];
+                    l.GetSuggestedCurrentMoves(moves);
+                    pkm.SetMoves(moves, false);
                 }
 
                 l = new LegalityAnalysis(pkm);
