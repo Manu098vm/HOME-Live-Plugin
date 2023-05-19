@@ -56,7 +56,7 @@ jobs:
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
 
     env:
-      Solution_Name: HomePlugin.sln
+      Solution_Name: HomeLive.sln
 
     steps:
     - name: Checkout
@@ -92,7 +92,7 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: HomeLivePlugin
+        name: HomeLive.Plugins
         path: |
-          HomePlugin/bin
-          !HomePlugin/bin/Release/net7.0-windows/PKHeX.Core.dll
+          HomeLive.Plugins/bin
+          !HomeLive.Plugins/bin/Release/net7.0-windows/PKHeX.Core.dll
