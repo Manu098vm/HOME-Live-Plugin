@@ -73,7 +73,7 @@ public class DeviceExecutor<T> : SwitchRoutineExecutor<T> where T : DeviceState
 
         var title = await SwitchConnection.GetTitleID(token).ConfigureAwait(false);
         var build = await GetBuildID(token).ConfigureAwait(false);
-        if (title.Equals(HomeTitleID) && build.Equals(HomeBuildID)) 
+        if (title.Equals(HomeTitleID) && build.Equals(HomeBuildID))
             return (title, build);
         else if (!title.Equals(HomeTitleID)) 
             throw new InvalidOperationException($"Invalid Title ID: {title}. The Pokémon HOME application is not running.");

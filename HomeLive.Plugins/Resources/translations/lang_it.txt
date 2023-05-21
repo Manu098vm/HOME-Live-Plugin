@@ -56,6 +56,7 @@ SettingsForm.lblLatestPort=Porta Predefinita:
 SettingsForm.lblLatestPath=Percorso Predefinito:
 SettingsForm.lblPreferredProtocol=Protocollo Predefinito:
 SettingsForm.lblLegality=Auto Fix Legalità:
+SettingsForm.lblLegality.ToolTip=Se abilitato, il Viewer prova ad aggiustare la legalità dei file PKM convertiti. Questa impostazione non influisce sul Dumper.
 SettingsForm.btnCancel=Annulla
 SettingsForm.btnApply=Applica
 SettingsForm.cmbProtocol.Item1=Wi-Fi

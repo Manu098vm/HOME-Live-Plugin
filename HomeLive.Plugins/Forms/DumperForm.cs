@@ -40,6 +40,9 @@ public partial class DumperForm : Form
 
         comboBox.SelectedIndex = 0;
         comboSlot.SelectedIndex = 0;
+
+        btnBrowse.Location = new Point(btnBrowse.Location.X, txtBoxPath.Location.Y);
+        btnBrowse.Height = txtBoxPath.Height;
     }
 
     private void GenerateDictionary()

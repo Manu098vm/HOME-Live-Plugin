@@ -56,6 +56,7 @@ SettingsForm.lblLatestPort=Default Port:
 SettingsForm.lblLatestPath=Default Path:
 SettingsForm.lblPreferredProtocol=Default Protocol:
 SettingsForm.lblLegality=Auto Fix Legality:
+SettingsForm.lblLegality.ToolTip=If enabled, the Viewer plugin will try to fix the legality of the converted PKM files. This does not affect the Dumper plugin.
 SettingsForm.btnCancel=Cancel
 SettingsForm.btnApply=Apply
 SettingsForm.cmbProtocol.Item1=Wi-Fi

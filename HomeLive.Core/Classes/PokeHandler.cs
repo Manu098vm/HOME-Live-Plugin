@@ -99,5 +99,4 @@ public static class PokeHandler
                 sb.Append(c);
         return sb.ToString();
     }
-
 }

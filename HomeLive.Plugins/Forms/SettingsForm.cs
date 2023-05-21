@@ -24,6 +24,10 @@ public partial class SettingsForm : Form
         txtBoxPath.Text = Properties.Settings.Default.path;
         cmbProtocol.SelectedIndex = Properties.Settings.Default.USB ? 1 : 0;
         cmbLegality.SelectedIndex = Properties.Settings.Default.fix_legality ? 0 : 1;
+
+        toolTipLegality.SetToolTip(lblLegality, Strings["SettingsForm.lblLegality.ToolTip"]);
+        btnPath.Location = new Point(btnPath.Location.X, txtBoxPath.Location.Y);
+        btnPath.Height = txtBoxPath.Height;
     }
 
     private void GenerateDictionary()
@@ -34,7 +38,8 @@ public partial class SettingsForm : Form
             { "SettingsForm.cmbProtocol.Item2", "" },
             { "SettingsForm.cmbLegality.Item1", "" },
             { "SettingsForm.cmbLegality.Item2", "" },
-            { "SettingsForm.btnApply.Done", "" }
+            { "SettingsForm.btnApply.Done", "" },
+            { "SettingsForm.lblLegality.ToolTip", "" },
         };
     }
 
@@ -45,6 +50,12 @@ public partial class SettingsForm : Form
         var c = e.KeyChar;
         if (!char.IsControl(e.KeyChar) && !((c >= '0' && c <= '9') || c == '.'))
             e.Handled = true;
+    }
+
+    private void BtnPath_Click(object sender, EventArgs e)
+    {
+        if (folderBrowser.ShowDialog() is DialogResult.OK)
+            txtBoxPath.Text = folderBrowser.SelectedPath;
     }
 
     private void BtnApply_Click(object sender, EventArgs e)
