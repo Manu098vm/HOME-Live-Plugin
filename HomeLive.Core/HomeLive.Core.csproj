@@ -42,7 +42,12 @@
 	<ItemGroup>
 		<PackageReference Include="NLog" Version="5.1.4" />
 		<PackageReference Include="PKHeX.Core" Version="23.5.11" />
-		<ProjectReference Include="..\SysBot.Base\SysBot.Base.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="SysBot.Base">
+			<HintPath>deps\SysBot.Base.dll</HintPath>
+		</Reference>
 	</ItemGroup>
 
 	<ItemGroup>

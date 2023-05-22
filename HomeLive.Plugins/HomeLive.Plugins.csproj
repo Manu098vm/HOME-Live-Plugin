@@ -6,7 +6,7 @@
 		<UseWindowsForms>true</UseWindowsForms>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<ApplicationIcon>Resources\icon.ico</ApplicationIcon>
-		<BaseOutputPath>D:\Projects\pkhex\PKHeX.WinForms\bin\Debug\net7.0-windows\win-x64\plugins</BaseOutputPath>
+		<BaseOutputPath>bin\</BaseOutputPath>
 		<Title>Home Live Plugins</Title>
 		<Authors>Manu098vm</Authors>
 		<Company>Project Pokémon</Company>
@@ -43,19 +43,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\HomeLive.Core\HomeLive.Core.csproj">
-			<Private>True</Private>
-		</ProjectReference>
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Costura.Fody" Version="5.7.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive; compile</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="LibUsbDotNet" Version="2.2.29" />
 		<PackageReference Include="Octokit" Version="6.0.0" />
-		<ProjectReference Include="..\SysBot.Base\SysBot.Base.csproj" />
+		<ProjectReference Include="..\HomeLive.Core\HomeLive.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="SysBot.Base">
+			<HintPath>..\HomeLive.Core\deps\SysBot.Base.dll</HintPath>
+		</Reference>
 	</ItemGroup>
 
 	<ItemGroup>
