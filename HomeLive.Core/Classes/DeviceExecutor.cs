@@ -44,8 +44,13 @@ public class DeviceExecutor<T> : SwitchRoutineExecutor<T> where T : DeviceState
         try
         {
             (var title, var build) = await IsRunningHome(token).ConfigureAwait(false);
-            Log($"Valid Title ID ({title}){Environment.NewLine}Valid Build ID ({build})");
-            Log("Connection Test OK");
+            Log($"Valid Title ID ({title})");
+            Log($"Valid Build ID ({build})");
+            Log("Connection Test OK.");
+
+            if (Config.Connection.Protocol is SwitchProtocol.WiFi)
+                SwitchConnection.MaximumTransferSize = HomeDataOffsets.HomeSlotSize * HomeDataOffsets.HomeBoxCount;
+
             Config.IterateNextRoutine();
         }
         catch (Exception ex)
