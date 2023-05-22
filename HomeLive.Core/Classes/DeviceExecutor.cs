@@ -1,5 +1,8 @@
-﻿using SysBot.Base;
+﻿using PKHeX.Core;
+using SysBot.Base;
 using System.Text;
+using System.Buffers.Binary;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HomeLive.Core;
 
@@ -89,6 +92,18 @@ public class DeviceExecutor<T> : SwitchRoutineExecutor<T> where T : DeviceState
         var cmd = SwitchCommand.GetBuildID(Config.Connection.Protocol is SwitchProtocol.WiFi);
         var bytes = await SwitchConnection.ReadRaw(cmd, 17, token).ConfigureAwait(false);
         var str = Encoding.ASCII.GetString(bytes).Trim().ToUpper();
+        return str;
+    }
+
+    public async Task<string> ReadPlayerOTName(CancellationToken token)
+    {
+        if (!Connection.Connected)
+            throw new InvalidOperationException("No remote connection");
+
+        Log("Reading MyStatus OT Name...");
+        var bytes = await SwitchConnection.ReadBytesMainAsync(HomeDataOffsets.PlayerNameOffset, 0x1A, token).ConfigureAwait(false);
+        var str = StringConverter8.GetString(bytes.AsSpan());
+        Log($"Done. (OT: {str})");
         return str;
     }
 

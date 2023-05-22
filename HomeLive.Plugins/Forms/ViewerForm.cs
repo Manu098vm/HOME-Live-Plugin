@@ -1,6 +1,7 @@
 ﻿using PKHeX.Core;
 using HomeLive.Core;
 using SysBot.Base;
+using System.Buffers.Binary;
 
 namespace HomeLive.Plugins;
 
@@ -363,11 +364,15 @@ public partial class ViewerForm : Form
             var mode = GetTargetType();
             var conversionType = GetConversionType();
 
+            await Executor.Connect(token);
+
+            if(Provider.SAV.IsBlankSaveFile())
+                Provider.SAV.OT = await Executor.ReadPlayerOTName(token).ConfigureAwait(false);
+
             if (mode is DumpTarget.TargetSlot)
             {
                 var box = GetBoxIndex();
                 var slot = GetSlotIndex();
-                await Executor.Connect(token);
                 var data = await Executor.ReadSlotData(box, slot, token).ConfigureAwait(false);
                 var pkh = PokeHandler.GenerateEntityFromBin(data);
                 Provider.SAV.SetPoke(Editor, pkh, conversionType, Properties.Settings.Default.fix_legality);
@@ -375,7 +380,6 @@ public partial class ViewerForm : Form
             else if (mode is DumpTarget.TargetBox)
             {
                 var box = GetBoxIndex();
-                await Executor.Connect(token);
                 var data = await Executor.ReadBoxData(box, token).ConfigureAwait(false);
                 var pkhlist = PokeHandler.GenerateEntitiesFromBoxBin(data);
                 Provider.SAV.SetPokeList(pkhlist, conversionType, Properties.Settings.Default.fix_legality);
@@ -391,7 +395,6 @@ public partial class ViewerForm : Form
                 var range = end.box - start.box;
                 var pkhlist = new List<PKH?>();
 
-                await Executor.Connect(token);
                 for (var i = 0; i <= range; i++)
                 {
                     var boxBin = await Executor.ReadBoxData(start.box + i - 1, token).ConfigureAwait(false);

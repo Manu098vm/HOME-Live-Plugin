@@ -4,34 +4,26 @@ namespace HomeLive.Core;
 
 public static class LegalityHandler
 {
-    public static LegalityAnalysis FixLegality(this PKM pkm)
+    public static PKM FixLegality(this PKM pkm)
     {
         var legality = new LegalityAnalysis(pkm);
+        //If the PKM is not legal, try to fix it
         if (!legality.Valid)
         {
-            pkm.Heal();
-            pkm.FixCopyHeight();
-            pkm.FixConversionPLA();
-            pkm.FixConversionBDSP();
-            pkm.FixConversionLGPE();
-            pkm.FixMoveSet();
-        }
-        return new LegalityAnalysis(pkm);
-    }
+            //Try to legalize a clone, if the editings are successful, apply the changes to the actual PKM
+            var clone = pkm.Clone();
+            clone.Heal();
+            clone.FixCopyHeight();
+            clone.FixConversionPLA();
+            clone.FixConversionBDSP();
+            clone.FixConversionLGPE();
+            clone.FixMoveSet();
 
-    private static void FixConversionPLA(this PKM pkm)
-    {
-        const int PLA_DEFLOC = 60000;
-
-        //PLA -> SWSH GameData conversion incorrectly set a wrong GameVersion, Met Location and Egg Met Location
-        var legality = new LegalityAnalysis(pkm);
-        if (!legality.Valid && pkm is PK8 pk8 && (GameVersion)pk8.Version is GameVersion.PLA)
-        {
-            pk8.Version = (int)GameVersion.SW;
-            pk8.Met_Location = PLA_DEFLOC;
-            if (pk8.Egg_Location == 65534)
-                pk8.Egg_Location = 0;
+            legality = new LegalityAnalysis(clone);
+            if (legality.Valid)
+                return clone;
         }
+        return pkm;
     }
 
     private static void FixCopyHeight(this PKM pkm)
@@ -65,6 +57,21 @@ public static class LegalityHandler
                     }
                 }
             }
+        }
+    }
+
+    private static void FixConversionPLA(this PKM pkm)
+    {
+        const int PLA_DEFLOC = 60000;
+
+        //PLA -> SWSH GameData conversion incorrectly set a wrong GameVersion, Met Location and Egg Met Location
+        var legality = new LegalityAnalysis(pkm);
+        if (!legality.Valid && pkm is PK8 pk8 && (GameVersion)pk8.Version is GameVersion.PLA)
+        {
+            pk8.Version = (int)GameVersion.SW;
+            pk8.Met_Location = PLA_DEFLOC;
+            if (pk8.Egg_Location == 65534)
+                pk8.Egg_Location = 0;
         }
     }
 
@@ -161,8 +168,8 @@ public static class LegalityHandler
             legality.GetSuggestedCurrentMoves(moves, MoveSourceType.LevelUp);
             pkm.SetRelearnMoves(relearn);
             pkm.SetMoves(moves);
-            pkm.HealPP();
         }
+        pkm.HealPP();
     }
 
     private static byte[] CheckAVs(LegalityAnalysis legality)

@@ -10,8 +10,7 @@ public static class SaveFileHandler
         if (res is not null)
         {
             sav.AdaptPKM(res);
-            if (fixLegality) res.FixLegality();
-            view.PopulateFieldsSafe(res);
+            view.PopulateFieldsSafe(fixLegality ? res.FixLegality() : res);
             return true;
         }
         return false;
@@ -32,8 +31,7 @@ public static class SaveFileHandler
             if (entity is not null)
             {
                 sav.AdaptPKM(entity);
-                if (fixLegality) entity.FixLegality();
-                sav.SetBoxSlotAtIndex(entity, i / numSlot, i % numSlot);
+                sav.SetBoxSlotAtIndex(fixLegality ? entity.FixLegality() : entity, i / numSlot, i % numSlot);
             }
         }
     }
@@ -55,4 +53,6 @@ public static class SaveFileHandler
         else
             view.PopulateFields(pkm);
     }
+
+    public static bool IsBlankSaveFile(this SaveFile sav) => sav.OT.Equals("PKHeX");
 }
