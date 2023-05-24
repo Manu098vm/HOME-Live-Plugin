@@ -75,7 +75,7 @@ Enter your IP Address into the Plugins, select the Boxes/Slots you want to show 
 
 [SciresM](https://github.com/SciresM) for his researches into the Pokémon Home encryption data method, implemented in his [PKHeX fork](https://github.com/SciresM/PKHeX/blob/5bf28522c34bca09e24d4ed83cf24358ed86a8d7/PKHeX.Core/PKM/Util/HomeCrypto.cs#L1).
 
-[kwsch](https://github.com/kwsch) for PKHeX and [SysBot.NET](https://github.com/kwsch)
+[kwsch](https://github.com/kwsch) for [PKHeX](https://github.com/kwsch/PKHeX) and [SysBot.NET](https://github.com/kwsch)
 
 [architdate](https://github.com/architdate), [Lusamine](https://github.com/Lusamine), all the ALM team and all the people involved in the developing/testing of the [PKHeX-Plugins](https://github.com/architdate/PKHeX-Plugins), thanks to which this project would never exist.
 
