@@ -1,7 +1,6 @@
 ﻿using PKHeX.Core;
 using HomeLive.Core;
 using SysBot.Base;
-using System.Buffers.Binary;
 
 namespace HomeLive.Plugins;
 

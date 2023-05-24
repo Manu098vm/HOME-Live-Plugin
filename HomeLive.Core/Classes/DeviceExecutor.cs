@@ -1,8 +1,6 @@
 ﻿using PKHeX.Core;
 using SysBot.Base;
 using System.Text;
-using System.Buffers.Binary;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HomeLive.Core;
 
