@@ -32,7 +32,7 @@ public partial class ViewerForm : Form
         txtBoxIP.Text = Properties.Settings.Default.ip_address;
         numPort.Value = Properties.Settings.Default.port;
 
-        radioSBox.Select();
+        radioBox.Select();
         comboBox.Items.AddRange(CalculateBoxStrings());
         comboBox.SelectedIndex = 0;
 
