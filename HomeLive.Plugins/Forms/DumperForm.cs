@@ -315,7 +315,7 @@ public partial class DumperForm : Form
     {
         if (openFileDialog.ShowDialog() is DialogResult.OK)
         {
-            var pkhlist = new List<PKH?>();
+            var pkhlist = new List<Core.HomeWrapper?>();
             foreach (var path in openFileDialog.FileNames)
                 if (File.Exists(path))
                     if (PokeHandler.IsCompatibleExtension(Path.GetExtension(path)))
@@ -386,7 +386,7 @@ public partial class DumperForm : Form
 
     public static bool TryLoadFiles(string path, ISaveFileProvider provider, string[]? filelist = null)
     {
-        var pkmlist = new List<PKH?>();
+        var pkmlist = new List<Core.HomeWrapper?>();
 
         if (filelist is null && Directory.Exists(path))
             filelist = Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories).ToArray();

@@ -58,7 +58,7 @@ public static class VersionHandler
         _ => throw new ArgumentException($"{nameof(version)} is not a valid version for this operation.")
     };
 
-    public static List<PKM?> ConvertListToType(this List<PKH?> list, Type destType, ConversionType conversionType)
+    public static List<PKM?> ConvertListToType(this List<HomeWrapper?> list, Type destType, ConversionType conversionType)
     {
         var pks = new List<PKM?>();
         foreach(var pkh in list)
@@ -66,33 +66,33 @@ public static class VersionHandler
         return pks;        
     }
 
-    public static PKM? ConvertToType(this PKH? pkm, Type destType, ConversionType conversionType)
+    public static PKM? ConvertToType(this HomeWrapper? pkm, Type destType, ConversionType conversionType)
     {
         if (pkm is null) return null;
         var forceConversion = conversionType is ConversionType.AnyData || (conversionType is ConversionType.CompatibleData && CanConvertToType(pkm, destType));
         return pkm.ConvertToPKM(destType, forceConversion);
     }
 
-    private static PKM? ConvertToPKM(this PKH pkm, Type destType, bool forceConversion)
+    private static PKM? ConvertToPKM(this HomeWrapper pkm, Type destType, bool forceConversion)
     {
-        if (destType == typeof(PB7) && (pkm.DataPB7 is not null && CanConvertToType(pkm, destType)|| forceConversion))
+        if (destType == typeof(PB7) && (pkm.HasPB7() && CanConvertToType(pkm, destType)|| forceConversion))
             return pkm.ConvertToPB7();
-        else if (destType == typeof(PK8) && (pkm.DataPK8 is not null && CanConvertToType(pkm, destType) || forceConversion))
+        else if (destType == typeof(PK8) && (pkm.HasPK8() && CanConvertToType(pkm, destType) || forceConversion))
             return pkm.ConvertToPK8();
-        else if (destType == typeof(PB8) && (pkm.DataPB8 is not null && CanConvertToType(pkm, destType) || forceConversion))
+        else if (destType == typeof(PB8) && (pkm.HasPB8() && CanConvertToType(pkm, destType) || forceConversion))
             return pkm.ConvertToPB8();
-        else if (destType == typeof(PA8) && (pkm.DataPA8 is not null && CanConvertToType(pkm, destType) || forceConversion))
+        else if (destType == typeof(PA8) && (pkm.HasPA8() && CanConvertToType(pkm, destType) || forceConversion))
             return pkm.ConvertToPA8();
-        else if (destType == typeof(PK9) && (pkm.DataPK9 is not null && CanConvertToType(pkm, destType) || forceConversion))
+        else if (destType == typeof(PK9) && (pkm.HasPK9() && CanConvertToType(pkm, destType) || forceConversion))
             return pkm.ConvertToPK9();
 
         return null;
     }
 
-    public static bool CanConvertToType(PKH pkm, Type destType)
+    public static bool CanConvertToType(HomeWrapper pkh, Type destType)
     {
         var version = GetGameVersion(destType);
-        return CheckVersionAvailability(pkm, version);
+        return CheckVersionAvailability(pkh.PKM!, version);
     }
 
     public static bool CheckVersionAvailability(PKM pkm, GameVersion version) => version switch

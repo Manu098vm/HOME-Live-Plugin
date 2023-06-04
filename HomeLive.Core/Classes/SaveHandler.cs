@@ -4,7 +4,7 @@ namespace HomeLive.Core;
 
 public static class SaveFileHandler
 {
-    public static bool SetPoke(this SaveFile sav, IPKMView view, PKH? pkm, ConversionType conversionType, bool fixLegality)
+    public static bool SetPoke(this SaveFile sav, IPKMView view, HomeWrapper? pkm, ConversionType conversionType, bool fixLegality)
     {
         var res = pkm.ConvertToType(sav.PKMType, conversionType);
         if (res is not null)
@@ -16,7 +16,7 @@ public static class SaveFileHandler
         return false;
     }
 
-    public static void SetPokeList(this SaveFile sav, List<PKH?> pks, ConversionType conversionType, bool fixLegality)
+    public static void SetPokeList(this SaveFile sav, List<HomeWrapper?> pks, ConversionType conversionType, bool fixLegality)
     {
         var version = sav.GetGameVersion();
         var numBox = version.GetBoxCount();

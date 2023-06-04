@@ -6,7 +6,7 @@ namespace HomeLive.Core;
 
 public static class PokeHandler
 {
-    public static readonly string[] CompatibleFormats = { ".ph1", ".eh1", ".pkh", ".ekh" };
+    public static readonly string[] CompatibleFormats = { ".ph2", ".eh2", ".ph1", ".eh1", ".pkh", ".ekh" };
 
     public static bool IsCompatibleExtension(string ext)
     {
@@ -15,14 +15,16 @@ public static class PokeHandler
         return false;
     }
 
-    public static void Dump(this PKH pkh, DumpFormat format, string path)
+    public static void Dump(this PKM pkm, DumpFormat format, string path) => Dump(new HomeWrapper(pkm), format, path);
+
+    public static void Dump(this HomeWrapper pkh, DumpFormat format, string path)
     {
         Directory.CreateDirectory(path);
         var filename = pkh.GetFileName();
         if (format is DumpFormat.Encrypted or DumpFormat.EncAndDec)
         {
             var ext = $".eh{pkh.DataVersion}";
-            File.WriteAllBytes($"{Path.Combine(path, filename)}{ext}", HomeCrypto.Encrypt(pkh.Data));
+            File.WriteAllBytes($"{Path.Combine(path, filename)}{ext}", pkh.EncryptedData);
         }
         if (format is DumpFormat.Decrypted or DumpFormat.EncAndDec)
         {
@@ -31,13 +33,13 @@ public static class PokeHandler
         }
     }
 
-    public static PKH? GenerateEntityFromPath(string path)
+    public static HomeWrapper? GenerateEntityFromPath(string path)
     {
         var data = File.ReadAllBytes(path);
         return GenerateEntityFromBin(data);
     }
 
-    public static PKH? GenerateEntityFromBin(ReadOnlySpan<byte> bin)
+    public static HomeWrapper? GenerateEntityFromBin(ReadOnlySpan<byte> bin)
     {
         var header = bin[..HomeDataOffsets.HeaderLength];
 
@@ -45,53 +47,58 @@ public static class PokeHandler
             return null;
 
         var encSize = HomeDataOffsets.HeaderLength + BinaryPrimitives.ReadUInt16LittleEndian(header[HomeDataOffsets.EncSizeOffset..]);
-        var pk = new PKH(bin[..encSize].ToArray());
+        var pk = new HomeWrapper(bin[..encSize].ToArray());
 
-        if (pk.ChecksumValid) 
+        if (pk.IsValid) 
             return pk;
 
         return null;
     }
 
-    public static List<PKH?> GenerateEntitiesFromBoxBin(ReadOnlySpan<byte> data)
+    public static List<HomeWrapper?> GenerateEntitiesFromBoxBin(ReadOnlySpan<byte> data)
     {
         var pkmsData = ArrayUtil.EnumerateSplit(data.ToArray(), HomeDataOffsets.HomeSlotSize);
-        var list = new List<PKH?>();
+        var list = new List<HomeWrapper?>();
         foreach(var entityData in pkmsData)
             list.Add(GenerateEntityFromBin(entityData));
         return list;
     }
 
-    public static string GetFileName(this PKH pkm)
+    public static string GetFileName(this HomeWrapper pkh)
     {
+        var pkm = pkh.GetHomeEntity(out _)!;
+
         var name = $"{pkm.Species:0000}";
         if (pkm.Form > 0 || pkm.Species == (ushort)Species.Alcremie)
+
             name += $"-{pkm.Form:00}";
-        if (pkm.Species == (ushort)Species.Alcremie)
-            name += $"-{pkm.FormArgument:00}";
+        if (pkm.Species == (ushort)Species.Alcremie && pkm is IFormArgument arg)
+            name += $"-{arg.FormArgument:00}";
 
         if (pkm.IsShiny)
-        {
             if (pkm.ShinyXor == 0 || pkm.FatefulEncounter)
                 name += " ■";
-            else
-                name += " ★";
+            else name += " ★";
+
+        if (pkh.HasPK8() && pkh.ConvertToPK8() is IGigantamax g && g.CanGigantamax)
+            name += " (GMax)";
+
+        if (pkh.HasPA8())
+        {
+            var pa8 = pkh.ConvertToPA8();
+            if (pa8 is IAlpha)
+                name += " (Alpha)";
+            if (pa8 is INoble)
+                name += " (Noble)";
         }
 
-        if (pkm.DataPK8 is IGigantamax g && g.CanGigantamax)
-            name += " (GMax)";
-        if (pkm.DataPA8 is GameDataPA8 a && a.IsAlpha)
-            name += " (Alpha)";
-        if (pkm.DataPA8 is GameDataPA8 n && n.IsNoble)
-            name += " (Noble)";
-
         name += $" - {pkm.GetFilteredString()}";
-        name += $" {pkm.Tracker:X16}";
+        name += $" {pkh.Tracker:X16}";
 
         return name;
     }
 
-    private static string GetFilteredString(this PKH pkm)
+    private static string GetFilteredString(this PKM pkm)
     {
         var sb = new StringBuilder();
         foreach (char c in pkm.Nickname)

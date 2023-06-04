@@ -365,9 +365,6 @@ public partial class ViewerForm : Form
 
             await Executor.Connect(token);
 
-            if(Provider.SAV.IsBlankSaveFile())
-                Provider.SAV.OT = await Executor.ReadPlayerOTName(token).ConfigureAwait(false);
-
             if (mode is DumpTarget.TargetSlot)
             {
                 var box = GetBoxIndex();
@@ -392,7 +389,7 @@ public partial class ViewerForm : Form
                 var (start, end) = GetDownloadRanges(localBoxCount, localSlotCount)[GetComboBoxIndex()];
 
                 var range = end.box - start.box;
-                var pkhlist = new List<PKH?>();
+                var pkhlist = new List<Core.HomeWrapper?>();
 
                 for (var i = 0; i <= range; i++)
                 {

@@ -20,9 +20,6 @@ public class DeviceState : BotState<RoutineType, SwitchConnectionConfig>
 
 public class DeviceExecutor<T> : SwitchRoutineExecutor<T> where T : DeviceState
 {
-    private const string HomeTitleID = "010015F008C54000";
-    private const string HomeBuildID = "ABF8AFD82FE1B2BD";
-
     public DeviceExecutor(DeviceState cfg) : base(cfg) { }
 
     public override string GetSummary()
@@ -47,7 +44,7 @@ public class DeviceExecutor<T> : SwitchRoutineExecutor<T> where T : DeviceState
             Log("Connection Test OK.");
 
             if (Config.Connection.Protocol is SwitchProtocol.WiFi)
-                SwitchConnection.MaximumTransferSize = HomeDataOffsets.HomeSlotSize * HomeDataOffsets.HomeBoxCount;
+                SwitchConnection.MaximumTransferSize = HomeDataOffsets.HomeSlotSize * HomeDataOffsets.HomeSlotCount;
 
             Config.IterateNextRoutine();
         }
@@ -79,9 +76,9 @@ public class DeviceExecutor<T> : SwitchRoutineExecutor<T> where T : DeviceState
 
         var title = await SwitchConnection.GetTitleID(token).ConfigureAwait(false);
         var build = await GetBuildID(token).ConfigureAwait(false);
-        if (title.Equals(HomeTitleID) && build.Equals(HomeBuildID))
+        if (title.Equals(HomeDataOffsets.HomeTitleID) && build.Equals(HomeDataOffsets.HomeBuildID))
             return (title, build);
-        else if (!title.Equals(HomeTitleID)) 
+        else if (!title.Equals(HomeDataOffsets.HomeTitleID)) 
             throw new InvalidOperationException($"Invalid Title ID: {title}. The Pokémon HOME application is not running.");
         else 
             throw new InvalidOperationException($"Invalid Build ID: {build}. The Pokémon HOME application is on a non-supported version.");
@@ -95,18 +92,6 @@ public class DeviceExecutor<T> : SwitchRoutineExecutor<T> where T : DeviceState
         var cmd = SwitchCommand.GetBuildID(Config.Connection.Protocol is SwitchProtocol.WiFi);
         var bytes = await SwitchConnection.ReadRaw(cmd, 17, token).ConfigureAwait(false);
         var str = Encoding.ASCII.GetString(bytes).Trim().ToUpper();
-        return str;
-    }
-
-    public async Task<string> ReadPlayerOTName(CancellationToken token)
-    {
-        if (!Connection.Connected)
-            throw new InvalidOperationException("No remote connection");
-
-        Log("Reading MyStatus OT Name...");
-        var bytes = await SwitchConnection.ReadBytesMainAsync(HomeDataOffsets.PlayerNameOffset, 0x1A, token).ConfigureAwait(false);
-        var str = StringConverter8.GetString(bytes.AsSpan());
-        Log($"Done. (OT: {str})");
         return str;
     }
 
