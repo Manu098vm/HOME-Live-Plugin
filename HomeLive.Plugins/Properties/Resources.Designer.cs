@@ -71,20 +71,18 @@ namespace HomeLive.Plugins.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Plugin.HomeLivePlugin=Home Live Plugin
+        ///   Looks up a localized string similar to Plugin.HomeLivePlugins=Home Live Plugins
         ///Plugin.DumperPlugin=Home Live Dumper
         ///Plugin.ViewerPlugin=Home Live Viewer
+        ///Plugin.SettingsPlugin=Home Live Plugins Settings
         ///
-        ///DumpForm=Home Plugin
-        ///DumpForm.toolsToolStripMenuItem=Tools
-        ///DumpForm.decryptFromFilesToolStripMenuItem=Decrypt from files
-        ///DumpForm.encryptFromFilesToolStripMenuItem=Encrypt from files
-        ///DumpForm.loadFileToEditorToolStripMenuItem=Load file to Editor
-        ///DumpForm.loadFilesToBoxesToolStripMenuItem=Load files to Boxes
-        ///DumpForm.GrpConnection=Connection
-        ///DumpForm.RadioWiFi=Wi-Fi
-        ///DumpForm.USB=USB
-        /// [rest of string was truncated]&quot;;.
+        ///DumperForm=Home Live Dumper Plugin
+        ///DumperForm.toolsToolStripMenuItem=Tools
+        ///DumperForm.decryptFromFilesToolStripMenuItem=Decrypt from files
+        ///DumperForm.encryptFromFilesToolStripMenuItem=Encrypt from files
+        ///DumperForm.loadFileToEditorToolStripMenuItem=Load file to Editor
+        ///DumperForm.loadFilesToBoxesToolStripMenuItem=Load files to Boxes
+        ///Dum [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string lang_de {
             get {
@@ -93,20 +91,18 @@ namespace HomeLive.Plugins.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Plugin.HomeLivePlugin=Home Live Plugin
+        ///   Looks up a localized string similar to Plugin.HomeLivePlugins=Home Live Plugins
         ///Plugin.DumperPlugin=Home Live Dumper
         ///Plugin.ViewerPlugin=Home Live Viewer
+        ///Plugin.SettingsPlugin=Home Live Plugins Settings
         ///
-        ///DumpForm=Home Plugin
-        ///DumpForm.toolsToolStripMenuItem=Tools
-        ///DumpForm.decryptFromFilesToolStripMenuItem=Decrypt from files
-        ///DumpForm.encryptFromFilesToolStripMenuItem=Encrypt from files
-        ///DumpForm.loadFileToEditorToolStripMenuItem=Load file to Editor
-        ///DumpForm.loadFilesToBoxesToolStripMenuItem=Load files to Boxes
-        ///DumpForm.GrpConnection=Connection
-        ///DumpForm.RadioWiFi=Wi-Fi
-        ///DumpForm.USB=USB
-        /// [rest of string was truncated]&quot;;.
+        ///DumperForm=Home Live Dumper Plugin
+        ///DumperForm.toolsToolStripMenuItem=Tools
+        ///DumperForm.decryptFromFilesToolStripMenuItem=Decrypt from files
+        ///DumperForm.encryptFromFilesToolStripMenuItem=Encrypt from files
+        ///DumperForm.loadFileToEditorToolStripMenuItem=Load file to Editor
+        ///DumperForm.loadFilesToBoxesToolStripMenuItem=Load files to Boxes
+        ///Dum [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string lang_en {
             get {
@@ -115,20 +111,18 @@ namespace HomeLive.Plugins.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Plugin.HomeLivePlugin=Home Live Plugin
+        ///   Looks up a localized string similar to Plugin.HomeLivePlugins=Home Live Plugins
         ///Plugin.DumperPlugin=Home Live Dumper
         ///Plugin.ViewerPlugin=Home Live Viewer
+        ///Plugin.SettingsPlugin=Home Live Plugins Settings
         ///
-        ///DumpForm=Home Plugin
-        ///DumpForm.toolsToolStripMenuItem=Tools
-        ///DumpForm.decryptFromFilesToolStripMenuItem=Decrypt from files
-        ///DumpForm.encryptFromFilesToolStripMenuItem=Encrypt from files
-        ///DumpForm.loadFileToEditorToolStripMenuItem=Load file to Editor
-        ///DumpForm.loadFilesToBoxesToolStripMenuItem=Load files to Boxes
-        ///DumpForm.GrpConnection=Connection
-        ///DumpForm.RadioWiFi=Wi-Fi
-        ///DumpForm.USB=USB
-        /// [rest of string was truncated]&quot;;.
+        ///DumperForm=Home Live Dumper Plugin
+        ///DumperForm.toolsToolStripMenuItem=Tools
+        ///DumperForm.decryptFromFilesToolStripMenuItem=Decrypt from files
+        ///DumperForm.encryptFromFilesToolStripMenuItem=Encrypt from files
+        ///DumperForm.loadFileToEditorToolStripMenuItem=Load file to Editor
+        ///DumperForm.loadFilesToBoxesToolStripMenuItem=Load files to Boxes
+        ///Dum [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string lang_es {
             get {
@@ -137,20 +131,18 @@ namespace HomeLive.Plugins.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Plugin.HomeLivePlugin=Home Live Plugin
+        ///   Looks up a localized string similar to Plugin.HomeLivePlugins=Home Live Plugins
         ///Plugin.DumperPlugin=Home Live Dumper
         ///Plugin.ViewerPlugin=Home Live Viewer
+        ///Plugin.SettingsPlugin=Home Live Plugins Settings
         ///
-        ///DumpForm=Home Plugin
-        ///DumpForm.toolsToolStripMenuItem=Tools
-        ///DumpForm.decryptFromFilesToolStripMenuItem=Decrypt from files
-        ///DumpForm.encryptFromFilesToolStripMenuItem=Encrypt from files
-        ///DumpForm.loadFileToEditorToolStripMenuItem=Load file to Editor
-        ///DumpForm.loadFilesToBoxesToolStripMenuItem=Load files to Boxes
-        ///DumpForm.GrpConnection=Connection
-        ///DumpForm.RadioWiFi=Wi-Fi
-        ///DumpForm.USB=USB
-        /// [rest of string was truncated]&quot;;.
+        ///DumperForm=Home Live Dumper Plugin
+        ///DumperForm.toolsToolStripMenuItem=Tools
+        ///DumperForm.decryptFromFilesToolStripMenuItem=Decrypt from files
+        ///DumperForm.encryptFromFilesToolStripMenuItem=Encrypt from files
+        ///DumperForm.loadFileToEditorToolStripMenuItem=Load file to Editor
+        ///DumperForm.loadFilesToBoxesToolStripMenuItem=Load files to Boxes
+        ///Dum [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string lang_fr {
             get {
@@ -159,19 +151,17 @@ namespace HomeLive.Plugins.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Plugin.HomeLivePlugin=Home Live Plugin
+        ///   Looks up a localized string similar to Plugin.HomeLivePlugins=Home Live Plugins
         ///Plugin.DumperPlugin=Home Live Dumper
         ///Plugin.ViewerPlugin=Home Live Viewer
+        ///Plugin.SettingsPlugin=Impostazioni Home Live Plugins
         ///
-        ///DumpForm=Home Plugin
-        ///DumpForm.toolsToolStripMenuItem=Strumenti
-        ///DumpForm.decryptFromFilesToolStripMenuItem=Decritta da Files
-        ///DumpForm.encryptFromFilesToolStripMenuItem=Critta da Files 
-        ///DumpForm.loadFileToEditorToolStripMenuItem=Importa File nell&apos;Editor
-        ///DumpForm.loadFilesToBoxesToolStripMenuItem=Importa Files nei Box
-        ///DumpForm.GrpConnection=Connessione
-        ///DumpForm.RadioWiFi=Wi-Fi
-        ///DumpForm. [rest of string was truncated]&quot;;.
+        ///DumperForm=Home Live Dumper Plugin
+        ///DumperForm.toolsToolStripMenuItem=Strumenti
+        ///DumperForm.decryptFromFilesToolStripMenuItem=Decritta da files
+        ///DumperForm.encryptFromFilesToolStripMenuItem=Critta da files
+        ///DumperForm.loadFileToEditorToolStripMenuItem=Importa file nell&apos;Editor
+        ///DumperForm.loadFilesToBoxesToolStripMenuItem=Importa files n [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string lang_it {
             get {
@@ -180,20 +170,18 @@ namespace HomeLive.Plugins.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Plugin.HomeLivePlugin=Home Live Plugin
+        ///   Looks up a localized string similar to Plugin.HomeLivePlugins=Home Live Plugins
         ///Plugin.DumperPlugin=Home Live Dumper
         ///Plugin.ViewerPlugin=Home Live Viewer
+        ///Plugin.SettingsPlugin=Home Live Plugins Settings
         ///
-        ///DumpForm=Home Plugin
-        ///DumpForm.toolsToolStripMenuItem=Tools
-        ///DumpForm.decryptFromFilesToolStripMenuItem=Decrypt from files
-        ///DumpForm.encryptFromFilesToolStripMenuItem=Encrypt from files
-        ///DumpForm.loadFileToEditorToolStripMenuItem=Load file to Editor
-        ///DumpForm.loadFilesToBoxesToolStripMenuItem=Load files to Boxes
-        ///DumpForm.GrpConnection=Connection
-        ///DumpForm.RadioWiFi=Wi-Fi
-        ///DumpForm.USB=USB
-        /// [rest of string was truncated]&quot;;.
+        ///DumperForm=Home Live Dumper Plugin
+        ///DumperForm.toolsToolStripMenuItem=Tools
+        ///DumperForm.decryptFromFilesToolStripMenuItem=Decrypt from files
+        ///DumperForm.encryptFromFilesToolStripMenuItem=Encrypt from files
+        ///DumperForm.loadFileToEditorToolStripMenuItem=Load file to Editor
+        ///DumperForm.loadFilesToBoxesToolStripMenuItem=Load files to Boxes
+        ///Dum [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string lang_ja {
             get {
@@ -202,20 +190,18 @@ namespace HomeLive.Plugins.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Plugin.HomeLivePlugin=Home Live Plugin
+        ///   Looks up a localized string similar to Plugin.HomeLivePlugins=Home Live Plugins
         ///Plugin.DumperPlugin=Home Live Dumper
         ///Plugin.ViewerPlugin=Home Live Viewer
+        ///Plugin.SettingsPlugin=Home Live Plugins Settings
         ///
-        ///DumpForm=Home Plugin
-        ///DumpForm.toolsToolStripMenuItem=Tools
-        ///DumpForm.decryptFromFilesToolStripMenuItem=Decrypt from files
-        ///DumpForm.encryptFromFilesToolStripMenuItem=Encrypt from files
-        ///DumpForm.loadFileToEditorToolStripMenuItem=Load file to Editor
-        ///DumpForm.loadFilesToBoxesToolStripMenuItem=Load files to Boxes
-        ///DumpForm.GrpConnection=Connection
-        ///DumpForm.RadioWiFi=Wi-Fi
-        ///DumpForm.USB=USB
-        /// [rest of string was truncated]&quot;;.
+        ///DumperForm=Home Live Dumper Plugin
+        ///DumperForm.toolsToolStripMenuItem=Tools
+        ///DumperForm.decryptFromFilesToolStripMenuItem=Decrypt from files
+        ///DumperForm.encryptFromFilesToolStripMenuItem=Encrypt from files
+        ///DumperForm.loadFileToEditorToolStripMenuItem=Load file to Editor
+        ///DumperForm.loadFilesToBoxesToolStripMenuItem=Load files to Boxes
+        ///Dum [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string lang_ko {
             get {
@@ -224,23 +210,18 @@ namespace HomeLive.Plugins.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Plugin.HomeLivePlugin=Home Live插件
-        ///Plugin.DumperPlugin=Home Live导出
-        ///Plugin.ViewerPlugin=Home Live浏览
+        ///   Looks up a localized string similar to Plugin.HomeLivePlugins=Home Live Plugins
+        ///Plugin.DumperPlugin=Home Live Dumper
+        ///Plugin.ViewerPlugin=Home Live Viewer
+        ///Plugin.SettingsPlugin=Home Live Plugins Settings
         ///
-        ///DumpForm=Home插件
-        ///DumpForm.toolsToolStripMenuItem=工具
-        ///DumpForm.decryptFromFilesToolStripMenuItem=从文件解密
-        ///DumpForm.encryptFromFilesToolStripMenuItem=从文件加密
-        ///DumpForm.loadFileToEditorToolStripMenuItem=将文件加载到编辑器
-        ///DumpForm.loadFilesToBoxesToolStripMenuItem=将文件加载到盒子
-        ///DumpForm.GrpConnection=连接
-        ///DumpForm.RadioWiFi=Wi-Fi
-        ///DumpForm.USB=USB
-        ///DumpForm.LblIP=IP地址:
-        ///DumpForm.LblPort=端口:
-        ///DumpForm.GrpAction=导出对象
-        ///DumpForm. [rest of string was truncated]&quot;;.
+        ///DumperForm=Home Live Dumper Plugin
+        ///DumperForm.toolsToolStripMenuItem=工具
+        ///DumperForm.decryptFromFilesToolStripMenuItem=从文件解密
+        ///DumperForm.encryptFromFilesToolStripMenuItem=从文件加密
+        ///DumperForm.loadFileToEditorToolStripMenuItem=将文件加载到编辑器
+        ///DumperForm.loadFilesToBoxesToolStripMenuItem=将文件加载到盒子
+        ///DumperForm.loadFolderToBoxesToolStripMenuItem=Load fo [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string lang_zh {
             get {
@@ -249,23 +230,18 @@ namespace HomeLive.Plugins.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Plugin.HomeLivePlugin=Home Live插件
-        ///Plugin.DumperPlugin=Home Live轉儲
-        ///Plugin.ViewerPlugin=Home Live瀏覽
+        ///   Looks up a localized string similar to Plugin.HomeLivePlugins=Home Live Plugins
+        ///Plugin.DumperPlugin=Home Live Dumper
+        ///Plugin.ViewerPlugin=Home Live Viewer
+        ///Plugin.SettingsPlugin=Home Live Plugins Settings
         ///
-        ///DumpForm=Home插件
-        ///DumpForm.toolsToolStripMenuItem=工具
-        ///DumpForm.decryptFromFilesToolStripMenuItem=從文件解密
-        ///DumpForm.encryptFromFilesToolStripMenuItem=從文件加密
-        ///DumpForm.loadFileToEditorToolStripMenuItem=將文件加載到編輯器
-        ///DumpForm.loadFilesToBoxesToolStripMenuItem=將文件加載到盒子
-        ///DumpForm.GrpConnection=連接
-        ///DumpForm.RadioWiFi=Wi-Fi
-        ///DumpForm.USB=USB
-        ///DumpForm.LblIP=IP地址:
-        ///DumpForm.LblPort=端口:
-        ///DumpForm.GrpAction=轉儲對象
-        ///DumpForm. [rest of string was truncated]&quot;;.
+        ///DumperForm=Home Live Dumper Plugin
+        ///DumperForm.toolsToolStripMenuItem=工具
+        ///DumperForm.decryptFromFilesToolStripMenuItem=從文件解密
+        ///DumperForm.encryptFromFilesToolStripMenuItem=從文件加密
+        ///DumperForm.loadFileToEditorToolStripMenuItem=將文件加載到編輯器
+        ///DumperForm.loadFilesToBoxesToolStripMenuItem=將文件加載到盒子
+        ///DumperForm.loadFolderToBoxesToolStripMenuItem=Load fo [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string lang_zh2 {
             get {

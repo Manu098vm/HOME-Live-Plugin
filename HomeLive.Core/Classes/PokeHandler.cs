@@ -86,9 +86,9 @@ public static class PokeHandler
         if (pkh.HasPA8())
         {
             var pa8 = pkh.ConvertToPA8();
-            if (pa8 is IAlpha)
+            if (pa8 is IAlpha a && a.IsAlpha)
                 name += " (Alpha)";
-            if (pa8 is INoble)
+            if (pa8 is INoble n && n.IsNoble)
                 name += " (Noble)";
         }
 
