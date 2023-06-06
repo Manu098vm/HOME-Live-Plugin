@@ -5,7 +5,7 @@ namespace HomeLive.Plugins;
 
 public class HomePlugin : IPlugin
 {
-    public const string Version = "2.9.9";
+    public const string Version = "3.0.0";
     public string Name => nameof(HomePlugin);
     public int Priority => 1;
 
