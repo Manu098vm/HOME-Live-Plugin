@@ -41,7 +41,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="NLog" Version="5.1.4" />
-		<PackageReference Include="PKHeX.Core" Version="23.7.10" />
+		<PackageReference Include="PKHeX.Core" Version="23.8.24" />
 	</ItemGroup>
 
 	<ItemGroup>
