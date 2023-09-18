@@ -1,4 +1,4 @@
-/*Legacy code for PKH Data Version 1.
+/* Legacy code for PKH Data Version 1.
  * https://github.com/kwsch/PKHeX/blob/be88ec387bd67b96018654ad8c7f13fbf2b02561/PKHeX.Core/PKM/HOME/GameDataPB8.cs
  * GPL v3 License
  * I claim no ownership of this code. Thanks to all the PKHeX contributors.*/
@@ -11,15 +11,15 @@ namespace HomeLive.Core.Legacy;
 /// <summary>
 /// Side game data for <see cref="PB8"/> data transferred into HOME.
 /// </summary>
-public sealed class GameDataPB8 : HomeOptional1, IGameDataSide
+public sealed class GameData1PB8 : HomeOptional1, IGameDataSide1
 {
     private const HomeGameDataFormat ExpectFormat = HomeGameDataFormat.PB8;
-    private const int SIZE = HomeCrypto.SIZE_1GAME_PB8;
+    private const int SIZE = 0x2B;
     protected override HomeGameDataFormat Format => ExpectFormat;
 
-    public GameDataPB8() : base(SIZE) { }
-    public GameDataPB8(Memory<byte> data) : base(data) => EnsureSize(SIZE);
-    public GameDataPB8 Clone() => new(ToArray());
+    public GameData1PB8() : base(SIZE) { }
+    public GameData1PB8(Memory<byte> data) : base(data) => EnsureSize(SIZE);
+    public GameData1PB8 Clone() => new(ToArray());
     public int WriteTo(Span<byte> result) => WriteWithHeader(result);
 
     #region Structure
@@ -61,7 +61,7 @@ public sealed class GameDataPB8 : HomeOptional1, IGameDataSide
 
     public void CopyTo(PB8 pk)
     {
-        ((IGameDataSide)this).CopyTo(pk);
+        ((IGameDataSide1)this).CopyTo(pk);
         // Move Records are not settable in PB8; do not copy even if nonzero (illegal).
     }
 
@@ -78,7 +78,7 @@ public sealed class GameDataPB8 : HomeOptional1, IGameDataSide
     #endregion
 
     /// <summary> Reconstructive logic to best apply suggested values. </summary>
-    public static GameDataPB8? TryCreate(PH1 pkh)
+    public static GameData1PB8? TryCreate(PH1 pkh)
     {
         if (pkh.DataPB7 is { } x)
             return Create(x);
@@ -89,14 +89,14 @@ public sealed class GameDataPB8 : HomeOptional1, IGameDataSide
         return null;
     }
 
-    public static T Create<T>(GameDataPB8 data) where T : IGameDataSide, new() => new()
+    public static T Create<T>(GameData1PB8 data) where T : IGameDataSide1, new() => new()
     {
         Ball = data.Ball,
         Met_Location = data.Met_Location == Locations.Default8bNone ? 0 : data.Met_Location,
         Egg_Location = data.Egg_Location == Locations.Default8bNone ? 0 : data.Egg_Location,
     };
 
-    public static GameDataPB8 Create(IGameDataSide data) => new()
+    public static GameData1PB8 Create(IGameDataSide1 data) => new()
     {
         Ball = data.Ball,
         Met_Location = data.Met_Location == 0 ? Locations.Default8bNone : data.Met_Location,

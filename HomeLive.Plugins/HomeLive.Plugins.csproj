@@ -48,7 +48,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive; compile</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="LibUsbDotNet" Version="2.2.29" />
-		<PackageReference Include="Octokit" Version="6.0.0" />
+		<PackageReference Include="Octokit" Version="7.1.0" />
 		<ProjectReference Include="..\HomeLive.Core\HomeLive.Core.csproj" />
 	</ItemGroup>
 

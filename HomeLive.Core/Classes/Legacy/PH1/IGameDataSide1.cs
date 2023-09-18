@@ -1,4 +1,4 @@
-/*Legacy code for PKH Data Version 1.
+/* Legacy code for PKH Data Version 1.
  * https://github.com/kwsch/PKHeX/blob/be88ec387bd67b96018654ad8c7f13fbf2b02561/PKHeX.Core/PKM/HOME/IGameDataSide.cs
  * GPL v3 License
  * I claim no ownership of this code. Thanks to all the PKHeX contributors.*/
@@ -9,7 +9,7 @@ namespace HomeLive.Core.Legacy;
 /// <summary>
 /// Common properties stored by HOME's side game data formats.
 /// </summary>
-public interface IGameDataSide
+public interface IGameDataSide1
 {
     ushort Move1 { get; set; } int Move1_PP { get; set; } int Move1_PPUps { get; set; } ushort RelearnMove1 { get; set; }
     ushort Move2 { get; set; } int Move2_PP { get; set; } int Move2_PPUps { get; set; } ushort RelearnMove2 { get; set; }
@@ -38,7 +38,7 @@ public static class GameDataSideExtensions
     /// </summary>
     /// <param name="data">Source side game data</param>
     /// <param name="pk">Destination entity</param>
-    public static void CopyTo(this IGameDataSide data, PKM pk)
+    public static void CopyTo(this IGameDataSide1 data, PKM pk)
     {
         pk.Move1 = data.Move1; pk.Move1_PP = data.Move1_PP; pk.Move1_PPUps = data.Move1_PPUps; pk.RelearnMove1 = data.RelearnMove1;
         pk.Move2 = data.Move2; pk.Move2_PP = data.Move1_PP; pk.Move2_PPUps = data.Move2_PPUps; pk.RelearnMove2 = data.RelearnMove2;
@@ -54,7 +54,7 @@ public static class GameDataSideExtensions
     /// </summary>
     /// <param name="data">Source side game data</param>
     /// <param name="pk">Destination entity</param>
-    public static void CopyTo(this IGameDataSide data, IGameDataSide pk)
+    public static void CopyTo(this IGameDataSide1 data, IGameDataSide1 pk)
     {
         pk.Move1 = data.Move1; pk.Move1_PP = data.Move1_PP; pk.Move1_PPUps = data.Move1_PPUps; pk.RelearnMove1 = data.RelearnMove1;
         pk.Move2 = data.Move2; pk.Move2_PP = data.Move1_PP; pk.Move2_PPUps = data.Move2_PPUps; pk.RelearnMove2 = data.RelearnMove2;

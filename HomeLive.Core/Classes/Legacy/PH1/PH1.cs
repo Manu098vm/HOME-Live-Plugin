@@ -13,11 +13,11 @@ namespace HomeLive.Core.Legacy;
 /// <summary> Pokémon HOME <see cref="PKM"/> format. </summary>
 public sealed class PH1 : PKM, IHandlerLanguage, IFormArgument, IHomeTrack, IBattleVersion, ITrainerMemories, IRibbonSetAffixed, IContestStats, IScaledSize, IRibbonSetRibbons, IRibbonSetMarks
 {
-    public readonly GameDataCore _coreData;
-    public GameDataPB7? DataPB7 { get; private set; }
-    public GameDataPK8? DataPK8 { get; private set; }
-    public GameDataPA8? DataPA8 { get; private set; }
-    public GameDataPB8? DataPB8 { get; private set; }
+    public readonly GameDataCore1 _coreData;
+    public GameData1PB7? DataPB7 { get; private set; }
+    public GameData1PK8? DataPK8 { get; private set; }
+    public GameData1PA8? DataPA8 { get; private set; }
+    public GameData1PB8? DataPB8 { get; private set; }
 
     private const int HeaderSize = 0x14;
     public override EntityContext Context => EntityContext.None;
@@ -28,7 +28,7 @@ public sealed class PH1 : PKM, IHandlerLanguage, IFormArgument, IHomeTrack, IBat
         var core = mem[..CoreDataSize];
         var side = mem.Slice(core.Length + 2, GameDataSize);
 
-        _coreData = new GameDataCore(core);
+        _coreData = new GameDataCore1(core);
         ReadGameData1(side);
     }
 
@@ -46,10 +46,10 @@ public sealed class PH1 : PKM, IHandlerLanguage, IFormArgument, IHomeTrack, IBat
 
             switch (format)
             {
-                case HomeGameDataFormat.PB7: DataPB7 = new GameDataPB7(chunk); break;
-                case HomeGameDataFormat.PK8: DataPK8 = new GameDataPK8(chunk); break;
-                case HomeGameDataFormat.PA8: DataPA8 = new GameDataPA8(chunk); break;
-                case HomeGameDataFormat.PB8: DataPB8 = new GameDataPB8(chunk); break;
+                case HomeGameDataFormat.PB7: DataPB7 = new GameData1PB7(chunk); break;
+                case HomeGameDataFormat.PK8: DataPK8 = new GameData1PK8(chunk); break;
+                case HomeGameDataFormat.PA8: DataPA8 = new GameData1PA8(chunk); break;
+                case HomeGameDataFormat.PB8: DataPB8 = new GameData1PB8(chunk); break;
                 default: throw new ArgumentException($"Unknown {nameof(HomeGameDataFormat)} {format}");
             }
         }
@@ -237,7 +237,7 @@ public sealed class PH1 : PKM, IHandlerLanguage, IFormArgument, IHomeTrack, IBat
     public override int MaxAbilityID => 267;
     public override int MaxItemID => 1828;
     public override int MaxBallID => (int)PKHeX.Core.Ball.LAOrigin;
-    public override int MaxGameID => (int)GameVersion.SP;
+    public override int MaxGameID => (int)SP;
 
     #endregion
 
@@ -310,9 +310,9 @@ public sealed class PH1 : PKM, IHandlerLanguage, IFormArgument, IHomeTrack, IBat
         DataPB7 = DataPB7?.Clone(),
     };
 
-    public IGameDataSide LatestGameData => OriginalGameData() ?? GetFallbackGameData();
+    public IGameDataSide1 LatestGameData => OriginalGameData() ?? GetFallbackGameData();
 
-    private IGameDataSide GetFallbackGameData() => Version switch
+    private IGameDataSide1 GetFallbackGameData() => Version switch
     {
         (int)GP or (int)GE => DataPB7 ??= new(),
         (int)BD or (int)SP => DataPB8 ??= new(),
@@ -320,7 +320,7 @@ public sealed class PH1 : PKM, IHandlerLanguage, IFormArgument, IHomeTrack, IBat
         _ => DataPK8 ??= new(),
     };
 
-    private IGameDataSide? OriginalGameData() => Version switch
+    private IGameDataSide1? OriginalGameData() => Version switch
     {
         (int)GP or (int)GE => DataPB7,
         (int)BD or (int)SP => DataPB8,
@@ -333,10 +333,10 @@ public sealed class PH1 : PKM, IHandlerLanguage, IFormArgument, IHomeTrack, IBat
         _ => DataPK8,
     };
 
-    public PB7? ConvertToPB7() => DataPB7 is { } x ? x.ConvertToPB7(this) : (DataPB7 ??= GameDataPB7.TryCreate(this))?.ConvertToPB7(this);
-    public PK8? ConvertToPK8() => DataPK8 is { } x ? x.ConvertToPK8(this) : (DataPK8 ??= GameDataPK8.TryCreate(this))?.ConvertToPK8(this);
-    public PB8? ConvertToPB8() => DataPB8 is { } x ? x.ConvertToPB8(this) : (DataPB8 ??= GameDataPB8.TryCreate(this))?.ConvertToPB8(this);
-    public PA8? ConvertToPA8() => DataPA8 is { } x ? x.ConvertToPA8(this) : (DataPA8 ??= GameDataPA8.TryCreate(this))?.ConvertToPA8(this);
+    public PB7? ConvertToPB7() => DataPB7 is { } x ? x.ConvertToPB7(this) : (DataPB7 ??= GameData1PB7.TryCreate(this))?.ConvertToPB7(this);
+    public PK8? ConvertToPK8() => DataPK8 is { } x ? x.ConvertToPK8(this) : (DataPK8 ??= GameData1PK8.TryCreate(this))?.ConvertToPK8(this);
+    public PB8? ConvertToPB8() => DataPB8 is { } x ? x.ConvertToPB8(this) : (DataPB8 ??= GameData1PB8.TryCreate(this))?.ConvertToPB8(this);
+    public PA8? ConvertToPA8() => DataPA8 is { } x ? x.ConvertToPA8(this) : (DataPA8 ??= GameData1PA8.TryCreate(this))?.ConvertToPA8(this);
 
     public PK9? ConvertToPK9()
     {
