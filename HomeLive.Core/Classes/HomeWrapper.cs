@@ -25,6 +25,9 @@ namespace HomeLive.Core
                     PKM = new PH1(data);
                     break;
                 case 2:
+                    PKM = new PH2(data);
+                    break;
+                case 3:
                     PKM = new PKH(data);
                     break;
             }
@@ -37,7 +40,7 @@ namespace HomeLive.Core
 
         private byte[] GetDecryptedData()
         {
-            if (PKM is PH1 or PKH)
+            if (PKM is PH1 or PH2 or PKH)
                 return PKM.Data;
             else if (PKM is not null)
                 return PKH.ConvertFromPKM(PKM).Data;
@@ -47,7 +50,7 @@ namespace HomeLive.Core
 
         private byte[] GetEncryptedData()
         {
-            if (PKM is PH1 or PKH)
+            if (PKM is PH1 or PH2 or PKH)
                 return HomeCrypto.Encrypt(Data);
             else if (PKM is not null)
                 return HomeCrypto.Encrypt(PKH.ConvertFromPKM(PKM).Data);
@@ -57,7 +60,7 @@ namespace HomeLive.Core
 
         private ulong GetTracker()
         {
-            if (PKM is PH1 or PKH)
+            if (PKM is PH1 or PH2 or PKH)
                 return ((dynamic)PKM).Tracker;
 
             return 0;
@@ -70,9 +73,14 @@ namespace HomeLive.Core
                 DataVersion = 1;
                 return ph1;
             }
-            else if (PKM is PKH pkh)
+            else if (PKM is PH2 ph2)
             {
                 DataVersion = 2;
+                return ph2;
+            }
+            else if (PKM is PKH pkh)
+            {
+                DataVersion = 3;
                 return pkh;
             }
             else if (PKM is not null)
@@ -88,7 +96,7 @@ namespace HomeLive.Core
 
         public bool HasPB7()
         {
-            if (PKM is PH1 or PKH)
+            if (PKM is PH1 or PH2 or PKH)
                 return ((dynamic)PKM).DataPB7 is not null;
             else if (PKM is PB7)
                 return true;
@@ -98,7 +106,7 @@ namespace HomeLive.Core
 
         public PB7? ConvertToPB7()
         {
-            if (PKM is PH1 or PKH)
+            if (PKM is PH1 or PH2 or PKH)
                 return ((dynamic)PKM).ConvertToPB7();
             else if (PKM is PB7 pb7)
                 return pb7;
@@ -108,7 +116,7 @@ namespace HomeLive.Core
 
         public bool HasPK8()
         {
-            if (PKM is PH1 or PKH)
+            if (PKM is PH1 or PH2 or PKH)
                 return ((dynamic)PKM).DataPK8 is not null;
             else if (PKM is PK8)
                 return true;
@@ -118,7 +126,7 @@ namespace HomeLive.Core
 
         public PK8? ConvertToPK8()
         {
-            if (PKM is PH1 or PKH)
+            if (PKM is PH1 or PH2 or PH2 or PKH)
                 return ((dynamic)PKM).ConvertToPK8();
             else if (PKM is PK8 pk8)
                 return pk8;
@@ -134,7 +142,7 @@ namespace HomeLive.Core
 
         public bool HasPB8()
         {
-            if (PKM is PH1 or PKH)
+            if (PKM is PH1 or PH2 or PKH)
                 return ((dynamic)PKM).DataPB8 is not null;
             else if (PKM is PB8)
                 return true;
@@ -144,7 +152,7 @@ namespace HomeLive.Core
 
         public PB8? ConvertToPB8()
         {
-            if (PKM is PH1 or PKH)
+            if (PKM is PH1 or PH2 or PKH)
                 return ((dynamic)PKM).ConvertToPB8();
             else if (PKM is PB8 pb8)
                 return pb8;
@@ -160,7 +168,7 @@ namespace HomeLive.Core
 
         public bool HasPA8()
         {
-            if (PKM is PH1 or PKH)
+            if (PKM is PH1 or PH2 or PKH)
                 return ((dynamic)PKM).DataPA8 is not null;
             else if (PKM is PA8)
                 return true;
@@ -170,7 +178,7 @@ namespace HomeLive.Core
 
         public PA8? ConvertToPA8()
         {
-            if (PKM is PH1 or PKH)
+            if (PKM is PH1 or PH2 or PKH)
                 return ((dynamic)PKM).ConvertToPA8();
             else if (PKM is PA8 pa8)
                 return pa8;
@@ -186,8 +194,8 @@ namespace HomeLive.Core
 
         public bool HasPK9()
         {
-            if (PKM is PKH pkh)
-                return pkh.DataPK9 is not null;
+            if (PKM is PH2 or PKH)
+                return ((dynamic)PKM).DataPK9 is not null;
             else if (PKM is PK9)
                 return true;
 
@@ -196,7 +204,7 @@ namespace HomeLive.Core
 
         public PK9? ConvertToPK9()
         {
-            if (PKM is PH1 or PKH)
+            if (PKM is PH1 or PH2 or PKH)
                 return ((dynamic)PKM).ConvertToPK9();
             else if (PKM is PK9 pk9)
                 return pk9;
@@ -219,7 +227,9 @@ namespace HomeLive.Core
 
             if (pkm is PH1 ph1 && ph1.Species > (ushort)Species.None && ph1.Species <= (ushort)Species.Enamorus)
                 return true;
-            else if (pkm is PKH ph2 && ph2.Species > (ushort)Species.None && ph2.Species < (ushort)Species.MAX_COUNT)
+            else if (pkm is PH2 ph2 && ph2.Species > (ushort)Species.None && ph2.Species <= (ushort)Species.IronLeaves)
+                return true;
+            else if (pkm is PKH ph3 && ph3.Species > (ushort)Species.None && ph3.Species < (ushort)Species.MAX_COUNT)
                 return true;
 
             return pkm.ChecksumValid;
@@ -229,8 +239,10 @@ namespace HomeLive.Core
         {
             if (PKM is PH1)
                 return 1;
-            else
+            else if (PKM is PH2)
                 return 2;
+            else
+                return 3;
         }
     }
 }

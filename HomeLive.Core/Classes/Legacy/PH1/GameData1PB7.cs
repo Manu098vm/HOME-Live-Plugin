@@ -1,4 +1,4 @@
-/*Legacy code for PKH Data Version 1.
+/* Legacy code for PKH Data Version 1.
  * https://github.com/kwsch/PKHeX/blob/be88ec387bd67b96018654ad8c7f13fbf2b02561/PKHeX.Core/PKM/HOME/GameDataPB7.cs
  * GPL v3 License
  * I claim no ownership of this code. Thanks to all the PKHeX contributors.*/
@@ -11,15 +11,15 @@ namespace HomeLive.Core.Legacy;
 /// <summary>
 /// Side game data for <see cref="PB7"/> data transferred into HOME.
 /// </summary>
-public sealed class GameDataPB7 : HomeOptional1, IGameDataSide, IScaledSizeAbsolute, IMemoryOT
+public sealed class GameData1PB7 : HomeOptional1, IGameDataSide1, IScaledSizeAbsolute, IMemoryOT
 {
     private const HomeGameDataFormat ExpectFormat = HomeGameDataFormat.PB7;
-    private const int SIZE = HomeCrypto.SIZE_1GAME_PB7;
+    private const int SIZE = 0x3B;
     protected override HomeGameDataFormat Format => ExpectFormat;
 
-    public GameDataPB7() : base(SIZE) { }
-    public GameDataPB7(Memory<byte> data) : base(data) => EnsureSize(SIZE);
-    public GameDataPB7 Clone() => new(ToArray());
+    public GameData1PB7() : base(SIZE) { }
+    public GameData1PB7(Memory<byte> data) : base(data) => EnsureSize(SIZE);
+    public GameData1PB7 Clone() => new(ToArray());
     public int WriteTo(Span<byte> result) => WriteWithHeader(result);
 
     #region Structure
@@ -76,7 +76,7 @@ public sealed class GameDataPB7 : HomeOptional1, IGameDataSide, IScaledSizeAbsol
 
     public void CopyTo(PB7 pk)
     {
-        ((IGameDataSide)this).CopyTo(pk);
+        ((IGameDataSide1)this).CopyTo(pk);
         pk.AV_HP = AV_HP;
         pk.AV_ATK = AV_ATK;
         pk.AV_DEF = AV_DEF;
@@ -114,7 +114,7 @@ public sealed class GameDataPB7 : HomeOptional1, IGameDataSide, IScaledSizeAbsol
     #endregion
 
     /// <summary> Reconstructive logic to best apply suggested values. </summary>
-    public static GameDataPB7? TryCreate(PH1 pkh)
+    public static GameData1PB7? TryCreate(PH1 pkh)
     {
         int met = 0;
         int ball = (int)PKHeX.Core.Ball.Poke;
@@ -137,14 +137,14 @@ public sealed class GameDataPB7 : HomeOptional1, IGameDataSide, IScaledSizeAbsol
             return null;
 
         if (pkh.Version is (int)GameVersion.GO)
-            return new GameDataPB7 { Ball = ball, Met_Location = Locations.GO7 };
+            return new GameData1PB7 { Ball = ball, Met_Location = Locations.GO7 };
         if (pkh.Version is (int)GameVersion.GP or (int)GameVersion.GE)
-            return new GameDataPB7 { Ball = ball, Met_Location = met };
+            return new GameData1PB7 { Ball = ball, Met_Location = met };
 
         return null;
     }
 
-    public static T Create<T>(GameDataPB7 data) where T : IGameDataSide, new() => new()
+    public static T Create<T>(GameData1PB7 data) where T : IGameDataSide1, new() => new()
     {
         Ball = data.Ball,
         Met_Location = data.Met_Location,

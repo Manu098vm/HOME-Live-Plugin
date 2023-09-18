@@ -1,4 +1,4 @@
-/*Legacy code for PKH Data Version 1.
+/* Legacy code for PKH Data Version 1.
  * https://github.com/kwsch/PKHeX/blob/be88ec387bd67b96018654ad8c7f13fbf2b02561/PKHeX.Core/PKM/HOME/GameDataCore.cs
  * GPL v3 License
  * I claim no ownership of this code. Thanks to all the PKHeX contributors.*/
@@ -12,7 +12,7 @@ namespace HomeLive.Core.Legacy;
 /// <summary>
 /// Core game data storage, format 1.
 /// </summary>
-public sealed class GameDataCore : IHomeTrack, ISpeciesForm, ITrainerID, INature, IFatefulEncounter, IContestStats, IScaledSize, ITrainerMemories, IHandlerLanguage, IBattleVersion, IHyperTrain, IFormArgument, IFavorite,
+public sealed class GameDataCore1 : IHomeTrack, ISpeciesForm, ITrainerID, INature, IFatefulEncounter, IContestStats, IScaledSize, ITrainerMemories, IHandlerLanguage, IBattleVersion, IHyperTrain, IFormArgument, IFavorite,
     IRibbonSetEvent3, IRibbonSetEvent4, IRibbonSetCommon3, IRibbonSetCommon4, IRibbonSetCommon6, IRibbonSetMemory6, IRibbonSetCommon7,
     IRibbonSetCommon8, IRibbonSetMark8,
     IRibbonSetCommon9, IRibbonSetMark9
@@ -21,7 +21,7 @@ public sealed class GameDataCore : IHomeTrack, ISpeciesForm, ITrainerID, INature
     private readonly Memory<byte> Buffer; // Raw Storage
     private Span<byte> Data => Buffer.Span;
 
-    public GameDataCore(Memory<byte> buffer)
+    public GameDataCore1(Memory<byte> buffer)
     {
         if (buffer.Length != HomeCrypto.SIZE_1CORE)
             throw new ArgumentException("Invalid Format 1 Core Data!");
