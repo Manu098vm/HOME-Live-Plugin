@@ -5,7 +5,7 @@ This program is meant to dump and view infos from those Pokèmon that are deposi
 Powered by [PKHeX.Core](https://github.com/kwsch/PKHeX) and [SysBot.Base](https://github.com/kwsch/SysBot.NET)
 
 ## Features:
-* Handle (dump, load, view) PKH/PH1/EH1/PH2/EH2 (Pokémon Home format) files.
+* Handle (dump, load, view) PKH/EKH/PH1/EH1/PH2/EH2/PH3/EH3 (Pokémon Home format) files.
 * Generate PB7/PK8/PB8/PA8/PK9 (Pokémon Game-Specific format) files from Pokémon Home data/files.
 
 ## Use Cases example:
