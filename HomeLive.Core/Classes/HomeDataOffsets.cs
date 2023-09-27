@@ -3,7 +3,7 @@
 public static class HomeDataOffsets
 {
     public const string HomeTitleID = "010015F008C54000";
-    public const string HomeBuildID = "10F33FB6836643D5";
+    public const string HomeBuildID = "5EABBB752498C865";
 
     public const int HomeSlotSize       = 720; //0x2D0
     public const int HomeSlotCount      = 30;
