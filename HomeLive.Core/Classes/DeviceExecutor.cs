@@ -1,5 +1,4 @@
-﻿using PKHeX.Core;
-using SysBot.Base;
+﻿using SysBot.Base;
 using System.Text;
 
 namespace HomeLive.Core;
