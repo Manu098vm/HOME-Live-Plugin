@@ -17,10 +17,8 @@ public class DeviceState : BotState<RoutineType, SwitchConnectionConfig>
     public override void Resume() => NextRoutineType = InitialRoutine;
 }
 
-public class DeviceExecutor<T> : SwitchRoutineExecutor<T> where T : DeviceState
+public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) where T : DeviceState
 {
-    public DeviceExecutor(DeviceState cfg) : base(cfg) { }
-
     public override string GetSummary()
     {
         var current = Config.CurrentRoutineType;

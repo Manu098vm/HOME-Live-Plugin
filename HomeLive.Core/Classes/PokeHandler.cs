@@ -6,7 +6,7 @@ namespace HomeLive.Core;
 
 public static class PokeHandler
 {
-    public static readonly string[] CompatibleFormats = { ".ph3", ".eh3", ".ph2", ".eh2", ".ph1", ".eh1", ".pkh", ".ekh" };
+    public static readonly string[] CompatibleFormats = [".ph3", ".eh3", ".ph2", ".eh2", ".ph1", ".eh1", ".pkh", ".ekh"];
 
     public static bool IsCompatibleExtension(string ext)
     {
