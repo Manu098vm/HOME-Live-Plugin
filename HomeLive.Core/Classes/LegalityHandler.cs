@@ -65,15 +65,15 @@ public static class LegalityHandler
         var legality = new LegalityAnalysis(pkm);
         if (!legality.Valid && pkm is PK8 pk8)
         {
-            if (pk8.Version is (int)GameVersion.SL)
+            if (pk8.Version is GameVersion.SL)
             {
-                pk8.Version = (int)GameVersion.SW;
-                pk8.Met_Location = LocationsHOME.SWSL;
+                pk8.Version = GameVersion.SW;
+                pk8.MetLocation = LocationsHOME.SWSL;
             }
-            else if (pk8.Version == (int)GameVersion.VL)
+            else if (pk8.Version is GameVersion.VL)
             {
-                pk8.Version = (int)GameVersion.SH;
-                pk8.Met_Location = LocationsHOME.SHVL;
+                pk8.Version = GameVersion.SH;
+                pk8.MetLocation = LocationsHOME.SHVL;
             }
         }
     }
@@ -81,7 +81,7 @@ public static class LegalityHandler
     private static void FixConversionPLA(this PKM pkm)
     {
         var legality = new LegalityAnalysis(pkm);
-        if (!legality.Valid && (GameVersion)pkm.Version is GameVersion.PLA)
+        if (!legality.Valid && pkm.Version is GameVersion.PLA)
         {
             //Set Ability number for PLA mons
             if (legality.Results.Any(r => r.Identifier is CheckIdentifier.Ability && r.Judgement is Severity.Invalid))
@@ -98,10 +98,10 @@ public static class LegalityHandler
             //PLA -> SWSH PH1 GameData conversion incorrectly set a wrong GameVersion, Met Location and Egg Met Location
             if (pkm is PK8 pk8)
             {
-                pk8.Version = (int)GameVersion.SW;
-                pk8.Met_Location = LocationsHOME.SWLA;
-                if (pk8.Egg_Location == 65534)
-                    pk8.Egg_Location = 0;
+                pk8.Version = GameVersion.SW;
+                pk8.MetLocation = LocationsHOME.SWLA;
+                if (pk8.EggLocation == 65534)
+                    pk8.EggLocation = 0;
             }
         }
     }
@@ -111,11 +111,11 @@ public static class LegalityHandler
         var legality = new LegalityAnalysis(pkm);
         if (!legality.Valid)
         {
-            if ((GameVersion)pkm.Version is GameVersion.SP or GameVersion.BD)
+            if (pkm.Version is GameVersion.SP or GameVersion.BD)
             {
                 //Only apply if Egg Location is 0 but recognized as Egg
-                if (pkm is PB8 pb8 && pb8.Egg_Location == 0)
-                    pb8.Egg_Location = ushort.MaxValue;
+                if (pkm is PB8 pb8 && pb8.EggLocation == 0)
+                    pb8.EggLocation = ushort.MaxValue;
                 //BDSP origin PH1 -> PK8 Origin Game incorrectly applied as BD or SP, should be applied as Sword or Shield
                 else if (pkm is PK8 pk8)
                     pk8.FixSinnohToGalar();
@@ -128,13 +128,13 @@ public static class LegalityHandler
         //PK8s Can not have origin game as Brilliant Diamond or Shining Pearl
         if ((GameVersion)pkm.Version is GameVersion.BD)
         {
-            pkm.Version = (int)GameVersion.SW;
-            pkm.Met_Location = LocationsHOME.SWBD;
+            pkm.Version = GameVersion.SW;
+            pkm.MetLocation = LocationsHOME.SWBD;
         }
-        else if ((GameVersion)pkm.Version is GameVersion.SP)
+        else if (pkm.Version is GameVersion.SP)
         {
-            pkm.Version = (int)GameVersion.SH;
-            pkm.Met_Location = LocationsHOME.SHSP;
+            pkm.Version = GameVersion.SH;
+            pkm.MetLocation = LocationsHOME.SHSP;
         }
 
         //All the PB8 are set as Egg during the conversion, check the encounter and eventually unset the Egg location
@@ -142,9 +142,9 @@ public static class LegalityHandler
         var legality = new LegalityAnalysis(clone);
         var encounter = legality.Results.Where(f => f.Identifier is CheckIdentifier.Encounter).FirstOrDefault();
         var applied = false;
-        if (encounter.Judgement is Severity.Invalid && clone.Egg_Location == 65534)
+        if (encounter.Judgement is Severity.Invalid && clone.EggLocation == 65534)
         {
-            clone.Egg_Location = 0;
+            clone.EggLocation = 0;
             applied = true;
         }
 
@@ -152,7 +152,7 @@ public static class LegalityHandler
         legality = new LegalityAnalysis(clone);
         encounter = legality.Results.Where(f => f.Identifier is CheckIdentifier.Encounter).FirstOrDefault();
         if (applied && encounter.Judgement is not Severity.Invalid)
-            pkm.Egg_Location = 0;
+            pkm.EggLocation = 0;
     }
 
     private static void FixConversionLGPE(this PKM pkm)

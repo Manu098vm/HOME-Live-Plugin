@@ -49,9 +49,9 @@ public sealed class GameData1PB8 : HomeOptional1, IGameDataSide1
     public bool GetMoveRecordFlagAny() => RecordFlag.IndexOfAnyExcept<byte>(0) >= 0;
     public void ClearMoveRecordFlags() => RecordFlag.Clear();
 
-    public int Ball { get => Data[0x26]; set => Data[0x26] = (byte)value; }
-    public int Egg_Location { get => ReadUInt16LittleEndian(Data[0x27..]); set => WriteUInt16LittleEndian(Data[0x27..], (ushort)value); }
-    public int Met_Location { get => ReadUInt16LittleEndian(Data[0x29..]); set => WriteUInt16LittleEndian(Data[0x29..], (ushort)value); }
+    public byte Ball { get => Data[0x26]; set => Data[0x26] = (byte)value; }
+    public ushort EggLocation { get => ReadUInt16LittleEndian(Data[0x27..]); set => WriteUInt16LittleEndian(Data[0x27..], (ushort)value); }
+    public ushort MetLocation { get => ReadUInt16LittleEndian(Data[0x29..]); set => WriteUInt16LittleEndian(Data[0x29..], (ushort)value); }
 
     #endregion
 
@@ -92,14 +92,14 @@ public sealed class GameData1PB8 : HomeOptional1, IGameDataSide1
     public static T Create<T>(GameData1PB8 data) where T : IGameDataSide1, new() => new()
     {
         Ball = data.Ball,
-        Met_Location = data.Met_Location == Locations.Default8bNone ? 0 : data.Met_Location,
-        Egg_Location = data.Egg_Location == Locations.Default8bNone ? 0 : data.Egg_Location,
+        MetLocation = data.MetLocation == Locations.Default8bNone ? (ushort)0 : data.MetLocation,
+        EggLocation = data.EggLocation == Locations.Default8bNone ? (ushort)0 : data.EggLocation,
     };
 
     public static GameData1PB8 Create(IGameDataSide1 data) => new()
     {
         Ball = data.Ball,
-        Met_Location = data.Met_Location == 0 ? Locations.Default8bNone : data.Met_Location,
-        Egg_Location = data.Egg_Location == 0 ? Locations.Default8bNone : data.Egg_Location,
+        MetLocation = data.MetLocation == 0 ? Locations.Default8bNone : data.MetLocation,
+        EggLocation = data.EggLocation == 0 ? Locations.Default8bNone : data.EggLocation,
     };
 }

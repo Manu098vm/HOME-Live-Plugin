@@ -15,9 +15,9 @@ public interface IGameDataSide1
     ushort Move2 { get; set; } int Move2_PP { get; set; } int Move2_PPUps { get; set; } ushort RelearnMove2 { get; set; }
     ushort Move3 { get; set; } int Move3_PP { get; set; } int Move3_PPUps { get; set; } ushort RelearnMove3 { get; set; }
     ushort Move4 { get; set; } int Move4_PP { get; set; } int Move4_PPUps { get; set; } ushort RelearnMove4 { get; set; }
-    int Ball { get; set; }
-    int Met_Location { get; set; }
-    int Egg_Location { get; set; }
+    byte Ball { get; set; }
+    ushort MetLocation { get; set; }
+    ushort EggLocation { get; set; }
 
     /// <summary>
     /// Gets the personal info for the input arguments.
@@ -45,8 +45,8 @@ public static class GameDataSideExtensions
         pk.Move3 = data.Move3; pk.Move3_PP = data.Move1_PP; pk.Move3_PPUps = data.Move3_PPUps; pk.RelearnMove3 = data.RelearnMove3;
         pk.Move4 = data.Move4; pk.Move4_PP = data.Move1_PP; pk.Move4_PPUps = data.Move4_PPUps; pk.RelearnMove4 = data.RelearnMove4;
         pk.Ball = data.Ball;
-        pk.Met_Location = data.Met_Location;
-        pk.Egg_Location = data.Egg_Location;
+        pk.MetLocation = data.MetLocation;
+        pk.EggLocation = data.EggLocation;
     }
 
     /// <summary>
@@ -61,7 +61,7 @@ public static class GameDataSideExtensions
         pk.Move3 = data.Move3; pk.Move3_PP = data.Move1_PP; pk.Move3_PPUps = data.Move3_PPUps; pk.RelearnMove3 = data.RelearnMove3;
         pk.Move4 = data.Move4; pk.Move4_PP = data.Move1_PP; pk.Move4_PPUps = data.Move4_PPUps; pk.RelearnMove4 = data.RelearnMove4;
         pk.Ball = data.Ball;
-        pk.Met_Location = data.Met_Location;
-        pk.Egg_Location = data.Egg_Location;
+        pk.MetLocation = data.MetLocation;
+        pk.EggLocation = data.EggLocation;
     }
 }

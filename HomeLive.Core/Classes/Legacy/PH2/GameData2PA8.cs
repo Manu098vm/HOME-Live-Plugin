@@ -50,7 +50,7 @@ public sealed class GameData2PA8 : HomeOptional2, IGameDataSide2<PA8>, IScaledSi
     public byte GV_SPD { get => Data[0x1E]; set => Data[0x1E] = value; }
     public float HeightAbsolute { get => ReadSingleLittleEndian(Data[0x1F..]); set => WriteSingleLittleEndian(Data[0x1F..], value); }
     public float WeightAbsolute { get => ReadSingleLittleEndian(Data[0x23..]); set => WriteSingleLittleEndian(Data[0x23..], value); }
-    public int Ball { get => Data[0x27]; set => Data[0x27] = (byte)value; }
+    public byte Ball { get => Data[0x27]; set => Data[0x27] = value; }
 
     private Span<byte> PurchasedRecord => Data.Slice(0x28, 8);
     public bool GetPurchasedRecordFlag(int index) => FlagUtil.GetFlag(PurchasedRecord, index >> 3, index & 7);
@@ -63,10 +63,10 @@ public sealed class GameData2PA8 : HomeOptional2, IGameDataSide2<PA8>, IScaledSi
     public void SetMasteredRecordFlag(int index, bool value) => FlagUtil.SetFlag(MasteredRecord, index >> 3, index & 7, value);
     public bool GetMasteredRecordFlagAny() => MasteredRecord.IndexOfAnyExcept<byte>(0) >= 0;
 
-    public int Egg_Location { get => ReadUInt16LittleEndian(Data[0x38..]); set => WriteUInt16LittleEndian(Data[0x38..], (ushort)value); }
-    public int Met_Location { get => ReadUInt16LittleEndian(Data[0x3A..]); set => WriteUInt16LittleEndian(Data[0x3A..], (ushort)value); }
+    public ushort EggLocation { get => ReadUInt16LittleEndian(Data[0x38..]); set => WriteUInt16LittleEndian(Data[0x38..], value); }
+    public ushort MetLocation { get => ReadUInt16LittleEndian(Data[0x3A..]); set => WriteUInt16LittleEndian(Data[0x3A..], value); }
 
-    public byte PKRS { get => Data[0x3C]; set => Data[0x3C] = value; }
+    public byte PokerusState { get => Data[0x3C]; set => Data[0x3C] = value; }
     public ushort Ability { get => ReadUInt16LittleEndian(Data[0x3D..]); set => WriteUInt16LittleEndian(Data[0x3D..], value); }
     public byte AbilityNumber { get => Data[0x3F]; set => Data[0x3F] = value; }
 
@@ -98,7 +98,7 @@ public sealed class GameData2PA8 : HomeOptional2, IGameDataSide2<PA8>, IScaledSi
         pk.GV_SPD = GV_SPD;
         PurchasedRecord.CopyTo(pk.PurchasedRecord);
         MasteredRecord.CopyTo(pk.MasteredRecord);
-        pk.PKRS = PKRS;
+        pk.PokerusState = PokerusState;
         pk.AbilityNumber = AbilityNumber;
         pk.Ability = Ability;
     }
@@ -120,7 +120,7 @@ public sealed class GameData2PA8 : HomeOptional2, IGameDataSide2<PA8>, IScaledSi
         GV_SPD = pk.GV_SPD;
         pk.PurchasedRecord.CopyTo(PurchasedRecord);
         pk.MasteredRecord.CopyTo(MasteredRecord);
-        PKRS = pk.PKRS;
+        PokerusState = pk.PokerusState;
         AbilityNumber = (byte)pk.AbilityNumber;
         Ability = (ushort)pk.Ability;
 
@@ -175,15 +175,15 @@ public sealed class GameData2PA8 : HomeOptional2, IGameDataSide2<PA8>, IScaledSi
     public void InitializeFrom(IGameDataSide2 side, PH2 pkh)
     {
         Ball = GetLegendBall(side.Ball, pkh.LA);
-        Met_Location = side.Met_Location == Locations.Default8bNone ? 0 : side.Met_Location;
-        Egg_Location = side.Egg_Location == Locations.Default8bNone ? 0 : side.Egg_Location;
+        MetLocation = side.MetLocation == Locations.Default8bNone ? (ushort)0 : side.MetLocation;
+        EggLocation = side.EggLocation == Locations.Default8bNone ? (ushort)0 : side.EggLocation;
 
         if (side is IScaledSize3 s3)
             Scale = s3.Scale;
         else
             Scale = pkh.HeightScalar;
         if (side is IPokerusStatus p)
-            PKRS = p.PKRS;
+            PokerusState = p.PokerusState;
         if (side is IGameDataSplitAbility a)
             AbilityNumber = a.AbilityNumber;
         else
@@ -192,7 +192,7 @@ public sealed class GameData2PA8 : HomeOptional2, IGameDataSide2<PA8>, IScaledSi
         PopulateFromCore(pkh);
     }
 
-    private static int GetLegendBall(int ball, bool wasLA)
+    private static byte GetLegendBall(byte ball, bool wasLA)
     {
         if (!wasLA)
             return ball;

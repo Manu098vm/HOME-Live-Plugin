@@ -57,18 +57,18 @@ public sealed class GameData2PB7 : HomeOptional2, IGameDataSide2<PB7>, IScaledSi
     public byte FieldEventFatigue2 { get => Data[0x28]; set => Data[0x28] = value; }
     public byte Fullness { get => Data[0x29]; set => Data[0x29] = value; }
     public byte Rank { get => Data[0x2A]; set => Data[0x2A] = value; }
-    public int OT_Affection { get => Data[0x2B]; set => Data[0x2B] = (byte)value; }
-    public byte OT_Intensity { get => Data[0x2C]; set => Data[0x2C] = value; }
-    public byte OT_Memory { get => Data[0x2D]; set => Data[0x2D] = value; }
-    public ushort OT_TextVar { get => ReadUInt16LittleEndian(Data[0x2E..]); set => WriteUInt16LittleEndian(Data[0x2E..], value); }
-    public byte OT_Feeling { get => Data[0x30]; set => Data[0x30] = value; }
+    public byte OriginalTrainerMemoryAffection { get => Data[0x2B]; set => Data[0x2B] = value; }
+    public byte OriginalTrainerMemoryIntensity { get => Data[0x2C]; set => Data[0x2C] = value; }
+    public byte OriginalTrainerMemory { get => Data[0x2D]; set => Data[0x2D] = value; }
+    public ushort OriginalTrainerMemoryVariable { get => ReadUInt16LittleEndian(Data[0x2E..]); set => WriteUInt16LittleEndian(Data[0x2E..], value); }
+    public byte OriginalTrainerMemoryFeeling { get => Data[0x30]; set => Data[0x30] = value; }
     public byte Enjoyment { get => Data[0x31]; set => Data[0x31] = value; }
     public uint GeoPadding { get => ReadUInt32LittleEndian(Data[0x32..]); set => WriteUInt32LittleEndian(Data[0x32..], value); }
-    public int Ball { get => Data[0x36]; set => Data[0x36] = (byte)value; }
-    public int Egg_Location { get => ReadUInt16LittleEndian(Data[0x37..]); set => WriteUInt16LittleEndian(Data[0x37..], (ushort)value); }
-    public int Met_Location { get => ReadUInt16LittleEndian(Data[0x39..]); set => WriteUInt16LittleEndian(Data[0x39..], (ushort)value); }
+    public byte Ball { get => Data[0x36]; set => Data[0x36] = (byte)value; }
+    public ushort EggLocation { get => ReadUInt16LittleEndian(Data[0x37..]); set => WriteUInt16LittleEndian(Data[0x37..], value); }
+    public ushort MetLocation { get => ReadUInt16LittleEndian(Data[0x39..]); set => WriteUInt16LittleEndian(Data[0x39..], value); }
 
-    public byte PKRS { get => Data[0x3B]; set => Data[0x3B] = value; }
+    public byte PokerusState { get => Data[0x3B]; set => Data[0x3B] = value; }
     public ushort Ability { get => ReadUInt16LittleEndian(Data[0x3C..]); set => WriteUInt16LittleEndian(Data[0x3C..], value); }
     public byte AbilityNumber { get => Data[0x3E]; set => Data[0x3E] = value; }
 
@@ -136,8 +136,8 @@ public sealed class GameData2PB7 : HomeOptional2, IGameDataSide2<PB7>, IScaledSi
         Ability = (ushort)pk.Ability;
 
         // All other side formats have HT Language. Just fake a value.
-        if (pkh is { HT_Language: 0, IsUntraded: false })
-            pkh.HT_Language = (byte)pk.Language;
+        if (pkh is { HandlingTrainerLanguage: 0, IsUntraded: false })
+            pkh.HandlingTrainerLanguage = (byte)pk.Language;
     }
 
     public PB7 ConvertToPKM(PH2 pkh)
@@ -177,10 +177,10 @@ public sealed class GameData2PB7 : HomeOptional2, IGameDataSide2<PB7>, IScaledSi
             return null;
 
         var ball = side.Ball;
-        if (pkh.Version is (int)GameVersion.GO)
-            return new GameData2PB7 { Ball = ball, Met_Location = Locations.GO7 };
-        if (pkh.Version is (int)GameVersion.GP or (int)GameVersion.GE)
-            return new GameData2PB7 { Ball = ball, Met_Location = side.Met_Location };
+        if (pkh.Version is GameVersion.GO)
+            return new GameData2PB7 { Ball = ball, MetLocation = Locations.GO7 };
+        if (pkh.Version is GameVersion.GP or GameVersion.GE)
+            return new GameData2PB7 { Ball = ball, MetLocation = side.MetLocation };
 
         var result = new GameData2PB7();
         result.InitializeFrom(side, pkh);
@@ -189,8 +189,8 @@ public sealed class GameData2PB7 : HomeOptional2, IGameDataSide2<PB7>, IScaledSi
 
     public void InitializeFrom(IGameDataSide2 side, PH2 pkh)
     {
-        Met_Location = side.Met_Location == Locations.Default8bNone ? 0 : side.Met_Location;
-        Egg_Location = side.Egg_Location == Locations.Default8bNone ? 0 : side.Egg_Location;
+        MetLocation = side.MetLocation == Locations.Default8bNone ? (ushort)0 : side.MetLocation;
+        EggLocation = side.EggLocation == Locations.Default8bNone ? (ushort)0 : side.EggLocation;
 
         if (side is IGameDataSplitAbility a)
             AbilityNumber = a.AbilityNumber;
@@ -214,7 +214,7 @@ public sealed class GameData2PB7 : HomeOptional2, IGameDataSide2<PB7>, IScaledSi
     public static T Create<T>(GameData2PB7 data) where T : IGameDataSide2, new() => new()
     {
         Ball = data.Ball,
-        Met_Location = data.Met_Location,
-        Egg_Location = data.Egg_Location,
+        MetLocation = data.MetLocation,
+        EggLocation = data.EggLocation,
     };
 }

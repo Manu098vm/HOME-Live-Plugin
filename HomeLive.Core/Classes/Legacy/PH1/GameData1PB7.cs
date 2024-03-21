@@ -57,16 +57,16 @@ public sealed class GameData1PB7 : HomeOptional1, IGameDataSide1, IScaledSizeAbs
     public byte FieldEventFatigue2 { get => Data[0x28]; set => Data[0x28] = value; }
     public byte Fullness { get => Data[0x29]; set => Data[0x29] = value; }
     public byte Rank { get => Data[0x2A]; set => Data[0x2A] = value; }
-    public int OT_Affection { get => Data[0x2B]; set => Data[0x2B] = (byte)value; }
-    public byte OT_Intensity { get => Data[0x2C]; set => Data[0x2C] = value; }
-    public byte OT_Memory { get => Data[0x2D]; set => Data[0x2D] = value; }
-    public ushort OT_TextVar { get => ReadUInt16LittleEndian(Data[0x2E..]); set => WriteUInt16LittleEndian(Data[0x2E..], value); }
-    public byte OT_Feeling { get => Data[0x30]; set => Data[0x30] = value; }
+    public int OriginalTrainerAffection { get => Data[0x2B]; set => Data[0x2B] = (byte)value; }
+    public byte OriginalTrainerMemoryIntensity { get => Data[0x2C]; set => Data[0x2C] = value; }
+    public byte OriginalTrainerMemory { get => Data[0x2D]; set => Data[0x2D] = value; }
+    public ushort OriginalTrainerMemoryVariable { get => ReadUInt16LittleEndian(Data[0x2E..]); set => WriteUInt16LittleEndian(Data[0x2E..], value); }
+    public byte OriginalTrainerMemoryFeeling { get => Data[0x30]; set => Data[0x30] = value; }
     public byte Enjoyment { get => Data[0x31]; set => Data[0x31] = value; }
     public uint GeoPadding { get => ReadUInt32LittleEndian(Data[0x32..]); set => WriteUInt32LittleEndian(Data[0x32..], value); }
-    public int Ball { get => Data[0x36]; set => Data[0x36] = (byte)value; }
-    public int Egg_Location { get => ReadUInt16LittleEndian(Data[0x37..]); set => WriteUInt16LittleEndian(Data[0x37..], (ushort)value); }
-    public int Met_Location { get => ReadUInt16LittleEndian(Data[0x39..]); set => WriteUInt16LittleEndian(Data[0x39..], (ushort)value); }
+    public byte Ball { get => Data[0x36]; set => Data[0x36] = value; }
+    public ushort EggLocation { get => ReadUInt16LittleEndian(Data[0x37..]); set => WriteUInt16LittleEndian(Data[0x37..], value); }
+    public ushort MetLocation { get => ReadUInt16LittleEndian(Data[0x39..]); set => WriteUInt16LittleEndian(Data[0x39..], value); }
 
     #endregion
 
@@ -116,30 +116,30 @@ public sealed class GameData1PB7 : HomeOptional1, IGameDataSide1, IScaledSizeAbs
     /// <summary> Reconstructive logic to best apply suggested values. </summary>
     public static GameData1PB7? TryCreate(PH1 pkh)
     {
-        int met = 0;
-        int ball = (int)PKHeX.Core.Ball.Poke;
+        ushort met = 0;
+        byte ball = (int)PKHeX.Core.Ball.Poke;
         if (pkh.DataPK8 is { } x)
         {
-            met = x.Met_Location;
+            met = x.MetLocation;
             ball = x.Ball;
         }
         else if (pkh.DataPB8 is { } y)
         {
-            met = y.Met_Location;
+            met = y.MetLocation;
             ball = y.Ball;
         }
         else if (pkh.DataPA8 is { } z)
         {
-            met = z.Met_Location;
+            met = z.MetLocation;
             ball = z.Ball;
         }
         if (met == 0)
             return null;
 
-        if (pkh.Version is (int)GameVersion.GO)
-            return new GameData1PB7 { Ball = ball, Met_Location = Locations.GO7 };
-        if (pkh.Version is (int)GameVersion.GP or (int)GameVersion.GE)
-            return new GameData1PB7 { Ball = ball, Met_Location = met };
+        if (pkh.Version is GameVersion.GO)
+            return new GameData1PB7 { Ball = ball, MetLocation = Locations.GO7 };
+        if (pkh.Version is GameVersion.GP or GameVersion.GE)
+            return new GameData1PB7 { Ball = ball, MetLocation = met };
 
         return null;
     }
@@ -147,7 +147,7 @@ public sealed class GameData1PB7 : HomeOptional1, IGameDataSide1, IScaledSizeAbs
     public static T Create<T>(GameData1PB7 data) where T : IGameDataSide1, new() => new()
     {
         Ball = data.Ball,
-        Met_Location = data.Met_Location,
-        Egg_Location = data.Egg_Location,
+        MetLocation = data.MetLocation,
+        EggLocation = data.EggLocation,
     };
 }

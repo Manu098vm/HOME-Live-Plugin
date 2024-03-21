@@ -50,7 +50,7 @@ public sealed class GameData1PA8 : HomeOptional1, IGameDataSide1, IScaledSizeAbs
     public byte GV_SPD { get => Data[0x1E]; set => Data[0x1E] = value; }
     public float HeightAbsolute { get => ReadSingleLittleEndian(Data[0x1F..]); set => WriteSingleLittleEndian(Data[0x1F..], value); }
     public float WeightAbsolute { get => ReadSingleLittleEndian(Data[0x23..]); set => WriteSingleLittleEndian(Data[0x23..], value); }
-    public int Ball { get => Data[0x27]; set => Data[0x27] = (byte)value; }
+    public byte Ball { get => Data[0x27]; set => Data[0x27] = value; }
 
     private Span<byte> PurchasedRecord => Data.Slice(0x28, 8);
     public bool GetPurchasedRecordFlag(int index) => FlagUtil.GetFlag(PurchasedRecord, index >> 3, index & 7);
@@ -63,8 +63,8 @@ public sealed class GameData1PA8 : HomeOptional1, IGameDataSide1, IScaledSizeAbs
     public void SetMasteredRecordFlag(int index, bool value) => FlagUtil.SetFlag(MasteredRecord, index >> 3, index & 7, value);
     public bool GetMasteredRecordFlagAny() => MasteredRecord.IndexOfAnyExcept<byte>(0) >= 0;
 
-    public int Egg_Location { get => ReadUInt16LittleEndian(Data[0x38..]); set => WriteUInt16LittleEndian(Data[0x38..], (ushort)value); }
-    public int Met_Location { get => ReadUInt16LittleEndian(Data[0x3A..]); set => WriteUInt16LittleEndian(Data[0x3A..], (ushort)value); }
+    public ushort EggLocation { get => ReadUInt16LittleEndian(Data[0x38..]); set => WriteUInt16LittleEndian(Data[0x38..], value); }
+    public ushort MetLocation { get => ReadUInt16LittleEndian(Data[0x3A..]); set => WriteUInt16LittleEndian(Data[0x3A..], value); }
 
     // Not stored.
     public PersonalInfo GetPersonalInfo(ushort species, byte form) => PersonalTable.LA.GetFormEntry(species, form);
@@ -116,7 +116,7 @@ public sealed class GameData1PA8 : HomeOptional1, IGameDataSide1, IScaledSizeAbs
         if (pkh.DataPB8 is { } b)
             return GameData1PB8.Create<GameData1PA8>(b);
         if (pkh.DataPK8 is { } c)
-            return new GameData1PA8 { Ball = c.Met_Location == LocationsHOME.SWLA ? (int)PKHeX.Core.Ball.LAPoke : c.Ball, Met_Location = c.Met_Location, Egg_Location = c.Egg_Location };
+            return new GameData1PA8 { Ball = c.MetLocation == LocationsHOME.SWLA ? (byte)PKHeX.Core.Ball.LAPoke : c.Ball, MetLocation = c.MetLocation, EggLocation = c.EggLocation };
         return null;
     }
 }

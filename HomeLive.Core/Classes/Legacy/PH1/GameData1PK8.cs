@@ -62,9 +62,9 @@ public sealed class GameData1PK8 : HomeOptional1, IGameDataSide1, IGigantamax, I
     public void ClearMoveRecordFlags() => RecordFlags.Clear();
 
     public int Palma { get => ReadInt32LittleEndian(Data[0x3B..]); set => WriteInt32LittleEndian(Data[0x3B..], value); }
-    public int Ball { get => Data[0x3F]; set => Data[0x3F] = (byte)value; }
-    public int Egg_Location { get => ReadUInt16LittleEndian(Data[0x40..]); set => WriteUInt16LittleEndian(Data[0x40..], (ushort)value); }
-    public int Met_Location { get => ReadUInt16LittleEndian(Data[0x42..]); set => WriteUInt16LittleEndian(Data[0x42..], (ushort)value); }
+    public byte Ball { get => Data[0x3F]; set => Data[0x3F] = (byte)value; }
+    public ushort EggLocation { get => ReadUInt16LittleEndian(Data[0x40..]); set => WriteUInt16LittleEndian(Data[0x40..], (ushort)value); }
+    public ushort MetLocation { get => ReadUInt16LittleEndian(Data[0x42..]); set => WriteUInt16LittleEndian(Data[0x42..], (ushort)value); }
 
     #endregion
 
@@ -110,19 +110,19 @@ public sealed class GameData1PK8 : HomeOptional1, IGameDataSide1, IGigantamax, I
         return null;
     }
 
-    private static GameData1PK8 Create(IGameDataSide1 side, int ver)
+    private static GameData1PK8 Create(IGameDataSide1 side, GameVersion ver)
     {
-        var met = side.Met_Location;
+        var met = side.MetLocation;
         var ball = GetBall(side.Ball);
-        var egg = GetEggLocation(side.Egg_Location);
+        var egg = GetEggLocation(side.EggLocation);
         if (!IsOriginallySWSH(ver, met))
             RemapMetEgg(ver, ref met, ref egg);
-        return new GameData1PK8 { Ball = ball, Met_Location = met, Egg_Location = egg };
+        return new GameData1PK8 { Ball = ball, MetLocation = met, EggLocation = egg };
     }
 
-    private static void RemapMetEgg(int ver, ref int met, ref int egg)
+    private static void RemapMetEgg(GameVersion ver, ref ushort met, ref ushort egg)
     {
-        var remap = LocationsHOME.GetMetSWSH((ushort)met, ver);
+        var remap = LocationsHOME.GetMetSWSH(met, ver);
         if (remap == met)
             return;
 
@@ -130,8 +130,8 @@ public sealed class GameData1PK8 : HomeOptional1, IGameDataSide1, IGigantamax, I
         egg = LocationsHOME.SWSHEgg;
     }
 
-    private static bool IsOriginallySWSH(int ver, int loc) => ver is (int)GameVersion.SW or (int)GameVersion.SH && !IsFakeMetLocation(loc);
+    private static bool IsOriginallySWSH(GameVersion ver, int loc) => ver is GameVersion.SW or GameVersion.SH && !IsFakeMetLocation(loc);
     private static bool IsFakeMetLocation(int met) => met is LocationsHOME.SWLA or LocationsHOME.SWBD or LocationsHOME.SHSP;
-    private static int GetBall(int ball) => ball > (int)PKHeX.Core.Ball.Beast ? 4 : ball;
-    private static int GetEggLocation(int egg) => egg == Locations.Default8bNone ? 0 : egg;
+    private static byte GetBall(byte ball) => ball > (byte)PKHeX.Core.Ball.Beast ? (byte)4 : ball;
+    private static ushort GetEggLocation(ushort egg) => egg == Locations.Default8bNone ? (ushort)0 : egg;
 }
