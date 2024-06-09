@@ -85,6 +85,8 @@ public sealed class PH2 : PKM, IHandlerLanguage, IFormArgument, IHomeTrack, IBat
     public override Span<byte> NicknameTrash => Core.NicknameTrash;
     public override Span<byte> OriginalTrainerTrash => Core.OriginalTrainerTrash;
     public override Span<byte> HandlingTrainerTrash => Core.HandlingTrainerTrash;
+    public override int TrashCharCountTrainer => 13;
+    public override int TrashCharCountNickname => 13;
     public override bool IsUntraded => ReadUInt16LittleEndian(HandlingTrainerTrash) == 0; // immediately terminated HT_Name data (\0)
 
     #region Core
@@ -230,7 +232,7 @@ public sealed class PH2 : PKM, IHandlerLanguage, IFormArgument, IHomeTrack, IBat
 
     public override int MaxIV => 31;
     public override int MaxEV => 252;
-    public override int MaxStringLengthOT => 12;
+    public override int MaxStringLengthTrainer => 12;
     public override int MaxStringLengthNickname => 12;
     public override ushort MaxMoveID => (ushort)Move.TakeHeart;
     public override ushort MaxSpeciesID => (ushort)PKHeX.Core.Species.Enamorus;
@@ -420,4 +422,16 @@ public sealed class PH2 : PKM, IHandlerLanguage, IFormArgument, IHomeTrack, IBat
             WeightScalar = PokeSizeUtil.GetRandomScalar(rnd);
         }
     }
+
+    public override string GetString(ReadOnlySpan<byte> data)
+    => StringConverter8.GetString(data);
+    public override int LoadString(ReadOnlySpan<byte> data, Span<char> destBuffer)
+        => StringConverter8.LoadString(data, destBuffer);
+    public override int SetString(Span<byte> destBuffer, ReadOnlySpan<char> value, int maxLength, StringConverterOption option)
+        => StringConverter8.SetString(destBuffer, value, maxLength, option);
+    public override int GetStringTerminatorIndex(ReadOnlySpan<byte> data)
+        => TrashBytesUTF16.GetTerminatorIndex(data);
+    public override int GetStringLength(ReadOnlySpan<byte> data)
+        => TrashBytesUTF16.GetStringLength(data);
+    public override int GetBytesPerChar() => 2;
 }

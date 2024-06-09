@@ -67,7 +67,7 @@ public sealed class GameData2PK9 : HomeOptional2, IGameDataSide2<PK9>, IScaledSi
     public void ClearMoveRecordFlags() => RecordFlags.Clear();
 
     // Rev2 Additions
-    public byte Obedience_Level { get => Data[0x39]; set => Data[0x39] = value; }
+    public byte ObedienceLevel { get => Data[0x39]; set => Data[0x39] = value; }
     public ushort Ability { get => ReadUInt16LittleEndian(Data[0x3A..]); set => WriteUInt16LittleEndian(Data[0x3A..], value); }
     public byte AbilityNumber { get => Data[0x3C]; set => Data[0x3C] = value; }
 
@@ -84,7 +84,7 @@ public sealed class GameData2PK9 : HomeOptional2, IGameDataSide2<PK9>, IScaledSi
         pk.TeraTypeOriginal = TeraTypeOriginal;
         pk.TeraTypeOverride = TeraTypeOverride;
         RecordFlags.CopyTo(pk.RecordFlagsBase);
-        pk.ObedienceLevel = Obedience_Level;
+        pk.ObedienceLevel = ObedienceLevel;
         pk.Ability = Ability;
         pk.AbilityNumber = AbilityNumber;
     }
@@ -96,7 +96,7 @@ public sealed class GameData2PK9 : HomeOptional2, IGameDataSide2<PK9>, IScaledSi
         TeraTypeOriginal = pk.TeraTypeOriginal;
         TeraTypeOverride = pk.TeraTypeOverride;
         pk.RecordFlagsBase.CopyTo(RecordFlags);
-        Obedience_Level = pk.ObedienceLevel;
+        ObedienceLevel = pk.ObedienceLevel;
         Ability = (ushort)pk.Ability;
         AbilityNumber = (byte)pk.AbilityNumber;
     }
@@ -163,7 +163,7 @@ public sealed class GameData2PK9 : HomeOptional2, IGameDataSide2<PK9>, IScaledSi
 
     private void PopulateFromCore(PH2 pkh)
     {
-        Obedience_Level = pkh.MetLevel;
+        ObedienceLevel = pkh.MetLevel;
 
         var pi = PersonalTable.SV.GetFormEntry(pkh.Species, pkh.Form);
         Ability = (ushort)pi.GetAbilityAtIndex(AbilityNumber >> 1);

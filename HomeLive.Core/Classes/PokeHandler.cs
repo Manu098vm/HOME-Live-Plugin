@@ -57,7 +57,7 @@ public static class PokeHandler
 
     public static List<HomeWrapper?> GenerateEntitiesFromBoxBin(ReadOnlySpan<byte> data)
     {
-        var pkmsData = ArrayUtil.EnumerateSplit(data.ToArray(), HomeDataOffsets.HomeSlotSize);
+        var pkmsData = EnumerateSplit(data.ToArray(), HomeDataOffsets.HomeSlotSize);
         var list = new List<HomeWrapper?>();
         foreach(var entityData in pkmsData)
             list.Add(GenerateEntityFromBin(entityData));
@@ -105,5 +105,11 @@ public static class PokeHandler
             if (c != '\\' && c != '/' && c != ':' && c != '*' && c != '?' && c != '"' && c != '<' && c != '>' && c != '|')
                 sb.Append(c);
         return sb.ToString();
+    }
+
+    private static IEnumerable<T[]> EnumerateSplit<T>(T[] bin, int size, int start = 0)
+    {
+        for (int i = start; i < bin.Length; i += size)
+            yield return bin.AsSpan(i, size).ToArray();
     }
 }
