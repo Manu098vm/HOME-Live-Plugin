@@ -1,6 +1,7 @@
 ﻿using PKHeX.Core;
 using System.Buffers.Binary;
 using System.Text;
+using HomeLive.DeviceExecutor;
 
 namespace HomeLive.Core;
 

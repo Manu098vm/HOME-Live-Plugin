@@ -1,4 +1,4 @@
-﻿namespace HomeLive.Core;
+﻿namespace HomeLive.DeviceExecutor;
 
 public static class HomeDataOffsets
 {

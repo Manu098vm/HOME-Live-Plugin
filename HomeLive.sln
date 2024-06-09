@@ -4,8 +4,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeLive.Core", "HomeLive.Core\HomeLive.Core.csproj", "{06E6531D-862E-4D04-987B-FFC97C02965A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{713E8B77-1B2A-4D0A-AD8E-23194CE902DA} = {713E8B77-1B2A-4D0A-AD8E-23194CE902DA}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeLive.Plugins", "HomeLive.Plugins\HomeLive.Plugins.csproj", "{BE40AB8E-46E0-448C-BA1D-8969185B376F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeLive.DeviceExecutor", "HomeLive.DeviceExecutor\HomeLive.DeviceExecutor.csproj", "{713E8B77-1B2A-4D0A-AD8E-23194CE902DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +26,10 @@ Global
 		{BE40AB8E-46E0-448C-BA1D-8969185B376F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE40AB8E-46E0-448C-BA1D-8969185B376F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE40AB8E-46E0-448C-BA1D-8969185B376F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{713E8B77-1B2A-4D0A-AD8E-23194CE902DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{713E8B77-1B2A-4D0A-AD8E-23194CE902DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{713E8B77-1B2A-4D0A-AD8E-23194CE902DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{713E8B77-1B2A-4D0A-AD8E-23194CE902DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

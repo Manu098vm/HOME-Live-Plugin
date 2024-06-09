@@ -1,5 +1,6 @@
 ﻿using PKHeX.Core;
 using HomeLive.Core;
+using HomeLive.DeviceExecutor;
 using SysBot.Base;
 
 namespace HomeLive.Plugins;

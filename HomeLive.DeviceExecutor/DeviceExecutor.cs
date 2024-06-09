@@ -1,7 +1,7 @@
 ﻿using SysBot.Base;
 using System.Text;
 
-namespace HomeLive.Core;
+namespace HomeLive.DeviceExecutor;
 
 public enum RoutineType
 {
