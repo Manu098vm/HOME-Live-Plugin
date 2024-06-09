@@ -92,15 +92,26 @@ public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) 
         return str;
     }
 
+    public async Task<ulong> GetBoxStartOffset(CancellationToken token)
+    {
+        if (!Connection.Connected)
+            throw new InvalidOperationException("No remote connection");
+
+        Log("Getting Box offset...");
+        var offset = await SwitchConnection.PointerAll(HomeDataOffsets.BoxStartPointer, token).ConfigureAwait(false);
+        Log($"Found offset 0x{offset:8X}");
+        return offset;
+    }
+
     public async Task<byte[]> ReadBoxData(int box, CancellationToken token)
     {
         if (!Connection.Connected)
             throw new InvalidOperationException("No remote connection");
 
         Log($"Reading Box {box}...");
-        var boxOffset = HomeDataOffsets.GetBoxOffset(box);
+        var boxOffset = HomeDataOffsets.GetBoxOffset(await GetBoxStartOffset(token).ConfigureAwait(false), box);
         var size = HomeDataOffsets.HomeSlotSize * HomeDataOffsets.HomeSlotCount;
-        var data = await SwitchConnection.ReadBytesAsync(boxOffset, size, token).ConfigureAwait(false);
+        var data = await SwitchConnection.ReadBytesAbsoluteAsync(boxOffset, size, token).ConfigureAwait(false);
         Log("Done.");
         return data;
     }
@@ -111,8 +122,8 @@ public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) 
             throw new InvalidOperationException("No remote connection");
 
         Log($"Reading Box {box}, Slot {slot}...");
-        var slotOffset = HomeDataOffsets.GetSlotOffset(box, slot);
-        var data = await SwitchConnection.ReadBytesAsync(slotOffset, HomeDataOffsets.HomeSlotSize, token).ConfigureAwait(false);
+        var slotOffset = HomeDataOffsets.GetSlotOffset(await GetBoxStartOffset(token).ConfigureAwait(false), box, slot);
+        var data = await SwitchConnection.ReadBytesAbsoluteAsync(slotOffset, HomeDataOffsets.HomeSlotSize, token).ConfigureAwait(false);
         Log("Done.");
         return data;
     }
@@ -123,10 +134,10 @@ public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) 
             throw new InvalidOperationException("No remote connection");
 
         Log($"Reading from Box {start.box}, Slot {start.slot} to Box {end.box}, Slot {end.slot}...");
-        var startOffset = HomeDataOffsets.GetSlotOffset(start.box, start.slot);
-        var endOffset = HomeDataOffsets.GetSlotOffset(end.box, end.slot);
-        var size = (int)(endOffset - startOffset);
-        var data = await SwitchConnection.ReadBytesAsync(startOffset, size, token).ConfigureAwait(false);
+        var startOffset = HomeDataOffsets.GetSlotOffset(await GetBoxStartOffset(token).ConfigureAwait(false), start.box, start.slot);
+        var endOffset = HomeDataOffsets.GetSlotOffset(await GetBoxStartOffset(token).ConfigureAwait(false), end.box, end.slot);
+        var size = endOffset - startOffset;
+        var data = await SwitchConnection.ReadBytesAbsoluteAsync(startOffset, (int)size, token).ConfigureAwait(false);
         Log("Done.");
         return data;
     }
