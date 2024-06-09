@@ -126,7 +126,7 @@ namespace HomeLive.Core
 
         public PK8? ConvertToPK8()
         {
-            if (PKM is PH1 or PH2 or PH2 or PKH)
+            if (PKM is PH1 or PH2 or PKH)
                 return ((dynamic)PKM).ConvertToPK8();
             else if (PKM is PK8 pk8)
                 return pk8;
