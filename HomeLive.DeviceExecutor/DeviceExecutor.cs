@@ -97,10 +97,7 @@ public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) 
         if (!Connection.Connected)
             throw new InvalidOperationException("No remote connection");
 
-        
-        var offset = await SwitchConnection.PointerAll(HomeDataOffsets.BoxStartPointer, token).ConfigureAwait(false);
-        
-        return offset;
+        return await SwitchConnection.PointerAll(HomeDataOffsets.BoxStartPointer, token).ConfigureAwait(false);
     }
 
     public async Task<byte[]> ReadBoxData(int box, CancellationToken token)
