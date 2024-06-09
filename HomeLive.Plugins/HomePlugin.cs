@@ -5,7 +5,7 @@ namespace HomeLive.Plugins;
 
 public class HomePlugin : IPlugin
 {
-    public const string Version = "3.2.2";
+    public const string Version = "3.2.3";
     public string Name => nameof(HomePlugin);
     public int Priority => 1;
 
@@ -80,6 +80,13 @@ public class HomePlugin : IPlugin
             Plugin.Enabled = true;
         else
             Plugin.Enabled = false;
+    }
+
+    public void NotifyDisplayLanguageChanged(string language)
+    {
+        Language = language;
+        TranslateDictionary(language);
+        TranslatePlugins();
     }
 
     public bool TryLoadFile(string path) => DumperForm.TryLoadFile(path, SaveFileEditor, PKMEditor);
