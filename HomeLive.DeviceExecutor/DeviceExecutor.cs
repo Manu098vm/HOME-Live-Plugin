@@ -19,6 +19,8 @@ public class DeviceState : BotState<RoutineType, SwitchConnectionConfig>
 
 public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) where T : DeviceState
 {
+    private static ulong BoxStartAddress = 0;
+
     public override string GetSummary()
     {
         var current = Config.CurrentRoutineType;
@@ -62,6 +64,7 @@ public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) 
     public void Disconnect()
     {
         HardStop();
+        BoxStartAddress = 0;
         if(Connection.Connected)
             Connection.Disconnect();
     }
@@ -97,7 +100,10 @@ public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) 
         if (!Connection.Connected)
             throw new InvalidOperationException("No remote connection");
 
-        return await SwitchConnection.PointerAll(HomeDataOffsets.BoxStartPointer, token).ConfigureAwait(false);
+        if (BoxStartAddress == 0)
+            BoxStartAddress = await SwitchConnection.PointerAll(HomeDataOffsets.BoxStartPointer, token).ConfigureAwait(false);
+
+        return BoxStartAddress;
     }
 
     public async Task<byte[]> ReadBoxData(int box, CancellationToken token)
