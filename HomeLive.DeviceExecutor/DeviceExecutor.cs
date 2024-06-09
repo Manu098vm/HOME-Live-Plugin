@@ -97,9 +97,9 @@ public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) 
         if (!Connection.Connected)
             throw new InvalidOperationException("No remote connection");
 
-        Log("Getting Box offset...");
+        
         var offset = await SwitchConnection.PointerAll(HomeDataOffsets.BoxStartPointer, token).ConfigureAwait(false);
-        Log($"Found offset 0x{offset:8X}");
+        
         return offset;
     }
 
@@ -108,8 +108,10 @@ public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) 
         if (!Connection.Connected)
             throw new InvalidOperationException("No remote connection");
 
-        Log($"Reading Box {box}...");
+        Log("Getting Box offset...");
         var boxOffset = HomeDataOffsets.GetBoxOffset(await GetBoxStartOffset(token).ConfigureAwait(false), box);
+        Log($"Found offset 0x{boxOffset:X8}");
+        Log($"Reading Box {box}...");
         var size = HomeDataOffsets.HomeSlotSize * HomeDataOffsets.HomeSlotCount;
         var data = await SwitchConnection.ReadBytesAbsoluteAsync(boxOffset, size, token).ConfigureAwait(false);
         Log("Done.");
@@ -121,8 +123,10 @@ public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) 
         if (!Connection.Connected)
             throw new InvalidOperationException("No remote connection");
 
-        Log($"Reading Box {box}, Slot {slot}...");
+        Log("Getting Box offset...");
         var slotOffset = HomeDataOffsets.GetSlotOffset(await GetBoxStartOffset(token).ConfigureAwait(false), box, slot);
+        Log($"Found offset 0x{slotOffset:X8}");
+        Log($"Reading Box {box}, Slot {slot}...");
         var data = await SwitchConnection.ReadBytesAbsoluteAsync(slotOffset, HomeDataOffsets.HomeSlotSize, token).ConfigureAwait(false);
         Log("Done.");
         return data;
