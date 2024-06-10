@@ -126,7 +126,7 @@ public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) 
         if (!Connection.Connected)
             throw new InvalidOperationException("No remote connection");
 
-        Log("Getting Box offset...");
+        Log("Getting Slot offset...");
         var slotOffset = HomeDataOffsets.GetSlotOffset(await GetBoxStartOffset(token).ConfigureAwait(false), box, slot);
         Log($"Found offset 0x{slotOffset:X8}");
         Log($"Reading Box {box}, Slot {slot}...");
