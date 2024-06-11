@@ -76,7 +76,7 @@ partial class DumperForm
         menuStrip.Items.AddRange(new ToolStripItem[] { toolsToolStripMenuItem });
         menuStrip.Location = new Point(0, 0);
         menuStrip.Name = "menuStrip";
-        menuStrip.Size = new Size(489, 28);
+        menuStrip.Size = new Size(512, 28);
         menuStrip.TabIndex = 0;
         menuStrip.Text = "menuStrip1";
         // 
@@ -132,14 +132,14 @@ partial class DumperForm
         grpConnection.Controls.Add(radioWiFi);
         grpConnection.Location = new Point(12, 31);
         grpConnection.Name = "grpConnection";
-        grpConnection.Size = new Size(466, 125);
+        grpConnection.Size = new Size(488, 125);
         grpConnection.TabIndex = 1;
         grpConnection.TabStop = false;
         grpConnection.Text = "Connection";
         // 
         // numPort
         // 
-        numPort.Location = new Point(387, 72);
+        numPort.Location = new Point(394, 72);
         numPort.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
         numPort.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
         numPort.Name = "numPort";
@@ -209,7 +209,7 @@ partial class DumperForm
         grpAction.Controls.Add(radioSlot);
         grpAction.Location = new Point(12, 162);
         grpAction.Name = "grpAction";
-        grpAction.Size = new Size(466, 125);
+        grpAction.Size = new Size(488, 125);
         grpAction.TabIndex = 2;
         grpAction.TabStop = false;
         grpAction.Text = "Dump Target";
@@ -226,7 +226,7 @@ partial class DumperForm
         // 
         chkBoxFolders.AutoSize = true;
         chkBoxFolders.Enabled = false;
-        chkBoxFolders.Font = new Font("Segoe UI", 7.8F, FontStyle.Regular, GraphicsUnit.Point);
+        chkBoxFolders.Font = new Font("Segoe UI", 7.8F);
         chkBoxFolders.Location = new Point(293, 83);
         chkBoxFolders.Name = "chkBoxFolders";
         chkBoxFolders.Size = new Size(173, 21);
@@ -280,10 +280,10 @@ partial class DumperForm
         // 
         // btnConnect
         // 
-        btnConnect.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
+        btnConnect.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold);
         btnConnect.Location = new Point(12, 440);
         btnConnect.Name = "btnConnect";
-        btnConnect.Size = new Size(466, 57);
+        btnConnect.Size = new Size(488, 57);
         btnConnect.TabIndex = 3;
         btnConnect.Text = "Connect";
         btnConnect.UseVisualStyleBackColor = true;
@@ -295,14 +295,14 @@ partial class DumperForm
         grpPath.Controls.Add(txtBoxPath);
         grpPath.Location = new Point(12, 365);
         grpPath.Name = "grpPath";
-        grpPath.Size = new Size(466, 69);
+        grpPath.Size = new Size(488, 69);
         grpPath.TabIndex = 6;
         grpPath.TabStop = false;
         grpPath.Text = "Dump Folder Path";
         // 
         // btnBrowse
         // 
-        btnBrowse.Location = new Point(378, 26);
+        btnBrowse.Location = new Point(384, 26);
         btnBrowse.Name = "btnBrowse";
         btnBrowse.Size = new Size(82, 29);
         btnBrowse.TabIndex = 7;
@@ -321,7 +321,7 @@ partial class DumperForm
         // 
         progressBar.Location = new Point(12, 503);
         progressBar.Name = "progressBar";
-        progressBar.Size = new Size(466, 29);
+        progressBar.Size = new Size(488, 29);
         progressBar.TabIndex = 7;
         // 
         // folderBrowser
@@ -335,7 +335,7 @@ partial class DumperForm
         grpDump.Controls.Add(radioEncrypted);
         grpDump.Location = new Point(12, 293);
         grpDump.Name = "grpDump";
-        grpDump.Size = new Size(466, 66);
+        grpDump.Size = new Size(488, 66);
         grpDump.TabIndex = 8;
         grpDump.TabStop = false;
         grpDump.Text = "Dump Format";
@@ -382,7 +382,7 @@ partial class DumperForm
         AcceptButton = btnConnect;
         AutoScaleDimensions = new SizeF(8F, 20F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(489, 539);
+        ClientSize = new Size(512, 539);
         Controls.Add(grpDump);
         Controls.Add(progressBar);
         Controls.Add(grpPath);

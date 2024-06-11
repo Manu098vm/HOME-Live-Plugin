@@ -71,14 +71,14 @@ partial class ViewerForm
         grpConnection.Controls.Add(radioWiFi);
         grpConnection.Location = new Point(12, 12);
         grpConnection.Name = "grpConnection";
-        grpConnection.Size = new Size(466, 125);
+        grpConnection.Size = new Size(481, 125);
         grpConnection.TabIndex = 2;
         grpConnection.TabStop = false;
         grpConnection.Text = "Connection";
         // 
         // numPort
         // 
-        numPort.Location = new Point(387, 72);
+        numPort.Location = new Point(403, 73);
         numPort.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
         numPort.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
         numPort.Name = "numPort";
@@ -98,7 +98,7 @@ partial class ViewerForm
         // radioUSB
         // 
         radioUSB.AutoSize = true;
-        radioUSB.Location = new Point(279, 26);
+        radioUSB.Location = new Point(287, 26);
         radioUSB.Name = "radioUSB";
         radioUSB.Size = new Size(57, 24);
         radioUSB.TabIndex = 1;
@@ -110,7 +110,7 @@ partial class ViewerForm
         // lblPort
         // 
         lblPort.AutoSize = true;
-        lblPort.Location = new Point(343, 75);
+        lblPort.Location = new Point(347, 75);
         lblPort.Name = "lblPort";
         lblPort.Size = new Size(38, 20);
         lblPort.TabIndex = 3;
@@ -118,7 +118,7 @@ partial class ViewerForm
         // 
         // txtBoxIP
         // 
-        txtBoxIP.Location = new Point(93, 72);
+        txtBoxIP.Location = new Point(104, 72);
         txtBoxIP.Name = "txtBoxIP";
         txtBoxIP.Size = new Size(213, 27);
         txtBoxIP.TabIndex = 4;
@@ -145,7 +145,7 @@ partial class ViewerForm
         grpForceConv.Controls.Add(radioConvertSpecific);
         grpForceConv.Location = new Point(12, 143);
         grpForceConv.Name = "grpForceConv";
-        grpForceConv.Size = new Size(466, 129);
+        grpForceConv.Size = new Size(481, 129);
         grpForceConv.TabIndex = 3;
         grpForceConv.TabStop = false;
         grpForceConv.Text = "Conversion Method";
@@ -203,10 +203,10 @@ partial class ViewerForm
         // 
         // btnConnect
         // 
-        btnConnect.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
+        btnConnect.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold);
         btnConnect.Location = new Point(12, 424);
         btnConnect.Name = "btnConnect";
-        btnConnect.Size = new Size(466, 57);
+        btnConnect.Size = new Size(481, 57);
         btnConnect.TabIndex = 5;
         btnConnect.Text = "Connect";
         btnConnect.UseVisualStyleBackColor = true;
@@ -216,7 +216,7 @@ partial class ViewerForm
         // 
         progressBar.Location = new Point(12, 487);
         progressBar.Name = "progressBar";
-        progressBar.Size = new Size(466, 29);
+        progressBar.Size = new Size(481, 29);
         progressBar.TabIndex = 8;
         // 
         // grpSelectionType
@@ -226,7 +226,7 @@ partial class ViewerForm
         grpSelectionType.Controls.Add(radioSlot);
         grpSelectionType.Location = new Point(12, 278);
         grpSelectionType.Name = "grpSelectionType";
-        grpSelectionType.Size = new Size(466, 63);
+        grpSelectionType.Size = new Size(481, 63);
         grpSelectionType.TabIndex = 9;
         grpSelectionType.TabStop = false;
         grpSelectionType.Text = "Targets";
@@ -258,7 +258,7 @@ partial class ViewerForm
         // radioSlot
         // 
         radioSlot.AutoSize = true;
-        radioSlot.Location = new Point(347, 26);
+        radioSlot.Location = new Point(342, 26);
         radioSlot.Name = "radioSlot";
         radioSlot.Size = new Size(112, 24);
         radioSlot.TabIndex = 0;
@@ -276,7 +276,7 @@ partial class ViewerForm
         grpSlot.Enabled = false;
         grpSlot.Location = new Point(12, 347);
         grpSlot.Name = "grpSlot";
-        grpSlot.Size = new Size(466, 71);
+        grpSlot.Size = new Size(481, 71);
         grpSlot.TabIndex = 10;
         grpSlot.TabStop = false;
         grpSlot.Text = "Select Slot";
@@ -303,7 +303,7 @@ partial class ViewerForm
         // cmbSlot
         // 
         cmbSlot.FormattingEnabled = true;
-        cmbSlot.Location = new Point(308, 26);
+        cmbSlot.Location = new Point(315, 26);
         cmbSlot.Name = "cmbSlot";
         cmbSlot.Size = new Size(151, 28);
         cmbSlot.TabIndex = 6;
@@ -321,7 +321,7 @@ partial class ViewerForm
         AcceptButton = btnConnect;
         AutoScaleDimensions = new SizeF(8F, 20F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(491, 532);
+        ClientSize = new Size(505, 532);
         Controls.Add(grpSlot);
         Controls.Add(grpSelectionType);
         Controls.Add(progressBar);
