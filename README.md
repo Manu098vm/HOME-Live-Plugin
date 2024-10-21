@@ -61,7 +61,7 @@ Move the DLL to your PKHeX' `plugins` folder, if you don't have it, create it ne
 
 Open PKHeX in Let's Go/Sword/Shield/Brilliant Diamond/Shining Pearl/Legends Arceus/Scarlet/Violet mode with a blank/default save file, and click on `Tools->Home Live Dumper` or `Tools -> Home Live Viewer` to open the Plugins.
 
-Open the Pokémon HOME application from your Nintendo Switch and tap the screen and least once. The app must be succesfully connected to internet and to your Pokémon Home Account before proceeding. 
+Open the Pokémon HOME application from your Nintendo Switch and tap the screen at least once. The app must be succesfully connected to internet and to your Pokémon Home Account before proceeding. 
 
 Enter your IP Address into the Plugins, select the Boxes/Slots you want to show or dump, and click "Connect".
 
