@@ -114,15 +114,14 @@ namespace HomeLive.Plugins.Properties {
         ///   Looks up a localized string similar to Plugin.HomeLivePlugins=Home Live Plugins
         ///Plugin.DumperPlugin=Home Live Dumper
         ///Plugin.ViewerPlugin=Home Live Viewer
-        ///Plugin.SettingsPlugin=Home Live Plugins Settings
+        ///Plugin.SettingsPlugin=Opciones Home Live Plugins 
         ///
         ///DumperForm=Home Live Dumper Plugin
-        ///DumperForm.toolsToolStripMenuItem=Tools
-        ///DumperForm.decryptFromFilesToolStripMenuItem=Decrypt from files
-        ///DumperForm.encryptFromFilesToolStripMenuItem=Encrypt from files
-        ///DumperForm.loadFileToEditorToolStripMenuItem=Load file to Editor
-        ///DumperForm.loadFilesToBoxesToolStripMenuItem=Load files to Boxes
-        ///Dum [rest of string was truncated]&quot;;.
+        ///DumperForm.toolsToolStripMenuItem=Herramientas
+        ///DumperForm.decryptFromFilesToolStripMenuItem=Desencriptar de archivos
+        ///DumperForm.encryptFromFilesToolStripMenuItem=Encriptar de archivos
+        ///DumperForm.loadFileToEditorToolStripMenuItem=Cargar archivo al editor
+        ///DumperForm.loadFilesToBoxesToolStripMenuItem=Ca [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string lang_es {
             get {
@@ -210,22 +209,24 @@ namespace HomeLive.Plugins.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Plugin.HomeLivePlugins=Home Live Plugins
-        ///Plugin.DumperPlugin=Home Live Dumper
-        ///Plugin.ViewerPlugin=Home Live Viewer
-        ///Plugin.SettingsPlugin=Home Live Plugins Settings
+        ///   Looks up a localized string similar to Plugin.HomeLivePlugins=Home Live插件
+        ///Plugin.DumperPlugin=Home Live导出
+        ///Plugin.ViewerPlugin=Home Live浏览
+        ///Plugin.SettingsPlugin=Home Live插件设置
         ///
-        ///DumperForm=Home Live Dumper Plugin
+        ///DumperForm=Home Live导出
         ///DumperForm.toolsToolStripMenuItem=工具
         ///DumperForm.decryptFromFilesToolStripMenuItem=从文件解密
         ///DumperForm.encryptFromFilesToolStripMenuItem=从文件加密
         ///DumperForm.loadFileToEditorToolStripMenuItem=将文件加载到编辑器
         ///DumperForm.loadFilesToBoxesToolStripMenuItem=将文件加载到盒子
-        ///DumperForm.loadFolderToBoxesToolStripMenuItem=Load fo [rest of string was truncated]&quot;;.
+        ///DumperForm.loadFolderToBoxesToolStripMenuItem=将文件夹加载到盒子
+        ///DumperForm.grpConnection=连接
+        ///DumperFo [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string lang_zh {
+        internal static string lang_zh_Hans {
             get {
-                return ResourceManager.GetString("lang_zh", resourceCulture);
+                return ResourceManager.GetString("lang_zh_Hans", resourceCulture);
             }
         }
         
@@ -243,9 +244,9 @@ namespace HomeLive.Plugins.Properties {
         ///DumperForm.loadFilesToBoxesToolStripMenuItem=將文件加載到盒子
         ///DumperForm.loadFolderToBoxesToolStripMenuItem=Load fo [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string lang_zh2 {
+        internal static string lang_zh_Hant {
             get {
-                return ResourceManager.GetString("lang_zh2", resourceCulture);
+                return ResourceManager.GetString("lang_zh_Hant", resourceCulture);
             }
         }
     }
