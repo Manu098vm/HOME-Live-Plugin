@@ -32,7 +32,6 @@ public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) 
 
     public override void SoftStop() => Config.Pause();
     public override Task HardStop() => Task.CompletedTask;
-    public override Task RebootAndStop(CancellationToken token) => Task.CompletedTask;
 
     public override async Task MainLoop(CancellationToken token)
     {
