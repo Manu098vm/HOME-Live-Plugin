@@ -14,6 +14,7 @@ public static class LegalityHandler
             var clone = pkm.Clone();
             clone.Heal();
             clone.FixCopyHeight();
+            clone.FixConversionSV();
             clone.FixConversionPLA();
             clone.FixConversionBDSP();
             clone.FixConversionLGPE();
@@ -177,6 +178,12 @@ public static class LegalityHandler
                     _ => 0,
                 };
                 pkm.SetAbilityIndex(index);
+            }
+
+            if (legality.Results.Any(r => r.Identifier is CheckIdentifier.Encounter && r.Judgement is Severity.Invalid) && legality.EncounterMatch is WB7 { CardID: 9028 } wb7)
+            {
+                pb7.HeightAbsolute = wb7.GetHomeHeightAbsolute();
+                pb7.WeightAbsolute = wb7.GetHomeWeightAbsolute();
             }
 
             pb7.ResetCP();
