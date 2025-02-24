@@ -9,7 +9,7 @@ public static class SaveFileHandler
         var res = pkm.ConvertToType(sav.PKMType, conversionType);
         if (res is not null)
         {
-            sav.AdaptPKM(res);
+            sav.AdaptToSaveFile(res, false);
             view.PopulateFieldsSafe(fixLegality ? res.FixLegality() : res);
             return true;
         }
@@ -30,7 +30,7 @@ public static class SaveFileHandler
             if (i > (numBox * numSlot)) break;
             if (entity is not null)
             {
-                sav.AdaptPKM(entity);
+                sav.AdaptToSaveFile(entity, false);
                 sav.SetBoxSlotAtIndex(fixLegality ? entity.FixLegality() : entity, i / numSlot, i % numSlot);
             }
         }
