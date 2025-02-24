@@ -1,20 +1,21 @@
-# About
-This program is meant to dump and view infos from those Pokèmon that are deposited into the Pokémon HOME application. 
-**This program is not intended to edit/inject Pokémon Infos directly into HOME and it will never allow to. Do not ask for any injection features.**
+# About  
+This program is meant to dump and view information from Pokémon deposited in the Pokémon HOME application.  
+**It is not intended to edit or inject Pokémon data directly into HOME and will never support such features. Do not request any injection capabilities.**  
 
-Powered by [PKHeX.Core](https://github.com/kwsch/PKHeX) and [SysBot.Base](https://github.com/kwsch/SysBot.NET)
+Powered by [PKHeX.Core](https://github.com/kwsch/PKHeX) and [SysBot.Base](https://github.com/kwsch/SysBot.NET).  
 
-## Features:
-* Handle (dump, load, view) PKH/EKH/PH1/EH1/PH2/EH2/PH3/EH3 (Pokémon Home format) files.
-* Generate PB7/PK8/PB8/PA8/PK9 (Pokémon Game-Specific format) files from Pokémon Home data/files.
+## Features:  
+* Handle (dump, load, view) PKH/EKH/PH1/EH1/PH2/EH2/PH3/EH3 (Pokémon HOME format) files.  
+* Generate PB7/PK8/PB8/PA8/PK9 (Pokémon game-specific format) files from Pokémon HOME data/files.  
 
-## Use Cases example:
-* Dump & preserve all your Pokémon Home PKM files, and/or load the files in PKHeX
-* Get access to all the Pokémon that are stuck beyond the first Pokémon Home Box if the Pokémon Home subscription is no longer active.
-* Generate a cloned Pokémon to be used on any of the Core game series while preserving the original data into your Pokémon Home account (this will preserve unique Go, Home, or Bank stamps).
+## Use Case Examples:  
+* Dump and preserve all your Pokémon HOME PKM files, or load them into PKHeX.  
+* Access Pokémon stored beyond the first Pokémon HOME box if your HOME subscription has expired.  
+* Generate a cloned Pokémon for use in any core series game while keeping the original data intact in your Pokémon HOME account (preserving unique GO, HOME, or Bank stamps).  
 
-If you need support, please write in the [Project Pokémon thread](https://projectpokemon.org/home/forums/topic/58311-pkhex-home-live-plugin-ram-viewer-thread/). 
+For support, please post in the [Project Pokémon thread](https://projectpokemon.org/home/forums/topic/58311-pkhex-home-live-plugin-ram-viewer-thread/).  
 Alternatively, feel free to join my [Discord server](https://discord.gg/yWveAjKbKt).
+
 
 [<img src="https://canary.discordapp.com/api/guilds/693083823197519873/widget.png?style=banner2">](https://discord.gg/yWveAjKbKt)
 
@@ -51,41 +52,41 @@ If you proceed with this tool, you accept the following:
 
 The Home Live Plugins can not be used in EmuNand or emulators.
 
-# How to use 
+# How to Use  
 
-Download the DLL from [Project Pokémon](https://projectpokemon.org/home/files/file/4388-pkhex-plugin-home-live-viewer/) or from the [GitHub Release page](https://github.com/Manu098vm/HOME-Live-Plugin/releases).
+Download the DLL from [Project Pokémon](https://projectpokemon.org/home/files/file/4388-pkhex-plugin-home-live-viewer/) or from the [GitHub Release page](https://github.com/Manu098vm/HOME-Live-Plugin/releases).  
 
-For Windows users, right click on the DLL, go to properties and select `Unblock`.
+For Windows users, right-click on the DLL, go to Properties, and select `Unblock`.  
 
-Move the DLL to your PKHeX' `plugins` folder, if you don't have it, create it near the PKHeX executable.
+Move the DLL to your PKHeX `plugins` folder. If the folder does not exist, create it in the same directory as the PKHeX executable.  
 
-Open PKHeX in Let's Go/Sword/Shield/Brilliant Diamond/Shining Pearl/Legends Arceus/Scarlet/Violet mode with a blank/default save file, and click on `Tools->Home Live Dumper` or `Tools -> Home Live Viewer` to open the Plugins.
+Open PKHeX in Let's Go/Sword/Shield/Brilliant Diamond/Shining Pearl/Legends Arceus/Scarlet/Violet mode with a blank/default save file, then click on `Tools -> Home Live Dumper` or `Tools -> Home Live Viewer` to open the plugin.  
 
-Open the Pokémon HOME application from your Nintendo Switch and tap the screen at least once. The app must be succesfully connected to internet and to your Pokémon Home Account before proceeding. 
+Open the Pokémon HOME application on your Nintendo Switch and tap the screen at least once. The app must be successfully connected to the internet and linked to your Pokémon HOME account before proceeding.  
 
-Enter your IP Address into the Plugins, select the Boxes/Slots you want to show or dump, and click "Connect".
+Enter your IP address into the plugin, select the boxes/slots you want to display or dump, and click "Connect".  
 
-# Credits
+# Credits  
 
-[architdate](https://github.com/architdate) for the contributions in the initial stage of this plugin.
+[architdate](https://github.com/architdate) for contributions in the initial stage of this plugin.  
 
-[olliz0r](https://github.com/olliz0r) and [berichan](https://github.com/berichan) for [sys-botbase](https://github.com/olliz0r/sys-botbase).
+[olliz0r](https://github.com/olliz0r) and [berichan](https://github.com/berichan) for [sys-botbase](https://github.com/olliz0r/sys-botbase).  
 
-[fishguy6564](https://github.com/fishguy6564) and [Koi-3088](https://github.com/Koi-3088) for [usb-botbase](https://github.com/fishguy6564/USB-Botbase).
+[fishguy6564](https://github.com/fishguy6564) and [Koi-3088](https://github.com/Koi-3088) for [usb-botbase](https://github.com/fishguy6564/USB-Botbase).  
 
-[SciresM](https://github.com/SciresM) for his researches into the Pokémon Home encryption data method, implemented in his [PKHeX fork](https://github.com/SciresM/PKHeX/blob/5bf28522c34bca09e24d4ed83cf24358ed86a8d7/PKHeX.Core/PKM/Util/HomeCrypto.cs#L1).
+[SciresM](https://github.com/SciresM) for his research into the Pokémon HOME encryption data method, implemented in his [PKHeX fork](https://github.com/SciresM/PKHeX/blob/5bf28522c34bca09e24d4ed83cf24358ed86a8d7/PKHeX.Core/PKM/Util/HomeCrypto.cs#L1).  
 
-[kwsch](https://github.com/kwsch) for [PKHeX](https://github.com/kwsch/PKHeX) and [SysBot.NET](https://github.com/kwsch)
+[kwsch](https://github.com/kwsch) for [PKHeX](https://github.com/kwsch/PKHeX) and [SysBot.NET](https://github.com/kwsch).  
 
-[architdate](https://github.com/architdate), [Lusamine](https://github.com/Lusamine), all the ALM team and all the people involved in the developing/testing of the [PKHeX-Plugins](https://github.com/architdate/PKHeX-Plugins), thanks to which this project would never exist.
+[architdate](https://github.com/architdate), [Lusamine](https://github.com/Lusamine), the entire ALM team, and everyone involved in the development and testing of [PKHeX-Plugins](https://github.com/architdate/PKHeX-Plugins), without whom this project would not exist.  
 
-[PP-theSLAYER](https://github.com/PP-theSLAYER) for the mutual support on the HOME research.
+[PP-theSLAYER](https://github.com/PP-theSLAYER) for mutual support in Pokémon HOME research.  
 
 # License
 
 ![gplv3-with-text-136x68](https://user-images.githubusercontent.com/52102823/199572700-4e02ed70-74ef-4d67-991e-3168d93aac0d.png)
 
-Copyright © 2024 Manu098vm
+Copyright © 2025 Manu098vm
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
