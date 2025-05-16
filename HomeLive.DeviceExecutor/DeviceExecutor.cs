@@ -1,4 +1,5 @@
 ﻿using SysBot.Base;
+using System.Globalization;
 using System.Text;
 
 namespace HomeLive.DeviceExecutor;
@@ -19,6 +20,7 @@ public class DeviceState : BotState<RoutineType, SwitchConnectionConfig>
 
 public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) where T : DeviceState
 {
+    private const decimal BotbaseVersion = 2.4m;
     private static ulong BoxStartAddress = 0;
 
     public override string GetSummary()
@@ -37,6 +39,8 @@ public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) 
     {
         try
         {
+            var botbase = await VerifyBotbaseVersion(token).ConfigureAwait(false);
+            Log($"Valid botbase version: {botbase}");
             (var title, var build) = await IsRunningHome(token).ConfigureAwait(false);
             Log($"Valid Title ID ({title})");
             Log($"Valid Build ID ({build})");
@@ -93,6 +97,30 @@ public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) 
         var bytes = await SwitchConnection.ReadRaw(cmd, 17, token).ConfigureAwait(false);
         var str = Encoding.ASCII.GetString(bytes).Trim().ToUpper();
         return str;
+    }
+
+    //Thanks Anubis
+    //https://github.com/kwsch/SysBot.NET/blob/b26c8c957364efe316573bec4b82e8c5c5a1a60f/SysBot.Pokemon/Actions/PokeRoutineExecutor.cs#L88
+    //AGPL v3 License
+    public async Task<string> VerifyBotbaseVersion(CancellationToken token)
+    {
+        if (Config.Connection.Protocol is SwitchProtocol.WiFi && !Connection.Connected)
+            throw new InvalidOperationException("No remote connection");
+
+        var data = await SwitchConnection.GetBotbaseVersion(token).ConfigureAwait(false);
+        var version = decimal.TryParse(data, CultureInfo.InvariantCulture, out var v) ? v : 0;
+        if (version < BotbaseVersion)
+        {
+            var protocol = Config.Connection.Protocol;
+            var msg = protocol is SwitchProtocol.WiFi ? "sys-botbase" : "usb-botbase";
+            msg += $" version is not supported. Expected version {BotbaseVersion} or greater, and current version is {version}. Please download the latest version from: ";
+            if (protocol is SwitchProtocol.WiFi)
+                msg += "https://github.com/olliz0r/sys-botbase/releases/latest";
+            else
+                msg += "https://github.com/Koi-3088/usb-botbase/releases/latest";
+            throw new Exception(msg);
+        }
+        return data;
     }
 
     public async Task<ulong> GetBoxStartOffset(CancellationToken token)
