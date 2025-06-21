@@ -1,6 +1,5 @@
 ﻿using SysBot.Base;
 using System.Globalization;
-using System.Text;
 
 namespace HomeLive.DeviceExecutor;
 
@@ -41,9 +40,9 @@ public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) 
         {
             var botbase = await VerifyBotbaseVersion(token).ConfigureAwait(false);
             Log($"Valid botbase version: {botbase}");
-            (var title, var build) = await IsRunningHome(token).ConfigureAwait(false);
+            (var title, var version) = await IsRunningHome(token).ConfigureAwait(false);
             Log($"Valid Title ID ({title})");
-            Log($"Valid Build ID ({build})");
+            Log($"Valid Home Version ({version})");
             Log("Connection Test OK.");
 
             if (Config.Connection.Protocol is SwitchProtocol.WiFi)
@@ -75,28 +74,17 @@ public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) 
 
     private async Task<(string, string)> IsRunningHome(CancellationToken token)
     {
-        if (!Connection.Connected)
+        if (Config.Connection.Protocol is SwitchProtocol.WiFi && !Connection.Connected)
             throw new InvalidOperationException("No remote connection");
 
         var title = await SwitchConnection.GetTitleID(token).ConfigureAwait(false);
-        var build = await GetBuildID(token).ConfigureAwait(false);
-        if (title.Equals(HomeDataOffsets.HomeTitleID) && build.Equals(HomeDataOffsets.HomeBuildID))
-            return (title, build);
+        var version = await SwitchConnection.GetGameInfo("version", token).ConfigureAwait(false);
+        if (title.Equals(HomeDataOffsets.HomeTitleID) && version.Equals(HomeDataOffsets.HomeSupportedVersion))
+            return (title, version);
         else if (!title.Equals(HomeDataOffsets.HomeTitleID)) 
             throw new InvalidOperationException($"Invalid Title ID: {title}. The Pokémon HOME application is not running.");
         else 
-            throw new InvalidOperationException($"Invalid Build ID: {build}. The Pokémon HOME application is on a non-supported version.");
-    }
-
-    private async Task<string> GetBuildID(CancellationToken token)
-    {
-        if (!Connection.Connected)
-            throw new InvalidOperationException("No remote connection");
-
-        var cmd = SwitchCommand.GetBuildID(Config.Connection.Protocol is SwitchProtocol.WiFi);
-        var bytes = await SwitchConnection.ReadRaw(cmd, 17, token).ConfigureAwait(false);
-        var str = Encoding.ASCII.GetString(bytes).Trim().ToUpper();
-        return str;
+            throw new InvalidOperationException($"Invalid Home Version: {version}. The Pokémon HOME application is on a non-supported version.");
     }
 
     //Thanks Anubis
@@ -125,7 +113,7 @@ public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) 
 
     public async Task<ulong> GetBoxStartOffset(CancellationToken token)
     {
-        if (!Connection.Connected)
+        if (Config.Connection.Protocol is SwitchProtocol.WiFi && !Connection.Connected)
             throw new InvalidOperationException("No remote connection");
 
         if (BoxStartAddress == 0)
@@ -136,7 +124,7 @@ public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) 
 
     public async Task<byte[]> ReadBoxData(int box, CancellationToken token)
     {
-        if (!Connection.Connected)
+        if (Config.Connection.Protocol is SwitchProtocol.WiFi && !Connection.Connected)
             throw new InvalidOperationException("No remote connection");
 
         Log("Getting Box offset...");
@@ -151,7 +139,7 @@ public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) 
 
     public async Task<byte[]> ReadSlotData(int box, int slot, CancellationToken token)
     {
-        if (!Connection.Connected)
+        if (Config.Connection.Protocol is SwitchProtocol.WiFi && !Connection.Connected)
             throw new InvalidOperationException("No remote connection");
 
         Log("Getting Slot offset...");
@@ -165,7 +153,7 @@ public class DeviceExecutor<T>(DeviceState cfg) : SwitchRoutineExecutor<T>(cfg) 
 
     public async Task<byte[]> ReadRange((int box, int slot) start, (int box, int slot) end, CancellationToken token)
     {
-        if (!Connection.Connected)
+        if (Config.Connection.Protocol is SwitchProtocol.WiFi && !Connection.Connected)
             throw new InvalidOperationException("No remote connection");
 
         Log($"Reading from Box {start.box}, Slot {start.slot} to Box {end.box}, Slot {end.slot}...");

@@ -21,7 +21,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="NLog" Version="5.3.4" />
+		<PackageReference Include="NLog" Version="5.4.0" />
 	</ItemGroup>
 
 	<ItemGroup>
