@@ -53,8 +53,8 @@ public sealed class GameData2PB7 : HomeOptional2, IGameDataSide2<PB7>, IScaledSi
     public float HeightAbsolute { get => ReadSingleLittleEndian(Data[0x1F..]); set => WriteSingleLittleEndian(Data[0x1F..], value); }
     public float WeightAbsolute { get => ReadSingleLittleEndian(Data[0x23..]); set => WriteSingleLittleEndian(Data[0x23..], value); }
 
-    public byte FieldEventFatigue1 { get => Data[0x27]; set => Data[0x27] = value; }
-    public byte FieldEventFatigue2 { get => Data[0x28]; set => Data[0x28] = value; }
+    public byte Spirit { get => Data[0x27]; set => Data[0x27] = value; }
+    public byte Mood { get => Data[0x28]; set => Data[0x28] = value; }
     public byte Fullness { get => Data[0x29]; set => Data[0x29] = value; }
     public byte Rank { get => Data[0x2A]; set => Data[0x2A] = value; }
     public byte OriginalTrainerMemoryAffection { get => Data[0x2B]; set => Data[0x2B] = value; }
@@ -92,8 +92,8 @@ public sealed class GameData2PB7 : HomeOptional2, IGameDataSide2<PB7>, IScaledSi
         pk.WeightAbsolute = pk.CalcWeightAbsolute; // Ignore the stored value, be nice and recalculate for the user.
 
         // Some fields are unused as PB7, don't bother copying.
-        pk.FieldEventFatigue1 = FieldEventFatigue1;
-        pk.FieldEventFatigue2 = FieldEventFatigue2;
+        pk.Spirit = Spirit;
+        pk.Mood = Mood;
         pk.Fullness = Fullness;
         // pk.Rank = Rank;
         // pk.OT_Affection
@@ -121,8 +121,8 @@ public sealed class GameData2PB7 : HomeOptional2, IGameDataSide2<PB7>, IScaledSi
         WeightAbsolute = pk.CalcWeightAbsolute; // Ignore the stored value, be nice and recalculate for the user.
 
         // Some fields are unused as PB7, don't bother copying.
-        FieldEventFatigue1 = pk.FieldEventFatigue1;
-        FieldEventFatigue2 = pk.FieldEventFatigue2;
+        Spirit = pk.Spirit;
+        Mood = pk.Mood;
         Fullness = pk.Fullness;
         // Rank = pk.Rank;
         // OT_Affection

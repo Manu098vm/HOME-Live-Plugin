@@ -67,8 +67,7 @@ public static class PokeHandler
 
     public static string GetFileName(this HomeWrapper pkh)
     {
-        var pkm = pkh.GetHomeEntity(out _)!;
-
+        var pkm = pkh.PKM!;
         var name = $"{pkm.Species:0000}";
         if (pkm.Form > 0 || pkm.Species == (ushort)Species.Alcremie)
 

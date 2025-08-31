@@ -22,9 +22,9 @@ public sealed class PH1 : PKM, IHandlerLanguage, IFormArgument, IHomeTrack, IBat
     private const int HeaderSize = 0x14;
     public override EntityContext Context => EntityContext.None;
 
-    public PH1(byte[] data) : base(DecryptHome(data))
+    public PH1(Memory<byte> data) : base(DecryptHome(data))
     {
-        var mem = Data.AsMemory(HomeCrypto.SIZE_1HEADER + 2);
+        var mem = Raw[(HomeCrypto.SIZE_1HEADER + 2)..];
         var core = mem[..CoreDataSize];
         var side = mem.Slice(core.Length + 2, GameDataSize);
 
@@ -55,19 +55,19 @@ public sealed class PH1 : PKM, IHandlerLanguage, IFormArgument, IHomeTrack, IBat
         }
     }
 
-    private static byte[] DecryptHome(byte[] data)
+    private static Memory<byte> DecryptHome(Memory<byte> data)
     {
         HomeCrypto.DecryptIfEncrypted(ref data);
         //Array.Resize(ref data, LegacyHomeCrypto.SIZE_1STORED);
         return data;
     }
 
-    public ushort DataVersion { get => ReadUInt16LittleEndian(Data.AsSpan(0x00)); set => WriteUInt16LittleEndian(Data.AsSpan(0x00), value); }
-    public ulong EncryptionSeed { get => ReadUInt64LittleEndian(Data.AsSpan(0x02)); set => WriteUInt64LittleEndian(Data.AsSpan(0x02), value); }
-    public uint Checksum { get => ReadUInt32LittleEndian(Data.AsSpan(0x0A)); set => WriteUInt32LittleEndian(Data.AsSpan(0x0A), value); }
-    public ushort EncodedDataSize { get => ReadUInt16LittleEndian(Data.AsSpan(0x0E)); set => WriteUInt16LittleEndian(Data.AsSpan(0x0E), value); }
-    public ushort CoreDataSize { get => ReadUInt16LittleEndian(Data.AsSpan(0x10)); set => WriteUInt16LittleEndian(Data.AsSpan(0x10), value); }
-    public ushort GameDataSize { get => ReadUInt16LittleEndian(Data.AsSpan(0x12 + CoreDataSize)); set => WriteUInt16LittleEndian(Data.AsSpan(0x12 + CoreDataSize), value); }
+    public ushort DataVersion { get => ReadUInt16LittleEndian(Data); set => WriteUInt16LittleEndian(Data, value); }
+    public ulong EncryptionSeed { get => ReadUInt64LittleEndian(Data[0x02..]); set => WriteUInt64LittleEndian(Data[0x02..], value); }
+    public uint Checksum { get => ReadUInt32LittleEndian(Data[0x0A..]); set => WriteUInt32LittleEndian(Data[0x0A..], value); }
+    public ushort EncodedDataSize { get => ReadUInt16LittleEndian(Data[0x0E..]); set => WriteUInt16LittleEndian(Data[0x0E..], value); }
+    public ushort CoreDataSize { get => ReadUInt16LittleEndian(Data[0x10..]); set => WriteUInt16LittleEndian(Data[0x10..], value); }
+    public ushort GameDataSize { get => ReadUInt16LittleEndian(Data[(0x12 + CoreDataSize)..]); set => WriteUInt16LittleEndian(Data[(0x12 + CoreDataSize)..], value); }
 
     public override Span<byte> NicknameTrash => _coreData.Nickname_Trash;
     public override Span<byte> OriginalTrainerTrash => _coreData.OriginalTrainerTrash;
@@ -286,7 +286,7 @@ public sealed class PH1 : PKM, IHandlerLanguage, IFormArgument, IHomeTrack, IBat
         DataVersion = HomeCrypto.Version1;
         EncodedDataSize = (ushort)(result.Length - HomeCrypto.SIZE_1HEADER);
         CoreDataSize = HomeCrypto.SIZE_1CORE;
-        Data.AsSpan(0, HomeCrypto.SIZE_1HEADER + 2).CopyTo(span); // Copy updated header & CoreData length.
+        Data[..(HomeCrypto.SIZE_1HEADER + 2)].CopyTo(span); // Copy updated header & CoreData length.
 
         return result;
     }
@@ -304,7 +304,7 @@ public sealed class PH1 : PKM, IHandlerLanguage, IFormArgument, IHomeTrack, IBat
         }
     }
 
-    public override PH1 Clone() => new((byte[])Data.Clone())
+    public override PH1 Clone() => new((byte[])Data.ToArray())
     {
         DataPK8 = DataPK8?.Clone(),
         DataPA8 = DataPA8?.Clone(),

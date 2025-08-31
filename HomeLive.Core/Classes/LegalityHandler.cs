@@ -127,7 +127,7 @@ public static class LegalityHandler
     private static void FixSinnohToGalar(this PKM pkm)
     {
         //PK8s Can not have origin game as Brilliant Diamond or Shining Pearl
-        if ((GameVersion)pkm.Version is GameVersion.BD)
+        if (pkm.Version is GameVersion.BD)
         {
             pkm.Version = GameVersion.SW;
             pkm.MetLocation = LocationsHOME.SWBD;
@@ -143,7 +143,7 @@ public static class LegalityHandler
         var legality = new LegalityAnalysis(clone);
         var encounter = legality.Results.Where(f => f.Identifier is CheckIdentifier.Encounter).FirstOrDefault();
         var applied = false;
-        if (encounter.Judgement is Severity.Invalid && clone.EggLocation == 65534)
+        if (encounter.Judgement is Severity.Invalid && clone.EggLocation == LocationsHOME.SWSHEgg)
         {
             clone.EggLocation = 0;
             applied = true;
@@ -161,12 +161,6 @@ public static class LegalityHandler
         var legality = new LegalityAnalysis(pkm);
         if(pkm is PB7 pb7 && !legality.Valid)
         {
-            //Fix AVs if there's any AV related legality result
-            var AVs = CheckAVs(legality);
-            for(var i = 0; i < AVs.Length; i++)
-                if (AVs[i] > 0)
-                    pb7.SetAV(i, AVs[i]);
-
             //Reset ability
             if (legality.Results.Any(r => r.Identifier is CheckIdentifier.Ability && r.Judgement is Severity.Invalid))
             {
@@ -209,36 +203,5 @@ public static class LegalityHandler
             pkm.SetMoves(moves);
         }
         pkm.HealPP();
-    }
-
-    private static byte[] CheckAVs(LegalityAnalysis legality)
-    {
-        var AVs = new byte[6];
-        var avComments = legality.Results.Where(r => r.Identifier is CheckIdentifier.AVs).Select(r => r.Comment).ToArray();
-        foreach (var str in avComments)
-        {
-            var avWords = new string[] { "AV_HP", "AV_ATK", "AV_DEF", "AV_SPA", "AV_SPD", "AV_SPE" };
-            foreach (var (av, j) in avWords.Select((av, j) => (av, j)))
-            {
-                if (str.Contains(av))
-                {
-                    for (int i = 0; i < str.Length; i++)
-                    {
-                        if (char.IsDigit(str[i]))
-                        {
-                            var valueEnd = i + 1;
-                            while (valueEnd < str.Length && char.IsDigit(str[valueEnd]))
-                                valueEnd++;
-
-                            var valueLength = valueEnd - i;
-                            var valueString = str.Substring(i, valueLength);
-                            if (int.TryParse(valueString, out int result))
-                                AVs[j] = (byte)result;
-                        }
-                    }
-                }
-            }
-        }
-        return AVs;
     }
 }
