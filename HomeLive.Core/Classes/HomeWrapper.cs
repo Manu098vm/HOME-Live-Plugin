@@ -16,21 +16,14 @@ public class HomeWrapper
 
     public HomeWrapper(byte[] data)
     {
-        PKM = null;
         var version = BinaryPrimitives.ReadUInt16LittleEndian(data);
-
-        switch (version)
+        PKM = version switch
         {
-            case 1:
-                PKM = new PH1(data);
-                break;
-            case 2:
-                PKM = new PH2(data);
-                break;
-            case 3:
-                PKM = new PKH(data);
-                break;
-        }
+            1 => new PH1(data),
+            2 => new PH2(data),
+            3 => new PKH(data),
+            _ => null
+        };
 
         if (PKM is null || !GetIsValid(PKM))
             PKM = EntityFormat.GetFromBytes(data);
