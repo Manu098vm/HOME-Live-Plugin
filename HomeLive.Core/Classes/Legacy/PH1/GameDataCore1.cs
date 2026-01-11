@@ -309,7 +309,7 @@ public sealed class GameDataCore1 : IHomeTrack, ISpeciesForm, ITrainerID, INatur
 
     public int MarkingCount => 6;
 
-    public TrainerIDFormat TrainerIDDisplayFormat => ((GameVersion)Version).GetGeneration() >= 7 ? TrainerIDFormat.SixDigit : TrainerIDFormat.SixteenBit;
+    public TrainerIDFormat TrainerIDDisplayFormat => ((GameVersion)Version).Generation >= 7 ? TrainerIDFormat.SixDigit : TrainerIDFormat.SixteenBit;
 
     public int GetMarking(int index)
     {

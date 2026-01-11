@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<ApplicationIcon>Resources\icon.ico</ApplicationIcon>
@@ -44,7 +44,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="PKHeX.Core" Version="25.9.25" />
+		<PackageReference Include="PKHeX.Core" Version="26.01.07" />
 	</ItemGroup>
 
 	<ItemGroup>

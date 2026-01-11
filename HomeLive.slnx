@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="HomeLive.Core/HomeLive.Core.csproj">
+    <BuildDependency Project="HomeLive.DeviceExecutor/HomeLive.DeviceExecutor.csproj" />
+  </Project>
+  <Project Path="HomeLive.DeviceExecutor/HomeLive.DeviceExecutor.csproj" />
+  <Project Path="HomeLive.Plugins/HomeLive.Plugins.csproj" />
+</Solution>

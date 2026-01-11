@@ -196,7 +196,7 @@ public sealed class GameData2PA8 : HomeOptional2, IGameDataSide2<PA8>, IScaledSi
     {
         if (!wasLA)
             return ball;
-        if (((Ball)ball).IsLegendBall())
+        if (((Ball)ball).IsLegendBall)
             return ball;
         return (byte)PKHeX.Core.Ball.LAPoke;
     }
