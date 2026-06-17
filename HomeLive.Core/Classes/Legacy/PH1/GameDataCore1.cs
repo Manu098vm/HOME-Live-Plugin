@@ -50,7 +50,7 @@ public sealed class GameDataCore1 : IHomeTrack, ISpeciesForm, ITrainerID, INatur
     public ushort MarkingValue { get => ReadUInt16LittleEndian(Data[0x1B..]); set => WriteUInt16LittleEndian(Data[0x1B..], (ushort)value); }
     public uint PID { get => ReadUInt32LittleEndian(Data[0x1D..]); set => WriteUInt32LittleEndian(Data[0x1D..], value); }
     public Nature Nature { get => (Nature)Data[0x21]; set => Data[0x21] = (byte)value; }
-    public Nature StatNature { get => (Nature)Data[0x22]; set => Data[0x22] = (byte)value; }
+    public Nature StatAlignment { get => (Nature)Data[0x22]; set => Data[0x22] = (byte)value; }
     public bool FatefulEncounter { get => Data[0x23] != 0; set => Data[0x23] = (byte)(value ? 1 : 0); }
     public byte Gender { get => Data[0x24]; set => Data[0x24] = (byte)value; }
     public byte Form { get => Data[0x25]; set => WriteUInt16LittleEndian(Data[0x25..], value); }
@@ -341,7 +341,7 @@ public sealed class GameDataCore1 : IHomeTrack, ISpeciesForm, ITrainerID, INatur
         if (pk is IAppliedMarkings7 m7)
             m7.MarkingValue = MarkingValue;
         pk.Nature = Nature;
-        pk.StatNature = StatNature;
+        pk.StatAlignment = StatAlignment;
         pk.FatefulEncounter = FatefulEncounter;
         pk.HeldItem = HeldItem;
         pk.IV_HP  = IV_HP;

@@ -94,7 +94,7 @@ public sealed class PH1 : PKM, IHandlerLanguage, IFormArgument, IHomeTrack, IBat
     public ushort MarkingValue { get => _coreData.MarkingValue; set => _coreData.MarkingValue = value; }
     public override uint PID { get => _coreData.PID; set => _coreData.PID = value; }
     public override Nature Nature { get => _coreData.Nature; set => _coreData.Nature = value; }
-    public override Nature StatNature { get => _coreData.StatNature; set => _coreData.StatNature = value; }
+    public override Nature StatAlignment { get => _coreData.StatAlignment; set => _coreData.StatAlignment = value; }
     public override bool FatefulEncounter { get => _coreData.FatefulEncounter; set => _coreData.FatefulEncounter = value; }
     public override byte Gender { get => _coreData.Gender; set => _coreData.Gender = value; }
     public override byte Form { get => _coreData.Form; set => _coreData.Form = value; }
