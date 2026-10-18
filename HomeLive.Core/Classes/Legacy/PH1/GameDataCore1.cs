@@ -456,6 +456,7 @@ public sealed class GameDataCore1 : IHomeTrack, ISpeciesForm, ITrainerID, INatur
         dest.RibbonEarth = set.RibbonEarth;
         dest.RibbonNational = set.RibbonNational;
         dest.RibbonCountry = set.RibbonCountry;
+        dest.RibbonWorld = set.RibbonWorld;
         dest.RibbonChampionBattle = set.RibbonChampionBattle;
         dest.RibbonChampionRegional = set.RibbonChampionRegional;
         dest.RibbonChampionNational = set.RibbonChampionNational;
@@ -469,7 +470,6 @@ public sealed class GameDataCore1 : IHomeTrack, ISpeciesForm, ITrainerID, INatur
         dest.RibbonEvent = set.RibbonEvent;
         dest.RibbonBirthday = set.RibbonBirthday;
         dest.RibbonSpecial = set.RibbonSpecial;
-        dest.RibbonWorld = set.RibbonWorld;
         dest.RibbonChampionWorld = set.RibbonChampionWorld;
         dest.RibbonSouvenir = set.RibbonSouvenir;
     }
