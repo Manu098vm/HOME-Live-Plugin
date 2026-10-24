@@ -34,9 +34,9 @@ public partial class DumperForm : Form
         numPort.Value = Properties.Settings.Default.port;
         txtBoxPath.Text = Properties.Settings.Default.path;
 
-        for (var i = 0; i < 200; i++)
+        for (var i = 0; i < HomeDataOffsets.HomeBoxCount; i++)
             comboBox.Items.Add($"{Strings["Word.Box"]} {i + 1}");
-        for (var i = 0; i < 30; i++)
+        for (var i = 0; i < HomeDataOffsets.HomeSlotCount; i++)
             comboSlot.Items.Add($"{Strings["Word.Slot"]} {i + 1}");
 
         comboBox.SelectedIndex = 0;
