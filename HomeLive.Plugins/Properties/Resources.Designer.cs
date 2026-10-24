@@ -19,7 +19,7 @@ namespace HomeLive.Plugins.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -126,6 +126,25 @@ namespace HomeLive.Plugins.Properties {
         internal static string lang_es {
             get {
                 return ResourceManager.GetString("lang_es", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin.HomeLivePlugins=Home Live Plugins
+        ///Plugin.DumperPlugin=Home Live Dumper
+        ///Plugin.ViewerPlugin=Home Live Viewer
+        ///Plugin.SettingsPlugin=Opciones Home Live Plugins 
+        ///
+        ///DumperForm=Home Live Dumper Plugin
+        ///DumperForm.toolsToolStripMenuItem=Herramientas
+        ///DumperForm.decryptFromFilesToolStripMenuItem=Desencriptar de archivos
+        ///DumperForm.encryptFromFilesToolStripMenuItem=Encriptar de archivos
+        ///DumperForm.loadFileToEditorToolStripMenuItem=Cargar archivo al editor
+        ///DumperForm.loadFilesToBoxesToolStripMenuItem=Ca [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string lang_es_419 {
+            get {
+                return ResourceManager.GetString("lang_es-419", resourceCulture);
             }
         }
         

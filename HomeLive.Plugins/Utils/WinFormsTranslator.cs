@@ -1,6 +1,8 @@
 ﻿//Most of functions are taken from pkhex
 //https://github.com/kwsch/PKHeX/blob/master/PKHeX.WinForms/Util/WinFormsTranslator.cs
 
+using System.Text;
+
 namespace HomeLive.Plugins;
 
 public static class WinFormsTranslator
@@ -96,12 +98,35 @@ public static class WinFormsTranslator
         string externalLangPath = GetTranslationFileNameExternal(lang);
         if (File.Exists(externalLangPath))
         {
-            try { return File.ReadAllLines(externalLangPath); }
+            try { return ReadTextLinesWithEncodingFallback(externalLangPath); }
             catch { /* In use? Just return the internal resource. */ }
         }
-        
-        var txt = (string?)Properties.Resources.ResourceManager.GetObject(file.Replace('-', '_'));
-        return txt is null ? [] : txt.Split("\r\n");
+
+        var txt = (string?)Properties.Resources.ResourceManager.GetObject(file)
+            ?? (string?)Properties.Resources.ResourceManager.GetObject(file.Replace('-', '_'));
+        return txt is null ? [] : txt.Split(["\r\n", "\n"], StringSplitOptions.None);
+    }
+
+    private static string[] ReadTextLinesWithEncodingFallback(string path)
+    {
+        var bytes = File.ReadAllBytes(path);
+        foreach (var encoding in new[]
+                 {
+                     new UTF8Encoding(false),
+                     Encoding.GetEncoding("windows-1252"),
+                     Encoding.Latin1,
+                 })
+        {
+            try
+            {
+                return encoding.GetString(bytes).Split(["\r\n", "\n"], StringSplitOptions.None);
+            }
+            catch
+            {
+            }
+        }
+
+        return Encoding.UTF8.GetString(bytes).Split(["\r\n", "\n"], StringSplitOptions.None);
     }
 
     private static IEnumerable<object> GetTranslatableControls(Control f)
