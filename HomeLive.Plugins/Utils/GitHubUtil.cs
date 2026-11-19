@@ -4,53 +4,58 @@ namespace HomeLive.Plugins;
 
 public static class GitHubUtil
 {
+    // Bounds the PKHeX startup delay when GitHub is slow or unreachable.
+    private static readonly TimeSpan RequestTimeout = TimeSpan.FromSeconds(5);
+
     public static async Task<bool> IsUpdateAvailable()
-    {
-        var currentVersion = ParseVersion(GetPluginVersion());
-        var latestVersion = ParseVersion(await GetLatestVersion());
-
-        if (latestVersion[0] > currentVersion[0])
-            return true;
-        else if (latestVersion[0] == currentVersion[0])
-        {
-            if (latestVersion[1] > currentVersion[1])
-                return true;
-            else if (latestVersion[1] == currentVersion[1])
-            {
-                if (latestVersion[2] > currentVersion[2])
-                    return true;
-            }
-        }
-        return false;
-    }
-
-    private static string GetPluginVersion() => HomePlugin.Version;
-
-    private static async Task<string> GetLatestVersion()
     {
         try
         {
-            return await GetLatest();
+            return IsNewerVersion(GetPluginVersion(), await GetLatestReleaseName());
         }
         catch (Exception)
         {
-            return "0.0.0";
+            // No connection, rate limit or no release: never report an update.
+            return false;
         }
     }
 
-    private static async Task<string> GetLatest()
+    /// <summary>
+    /// Checks if the release name <paramref name="latest"/> (e.g. "4.10.0" or "v4.2.0") is a newer version than <paramref name="current"/>.
+    /// A name without a readable version number never counts as an update.
+    /// </summary>
+    public static bool IsNewerVersion(string current, string? latest) =>
+        TryParseVersion(current, out var currentVersion) &&
+        TryParseVersion(latest, out var latestVersion) &&
+        latestVersion > currentVersion;
+
+    private static string GetPluginVersion() => HomePlugin.Version;
+
+    private static async Task<string?> GetLatestReleaseName()
     {
         var client = new GitHubClient(new ProductHeaderValue("HOME-Live-Plugin"));
+        client.SetRequestTimeout(RequestTimeout);
         var release = await client.Repository.Release.GetLatest("Manu098vm", "HOME-Live-Plugin");
-        return release.Name;
+        return string.IsNullOrWhiteSpace(release.Name) ? release.TagName : release.Name;
     }
 
-    private static int[] ParseVersion(string version)
+    private static bool TryParseVersion(string? text, out Version version)
     {
-        var v = new int[3];
-        v[0] = int.Parse($"{version[0]}");
-        v[1] = int.Parse($"{version[2]}");
-        v[2] = int.Parse($"{version[4]}");
-        return v;
+        version = new Version();
+        if (string.IsNullOrWhiteSpace(text))
+            return false;
+
+        // Only the leading number counts: "v4.2.0" and "4.2.0 - HOME 4.2.0 support" both read as 4.2.0.
+        var span = text.AsSpan().Trim().TrimStart("vV");
+        var length = 0;
+        while (length < span.Length && (char.IsAsciiDigit(span[length]) || span[length] == '.'))
+            length++;
+
+        if (!Version.TryParse(span[..length].TrimEnd('.'), out var parsed))
+            return false;
+
+        // Missing parts count as 0, so "4.1" equals "4.1.0".
+        version = new Version(parsed.Major, parsed.Minor, Math.Max(parsed.Build, 0), Math.Max(parsed.Revision, 0));
+        return true;
     }
 }

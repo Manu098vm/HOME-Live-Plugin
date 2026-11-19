@@ -64,11 +64,18 @@ public class HomePlugin : IPlugin
 
     private async Task TryUpdate()
     {
-        if (await GitHubUtil.IsUpdateAvailable())
+        try
         {
-            var result = MessageBox.Show(Strings["Update.Message"], Strings["Update.Popup"], MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result == DialogResult.Yes)
-                Process.Start(new ProcessStartInfo { FileName = @"https://github.com/Manu098vm/HOME-Live-Plugin/releases", UseShellExecute = true });
+            if (await GitHubUtil.IsUpdateAvailable())
+            {
+                var result = MessageBox.Show(Strings["Update.Message"], Strings["Update.Popup"], MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                    Process.Start(new ProcessStartInfo { FileName = @"https://github.com/Manu098vm/HOME-Live-Plugin/releases", UseShellExecute = true });
+            }
+        }
+        catch (Exception)
+        {
+            // The update check must never stop the plugin from loading.
         }
     }
 

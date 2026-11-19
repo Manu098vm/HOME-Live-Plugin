@@ -26,7 +26,7 @@ public static class SaveFileHandler
 
         foreach (var (entity, i) in convertedList.Select((entity, i) => (entity, i)))
         {
-            if (i > (numBox * numSlot)) break;
+            if (i >= numBox * numSlot) break;
             if (entity is not null)
             {
                 sav.AdaptToSaveFile(entity, false);

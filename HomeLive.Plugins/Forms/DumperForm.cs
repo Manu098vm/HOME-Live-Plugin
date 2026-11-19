@@ -7,7 +7,7 @@ namespace HomeLive.Plugins;
 
 public partial class DumperForm : Form
 {
-    private DeviceExecutor<DeviceState> Executor = null!;
+    private DeviceExecutor<DeviceState>? Executor;
     private Dictionary<string, string> Strings = null!;
 
     private readonly ISaveFileProvider Provider = null!;
@@ -103,7 +103,10 @@ public partial class DumperForm : Form
 
     private void DisableControls()
     {
-        toolsToolStripMenuItem.Enabled = false;
+        if (menuStrip.InvokeRequired)
+            menuStrip.Invoke(() => toolsToolStripMenuItem.Enabled = false);
+        else
+            toolsToolStripMenuItem.Enabled = false;
 
         if (grpConnection.InvokeRequired)
             grpConnection.Invoke(() => grpConnection.Enabled = false);
@@ -133,7 +136,10 @@ public partial class DumperForm : Form
 
     private void EnableControls()
     {
-        toolsToolStripMenuItem.Enabled = true;
+        if (menuStrip.InvokeRequired)
+            menuStrip.Invoke(() => toolsToolStripMenuItem.Enabled = true);
+        else
+            toolsToolStripMenuItem.Enabled = true;
 
         if (grpConnection.InvokeRequired)
             grpConnection.Invoke(() => grpConnection.Enabled = true);
@@ -467,15 +473,15 @@ public partial class DumperForm : Form
 
             Executor.Disconnect();
             UpdateProgressBar(100);
-            MessageBox.Show($"{Strings["Action.Completed"]}", "HomeLive", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.ShowMessageSafe(Strings["Action.Completed"], MessageBoxIcon.Information);
 
             EnableControls();
         }
         catch (Exception ex)
         {
-            Executor.Disconnect();
-            MessageBox.Show($"{Strings["Warning.SomethingWrong"]}{Environment.NewLine}{Strings["Warning.CheckInstallation"]}" +
-                $"{Environment.NewLine}{Environment.NewLine}{ex.Message}", "HomeLive", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            Executor?.Disconnect();
+            this.ShowMessageSafe($"{Strings["Warning.SomethingWrong"]}{Environment.NewLine}{Strings["Warning.CheckInstallation"]}" +
+                $"{Environment.NewLine}{Environment.NewLine}{ex.Message}", MessageBoxIcon.Warning);
             EnableControls();
             UpdateProgressBar(100);
         }

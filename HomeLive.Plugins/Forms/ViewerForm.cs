@@ -7,7 +7,7 @@ namespace HomeLive.Plugins;
 
 public partial class ViewerForm : Form
 {
-    private DeviceExecutor<DeviceState> Executor = null!;
+    private DeviceExecutor<DeviceState>? Executor;
     private Dictionary<string, string> Strings = null!;
 
     private readonly ISaveFileProvider Provider = null!;
@@ -273,45 +273,14 @@ public partial class ViewerForm : Form
         var localSlotCount = version.GetSlotCount();
         var localBoxCount = version.GetBoxCount();
 
-        var tuples = GetDownloadRanges(localBoxCount, localSlotCount);
+        var tuples = RangeHandler.GetDownloadRanges(localBoxCount, localSlotCount);
         var strings = new string[tuples.Count];
 
         foreach (var (el, i) in tuples.Select((el, i) => (el, i)))
             strings[i] = $"{Strings["Word.Box"]} {el.start.box}{(el.start.slot > 1 ? $" {Strings["Word.Slot"]} {el.start.slot}" : "")} " +
-                $"- {Strings["Word.Box"]} {el.end.box} {(el.end.slot < 30 ? $"{Strings["Word.Slot"]} {el.end.slot}" : "")}";
+                $"- {Strings["Word.Box"]} {el.end.box} {(el.end.slot < HomeDataOffsets.HomeSlotCount ? $"{Strings["Word.Slot"]} {el.end.slot}" : "")}";
 
         return strings;
-    }
-
-    private static List<((int box, int slot) start, (int box, int slot) end)> GetDownloadRanges(int localBoxes, int localSlots)
-    {
-        var ranges = new List<((int, int), (int, int))>();
-
-        var homeBoxes = HomeDataOffsets.HomeBoxCount;
-        var homeSlots = HomeDataOffsets.HomeSlotCount;
-
-        var totalSlots = localBoxes * localSlots;
-        var startSlot = 1;
-        var endSlot = totalSlots;
-
-        while (startSlot <= homeSlots * homeBoxes)
-        {
-            var startBox = (startSlot - 1) / homeSlots + 1;
-            var endBox = (endSlot - 1) / homeSlots + 1;
-
-            if (endBox > homeBoxes)
-            {
-                endBox = homeBoxes;
-                endSlot = homeBoxes * homeSlots;
-            }
-
-            ranges.Add(((startBox, (startSlot - 1) % homeSlots + 1), (endBox, (endSlot - 1) % homeSlots + 1)));
-
-            startSlot = endSlot + 1;
-            endSlot = startSlot + totalSlots - 1;
-        }
-
-        return ranges;
     }
 
     private SwitchProtocol GetProtocol()
@@ -387,23 +356,19 @@ public partial class ViewerForm : Form
                 var version = Provider.SAV.GetGameVersion();
                 var localSlotCount = version.GetSlotCount();
                 var localBoxCount = version.GetBoxCount();
-                var (start, end) = GetDownloadRanges(localBoxCount, localSlotCount)[GetComboBoxIndex()];
+                var (start, end) = RangeHandler.GetDownloadRanges(localBoxCount, localSlotCount)[GetComboBoxIndex()];
 
-                var range = end.box - start.box;
+                var boxCount = end.box - start.box + 1;
                 var pkhlist = new List<Core.HomeWrapper?>();
 
-                for (var i = 0; i <= range; i++)
+                for (var i = 0; i < boxCount; i++)
                 {
-                    var boxBin = await Executor.ReadBoxData(start.box + i - 1, token).ConfigureAwait(false);
+                    var box = start.box + i;
+                    var boxBin = await Executor.ReadBoxData(box - 1, token).ConfigureAwait(false);
                     var boxMons = PokeHandler.GenerateEntitiesFromBoxBin(boxBin);
-                    if (i == end.box - 1 && end.slot != 0)
-                        for (var j = 0; j < end.slot; j++)
-                            pkhlist.Add(boxMons[j]);
-                    else
-                        pkhlist.AddRange(boxMons);
+                    pkhlist.AddRange(RangeHandler.GetEntriesInRange(boxMons, box, start, end));
 
-                    var value = i * 100 / range;
-                    UpdateProgressBar(value);
+                    UpdateProgressBar((i + 1) * 100 / boxCount);
                 }
 
                 Provider.SAV.SetPokeList(pkhlist, conversionType, Properties.Settings.Default.fix_legality);
@@ -412,15 +377,15 @@ public partial class ViewerForm : Form
 
             Executor.Disconnect();
             UpdateProgressBar(100);
-            MessageBox.Show($"{Strings["Action.Completed"]}", "HomeLive", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.ShowMessageSafe(Strings["Action.Completed"], MessageBoxIcon.Information);
 
             EnableControls();
         }
         catch (Exception ex)
         {
-            Executor.Disconnect();
-            MessageBox.Show($"{Strings["Warning.SomethingWrong"]}{Environment.NewLine}{Strings["Warning.CheckInstallation"]}" +
-                $"{Environment.NewLine}{Environment.NewLine}{ex.Message}", "HomeLive", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            Executor?.Disconnect();
+            this.ShowMessageSafe($"{Strings["Warning.SomethingWrong"]}{Environment.NewLine}{Strings["Warning.CheckInstallation"]}" +
+                $"{Environment.NewLine}{Environment.NewLine}{ex.Message}", MessageBoxIcon.Warning);
             EnableControls();
             UpdateProgressBar(0);
         }

@@ -1,4 +1,4 @@
-﻿/* Legacy code for PKH Data Version 2.
+﻿/* Legacy code for PKH Data Version 3.
  * https://github.com/kwsch/PKHeX/blob/e41797d0cbec195577a993e97e79e979c2e97ce3/PKHeX.Core/PKM/HOME/IGameDataSide.cs
  * GPL v3 License
  * I claim no ownership of this code. Thanks to all the PKHeX contributors.*/

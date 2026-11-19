@@ -83,9 +83,12 @@ public static class PokeHandler
         if (pkh.HasPK8() && pkh.ConvertToPK8() is IGigantamax g && g.CanGigantamax)
             name += " (GMax)";
 
-        if (pkh is IAlpha a && a.IsAlpha)
+        // HOME keeps the Alpha and Noble flags in the Legends: Arceus / Legends: Z-A game data, not in the core data.
+        var pa8 = pkh.HasPA8() ? pkh.ConvertToPA8() : null;
+        var pa9 = pkh.HasPA9() ? pkh.ConvertToPA9() : null;
+        if (pa8 is { IsAlpha: true } || pa9 is { IsAlpha: true })
             name += " (Alpha)";
-        if (pkh is INoble n && n.IsNoble)
+        if (pa8 is { IsNoble: true })
             name += " (Noble)";
 
         name += $" - {pkm.GetFilteredString()}";

@@ -53,7 +53,7 @@ public static class VersionHandler
         _ => throw new ArgumentException($"{nameof(version)} is not a valid version for this operation.")
     };
 
-    public static int GetSlotCount(this GameVersion version) => version switch
+    public static int GetSlotCount(this GameVersion version) => GetGameVersion(version) switch
     {
         GameVersion.GG => LGPESlots,
         GameVersion.SWSH => SWSHSlots,
